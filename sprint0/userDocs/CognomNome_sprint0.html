@@ -1,213 +1,249 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+
 <head>
-    <!--
+	<!--
 <link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
 <script type="text/javascript" src="../css/issStyle.js"></script>
 -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/css/foundation.min.css" crossorigin="anonymous">
-		<script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/js/foundation.min.js"crossorigin="anonymous"></script> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="./commons/resources/styles/templateISS.css">
-        <link rel="stylesheet" type="text/css" href="./commons/resources/styles/main.css">
-        <link rel="stylesheet" type="text/css" href="./commons/resources/styles/navbar.css">
-        <link rel="stylesheet" type="text/css" href="./commons/resources/styles/table.css">
-        <link rel="stylesheet" type="text/css" href="./commons/resources/styles/code.css">
-        <!-- <script type="text/javascript" src="./commons/resources/scripts/myScripts.js"></script> -->
-<style type="text/css">
-body
-{
-    margin-left:  30px;
-    margin-right: 30px;
-};
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/css/foundation.min.css"
+		crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/js/foundation.min.js"
+		crossorigin="anonymous"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/templateISS.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/main.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/navbar.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/table.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/code.css">
+	<!-- <script type="text/javascript" src="./commons/resources/scripts/myScripts.js"></script> -->
+	<style type="text/css">
+		body {
+			margin-left: 30px;
+			margin-right: 30px;
+		}
 
-P
-{
-    font-family: Tahoma;
-    font-size: 10pt;
-};
+		;
 
-a, a:visited, a:active, a:link, a:hover {
-    text-decoration: underline;
-    color: #545454;
-    background-color: transparent;
-	font-size: 93%;
-}
+		P {
+			font-family: Tahoma;
+			font-size: 10pt;
+		}
 
-a:hover {
-    background-color: #cccccc;
-}
+		;
 
+		a,
+		a:visited,
+		a:active,
+		a:link,
+		a:hover {
+			text-decoration: underline;
+			color: #545454;
+			background-color: transparent;
+			font-size: 93%;
+		}
 
-hr {
-    clear: both;
-    height: 1px;
-    color: #242424;
-    background-color: transparent;
-}
-
-h1, h2, h3 {
-    color: #242424;
-    clear: left;
-    font: 100% Tahoma, Helvetica, Arial, sans-serif;
-    margin-bottom: 0.5em;
-    padding-top: 0.5em;
-	border-radius: 10px;
-	padding: 5px;
-}
-
-top {
-	width: 100%;
-}
+		a:hover {
+			background-color: #cccccc;
+		}
 
 
-#i {
-    color: #ff1010;
-}
-tt{
-	font-family: "Arial";
-    font-size: 90%;
-	color: #006600;
-}
-em{
-	font-family: "Arial";
-    font-size: 80%;
-	font-weight: bold;
-	border-style:solid;
-	border-color: #abe876;
-    color: #1632cc;
-}
-bc{
-	font-family: "Arial";
-	font-size: 90%;
-	font-weight: bold;
-    color: #990000;
-	background-color: #fcf8c7;
-}
-ks{
-	font-family: "Arial";
-	font-weight: bold;
-    color: #0000CD	;
-	font-size: 90%;
-}
-kc{
-	font-family: "Arial";
-	font-weight: bold;
-    color: #008000	;
-	font-size: 90%;
-}
-pre{
-	font-family: "Consolas";
-	font-size: 85%;
-	background-color: #f5f5f5;
-	border: 1.5px solid silver;
-	padding: 5px;
-}
-m{
-	font-family: "Helvetica";
-	line-height: 100%;
- 	font-size: 75%;
-}
-div.body{
-	 
-    font-size: 18px;
-}
-k{
-    color: #990000;
-	font-weight: bold;
-	font-size: 90%;
-}
-h1 {
-    font-size: 150%;
-    background-color: #b2c0ff;
-	padding: 10px;
-}
+		hr {
+			clear: both;
+			height: 1px;
+			color: #242424;
+			background-color: transparent;
+		}
 
-h2 {
-    background-color: #9ed8ff;
-    font-size: 130%;
-}
+		h1,
+		h2,
+		h3 {
+			color: #242424;
+			clear: left;
+			font: 100% Tahoma, Helvetica, Arial, sans-serif;
+			margin-bottom: 0.5em;
+			padding-top: 0.5em;
+			border-radius: 10px;
+			padding: 5px;
+		}
 
-h3 {
-	background-color: #e6ccff;
-    font-size: 100%;
-}
-h4 {
-    background-color: #ccffcc;
-    font-size: 100%;
-	width: 95%;
-	border-radius: 5px;
-	padding: 2px;
-}
-h5 {
-    background-color: #d5ffb0;
-    font-size: 100%;
+		top {
+			width: 100%;
+		}
 
-}
-div.req{
-	background-color: #d9ffb3;
-    font-size: 18px;
-	width: 700px;
-    border: 3px solid green;
-    padding: 15px;
-    margin: 10px;
-}
-div.remark{
-	background-color: #E3F2FD;
-    border: 1.5px solid #d5f2ed;
-    padding: 15px;
-    margin: 10px;
-	border-radius: 25px;
-}
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
 
-ol, ul, li {
-  margin: 0;
-  margin-left: 10px;
-  padding: 0;
-  padding-bottom: 5px;
-}
+		#i {
+			color: #ff1010;
+		}
 
-table, th, td {
-	border: 1px solid black;
-}
+		tt {
+			font-family: "Arial";
+			font-size: 90%;
+			color: #006600;
+		}
 
-img {
-	border: 1.5px solid #d5f2ed
+		em {
+			font-family: "Arial";
+			font-size: 80%;
+			font-weight: bold;
+			border-style: solid;
+			border-color: #abe876;
+			color: #1632cc;
+		}
 
-}
+		bc {
+			font-family: "Arial";
+			font-size: 90%;
+			font-weight: bold;
+			color: #990000;
+			background-color: #fcf8c7;
+		}
 
-a, a:visited, a:active, a:link, a:hover {
-    text-decoration: underline;
-    color: #545454;
-    background-color: transparent;
-}
+		ks {
+			font-family: "Arial";
+			font-weight: bold;
+			color: #0000CD;
+			font-size: 90%;
+		}
 
-div.wrapdesc{
-	width: 90%;
-	margin: auto;
-}
+		kc {
+			font-family: "Arial";
+			font-weight: bold;
+			color: #008000;
+			font-size: 90%;
+		}
 
-div.imagedesc{
-	width: 85%;
-	margin: auto;
-}
-</style>
-    
- 
-   
+		pre {
+			font-family: "Consolas";
+			font-size: 85%;
+			background-color: #f5f5f5;
+			border: 1.5px solid silver;
+			padding: 5px;
+		}
+
+		m {
+			font-family: "Helvetica";
+			line-height: 100%;
+			font-size: 75%;
+		}
+
+		div.body {
+
+			font-size: 18px;
+		}
+
+		k {
+			color: #990000;
+			font-weight: bold;
+			font-size: 90%;
+		}
+
+		h1 {
+			font-size: 150%;
+			background-color: #b2c0ff;
+			padding: 10px;
+		}
+
+		h2 {
+			background-color: #9ed8ff;
+			font-size: 130%;
+		}
+
+		h3 {
+			background-color: #e6ccff;
+			font-size: 100%;
+		}
+
+		h4 {
+			background-color: #ccffcc;
+			font-size: 100%;
+			width: 95%;
+			border-radius: 5px;
+			padding: 2px;
+		}
+
+		h5 {
+			background-color: #d5ffb0;
+			font-size: 100%;
+
+		}
+
+		div.req {
+			background-color: #d9ffb3;
+			font-size: 18px;
+			width: 700px;
+			border: 3px solid green;
+			padding: 15px;
+			margin: 10px;
+		}
+
+		div.remark {
+			background-color: #E3F2FD;
+			border: 1.5px solid #d5f2ed;
+			padding: 15px;
+			margin: 10px;
+			border-radius: 25px;
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		ol,
+		ul,
+		li {
+			margin: 0;
+			margin-left: 10px;
+			padding: 0;
+			padding-bottom: 5px;
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+		}
+
+		img {
+			border: 1.5px solid #d5f2ed
+		}
+
+		a,
+		a:visited,
+		a:active,
+		a:link,
+		a:hover {
+			text-decoration: underline;
+			color: #545454;
+			background-color: transparent;
+		}
+
+		div.wrapdesc {
+			width: 90%;
+			margin: auto;
+		}
+
+		div.imagedesc {
+			width: 85%;
+			margin: auto;
+		}
+	</style>
+
+
+
 </head>
-	
-		
-  
 
 
-   
-<title>TemplateToFill</title></head>
-    
+
+
+
+
+<title>TemplateToFill</title>
+</head>
+
 <!--
 	<body onload="loadNav();">
 		<div id="openButton" class="openButton" onclick="openNav(true)">&#9776; Menu</div>
@@ -232,49 +268,88 @@ div.imagedesc{
 			<bottom-spacer/>
 		</div>
 -->
+
 <body>
-<div id="top">
-<h1>LABORATORIO DI INGEGNERIA DEI SISTEMI SOFTWARE <font size="5"></font> </h1>
-</div>  
+	<div id="top">
+		<h1>LABORATORIO DI INGEGNERIA DEI SISTEMI SOFTWARE <font size="5"></font>
+		</h1>
+	</div>
 
-<div class="body"> 
-<h2>Introduction</h2>
-<a href="./TemaFinale24.html">Richiesta del committente</a>
-<h2>Requisiti del Sistema</h2>
-<ol>
-<li>WasteStorage</il>
-</ol>
- 
-<div class="remark">
-Copy here the EXACT text fiven by the customer.
-</div>
+	<div class="body">
+		<h2>Introduction</h2>
+		<a href="./TemaFinale24.html">Richiesta del committente</a>
+		<h2>Requisiti del Sistema</h2>
+		<ol>
+			<li><b>WasteStorage</b>
+				<ul>
+					R1.1: Misurare il peso totale dei rifiuti (RP) presenti nel Waste Storage attraverso il weighing
+					device (scale)
+				</ul>
+			</li>
+			<li><b>Monitoring</b>
+				<ul>
+					<li>R2.1: Misurare il livello delle ceneri nel AshStorage tramite il sonar.</li>
+					<li>R2.2: Segnalare lo stato dell'inceneritore e del AshStorage tramite un LED.
+						<ul>
+							<li>R2.2.1: Il LED deve essere acceso quando l'inceneritore è in fase di bruciatura.</li>
+							<li>R2.2.2: Il LED deve essere spento quando l'inceneritore non è in funzione.</li>
+							<li>R2.2.3: Il LED deve lampeggiare quando l'AshStorage è pieno o vuoto.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
 
- 
+			<li><b>Incinerator</b>
+				<ul>
+					<li>R3.1: Ricevere comando di attivazione per iniziare il processo di bruciatura.</li>
+					<li>R3.2: Bruciare un RP alla volta in un tempo predefinito (BTIME).</li>
+					<li>R3.3: Emanare un segnale (acustico o altro) alla fine del processo di incenerimento.</li>
+				</ul>
+			</li>
 
-<h2>Requirement analysis</h2>
- 
+			<li>
+				<b>OpRobot</b>
+				<ul>
+					<li>
+						R4.1: Raggiunge la posizione delle porte: WASTEIN, BURNIN, BURNOUT, ASHOUT e della HOME</li>
+					<li>R4.2: Caricare RP dal WASTEIN e scaricare in BURNIN.</li>
+					<li>R4.3: Tornare a HOME durante la fase di bruciatura dell'inceneritore e quando non c’e` lavoro da
+						fare.</li>
+					<li>R4.4: Caricare ceneri da BURNOUT e scaricare in ASHOUT.</li>
+				</ul>
+			</li>
+		</ol>
 
-</div>
-
-<h2>Problem analysis</h2>
- 
-
-<h2>Test plans</h2> 
+		<div class="remark">
+			Copy here the EXACT text fiven by the customer.
+		</div>
 
 
-<h2>Project</h2> 
- 
-</div>
 
-<h2>Testing</h2> 
- 
+		<h2>Requirement analysis</h2>
 
-<h2>Deployment</h2> 
 
- 
-<h2>Maintenance</h2> 
- 
-<!-- USEFUL
+	</div>
+
+	<h2>Problem analysis</h2>
+
+
+	<h2>Test plans</h2>
+
+
+	<h2>Project</h2>
+
+	</div>
+
+	<h2>Testing</h2>
+
+
+	<h2>Deployment</h2>
+
+
+	<h2>Maintenance</h2>
+
+	<!-- USEFUL
 <table style="width:100%" border="1">
 <tr>
 <td style="width:50%">
@@ -283,14 +358,15 @@ Copy here the EXACT text fiven by the customer.
 </tr>
 </table>
 -->
-	      	
-<br/><br/> 	
-</div>  
 
-<div style="background-color:rgba(86, 56, 253, 0.9); width:60%;text-align:left;color:white">
-By studentName email: student@studio.unibo.it, 
-<img src="./img/emiglio.png" alt="mbot" width="15%" height="15%">
-GIT repo: https://github.com/... 
-</div> 
+	<br /><br />
+	</div>
+
+	<div style="background-color:rgba(86, 56, 253, 0.9); width:60%;text-align:left;color:white">
+		By studentName email: student@studio.unibo.it,
+		<img src="./img/emiglio.png" alt="mbot" width="15%" height="15%">
+		GIT repo: https://github.com/...
+	</div>
 </body>
+
 </html>
