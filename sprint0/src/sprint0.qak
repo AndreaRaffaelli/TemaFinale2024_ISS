@@ -1,0 +1,89 @@
+System sprint0
+
+//Context ctxRobot  ip [host="localhost" port=8001] 
+//Context ctxServiceArea  ip [host="localhost" port=8001] 
+//Context ctxWasteStorage  ip [host="localhost" port=8001] 
+//Context ctxAshStorage   ip [host="localhost" port=8001] 
+
+
+Event sonarUpdate: sonarUpdate(X)
+Event scaleUpdate: scaleUpdate(X)
+Dispatch sonarUpdate: sonarUpdate(X)
+Dispatch scaleUpdate: scaleUpdate(X)
+
+Context ctxLocale   ip [host="localhost" port=8001] 
+
+
+QActor wis context ctxLocale{ 
+	[#
+		var ws_status = 0;
+		var as_status = 0;
+	#]
+	State s0 initial{
+		observeResource sonar msgid sonarUpdate
+		observeResource wastestorage msgid scaleUpdate
+	}
+	Goto idle
+	
+	State idle {}
+	Transition t0
+		whenEvent sonarUpdate -> sonarHandler
+		whenEvent scaleUpdate -> scaleHandler
+		
+	State sonarHandler {
+		// Gestione as_status
+	}
+	
+	State scaleHandler {
+		
+	}
+	
+	
+}
+
+
+
+
+
+
+QActor sonar context ctxLocale{ 
+	State s0 initial{
+		
+		
+	}
+}
+
+
+QActor wastestorage context ctxLocale{ 
+	State s0 initial{
+		
+		
+	}
+}
+
+
+
+
+
+
+
+
+QActor oprobot context ctxLocale{ 
+	State s0 initial{
+		
+	}
+}
+
+
+QActor incinerator context ctxLocale{ 
+	State s0 initial{
+		
+	}
+}
+
+QActor mdevice context ctxLocale{ 
+	State s0 initial{
+		
+	}
+}
+
