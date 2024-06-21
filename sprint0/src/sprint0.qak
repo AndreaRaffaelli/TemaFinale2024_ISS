@@ -6,19 +6,40 @@ System sprint0
 //Context ctxAshStorage   ip [host="localhost" port=8001] 
 
 
-Event sonarUpdate: sonarUpdate(X)
-Event scaleUpdate: scaleUpdate(X)
+
 Dispatch sonarUpdate: sonarUpdate(X)
 Dispatch scaleUpdate: scaleUpdate(X)
 
+Dispatch robotStart: robotStart(X)
+
+Dispatch burnStart: burnStart(X)
+Dispatch burnEnd: burnEnd(X)
+
+
+Dispatch ledOn: ledOn(X)
+Dispatch ledOff: ledOff(X)
+Dispatch ledBlink: ledBlink(X)
+
+Dispatch decScale: decScale(X)
+Dispatch depositRP: depositRP(X)
+
+Dispatch addAsh: addAsh(X)
+
+
+
 Context ctxLocale   ip [host="localhost" port=8001] 
+
 
 
 QActor wis context ctxLocale{ 
 	[#
 		var ws_status = 0;
 		var as_status = 0;
+		var inc_status= false;
+		var robotWait = true;
 	#]
+	
+	
 	State s0 initial{
 		observeResource sonar msgid sonarUpdate
 		observeResource wastestorage msgid scaleUpdate
@@ -27,63 +48,169 @@ QActor wis context ctxLocale{
 	
 	State idle {}
 	Transition t0
-		whenEvent sonarUpdate -> sonarHandler
-		whenEvent scaleUpdate -> scaleHandler
+		whenMsg sonarUpdate -> sonarHandler
+		whenMsg scaleUpdate -> scaleHandler
+		whenMsg depositRP -> startInc
+		whenMsg burnEnd -> stopInc
+		
+	State startInc{
+		forward incinerator -m burnStart : burnStart( parti )
+		[#inc_status=true#]
+		forward monitoringdevice -m ledOn : ledOn( parti )
+		
+	}
+	
+	State stopInc{
+		[#inc_status=false#]
+		forward monitoringdevice -m ledOff : ledOff( stop )
+		
+	}
 		
 	State sonarHandler {
-		// Gestione as_status
+		onMsg( sonarUpdate:sonarUpdate(X)){
+			[# as_status = payloadArg(0).toInt() #]
+			println("($name) sonarhandler: $as_status") color blue	
+		}	
 	}
+	Goto controllo
 	
 	State scaleHandler {
-		
+		onMsg( scaleUpdate:scaleUpdate(X)){
+			[# ws_status = payloadArg(0).toInt() #]
+			println("($name) scalehandler: $ws_status") color blue	
+		}	
 	}
+	Goto controllo
 	
 	
-}
-
-
-
-
-
-
-QActor sonar context ctxLocale{ 
-	State s0 initial{
-		
-		
+	State controllo {
+		[#
+			if(ws_status>0 && ws_status>0 && inc_status==false && robotWait==true{
+				#]
+				forward oprobot -m robotStart : robotStart( parti )
+				println("($name) controllo: condizioni corrette")
+				[#
+				robotWait=false;
+			}
+			#
+		]
 	}
-}
-
-
-QActor wastestorage context ctxLocale{ 
-	State s0 initial{
-		
-		
-	}
+	Goto idle
 }
 
 
 
 
-
-
-
-
+// In oprobot è da implementare gestione posizione del robot x gui
 QActor oprobot context ctxLocale{ 
-	State s0 initial{
+	State home initial{}
+	Transition t0
+		whenMsg robotStart -> start
+		whenMsg burnEnd -> gatheringAsh		// inc segnala fine combustione
 		
+	State start{
+		delay 2000			// Si sposta alla porta di wast storage			
+		forward wastestorage -m decScale : decScale( decrementa_bilancia ) 	// Svuotiamo il waste storage
+		delay 3000 // Va all'inc
+		forward wis -m depositRP : depositRP( scaricoRP ) 	// Svuotiamo il waste storage
+		delay 2000 // va in home
 	}
+	Goto home
+	
+	State gatheringAsh{
+		delay 4000 // andiamo porta raccolta ash e scarichiamo nella porta di ashout
+		forward sonar -m addAsh : addAsh( incrementoAsh ) // simuliamo comportamento del sonar: aggiunta polvere
+		delay 2000 // torna in home
+	}
+	Goto home
 }
 
 
 QActor incinerator context ctxLocale{ 
-	State s0 initial{
+	State s0 initial{}
+	Transition t0
+		whenMsg burnStart -> start
 		
+	State start{
+		delay 3000 // Inizio combustione
+		forward wis -m burnEnd : burnEnd( stop )
+		forward oprobot -m burnEnd : burnEnd( stop )
+	}
+	Transition t0
+		whenMsg burnStart -> start
+}
+
+
+
+
+QActor sonar context ctxLocale{ 	// Manca update resource
+	[# 
+		var as_status = 0
+	#]
+	State s0 initial{}
+	Transition t0
+		whenTime 3000 -> emptyStorage
+		whenMsg addAsh -> ashUpdate
+		
+	State ashUpdate{
+		[# 
+			as_status =  as_status +1
+			if(as_status>4){
+				#]
+				forward monitoringdevice -m ledBlink : ledBlink( lampeggia )
+				[#
+			} else {
+				#]
+				forward monitoringdevice -m ledOff : ledOff( stop )
+				[#
+			}
+		#]
+	}
+	Transition t0
+		whenTime 3000 -> emptyStorage
+		whenMsg addAsh -> ashUpdate
+		
+	State emptyStorage{
+		[# 
+			as_status = 0
+		#]
+		forward monitoringdevice -m ledBlink : ledBlink( lampeggia )
+	}
+	Transition t0
+		whenTime 3000 -> emptyStorage
+		whenMsg addAsh -> ashUpdate
+}
+
+
+
+
+
+
+
+QActor wastestorage context ctxLocale{ 
+	State s0 initial{
+		[#
+			var w = 0;
+			
+		#]
+	}
+//	Transition t0
+//		whenMsg sonarUpdate -> sonarHandler
+//	Goto carica
+	
+	State carica{
+		// In maniera random carichiamo la scale
 	}
 }
 
-QActor mdevice context ctxLocale{ 
-	State s0 initial{
-		
-	}
+
+
+
+
+
+
+QActor monitoringdevice context ctxLocale{ 
+	State s0 initial{}
+	
 }
 

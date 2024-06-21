@@ -17,18 +17,46 @@ import it.unibo.kactor.sysUtil.createActor   //Sept2023
 class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
 	override fun getInitialState() : String{
-		return "s0"
+		return "home"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		return { //this:ActionBasciFsm
-				state("s0") { //this:State
+				state("home") { //this:State
 					action { //it:State
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t04",targetState="start",cond=whenDispatch("robotStart"))
+					transition(edgeName="t05",targetState="gatheringAsh",cond=whenDispatch("burnEnd"))
+				}	 
+				state("start") { //this:State
+					action { //it:State
+						delay(2000) 
+						forward("decScale", "decScale(decrementa_bilancia)" ,"wastestorage" ) 
+						delay(3000) 
+						forward("depositRP", "depositRP(scaricoRP)" ,"wis" ) 
+						delay(2000) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="home", cond=doswitch() )
+				}	 
+				state("gatheringAsh") { //this:State
+					action { //it:State
+						delay(4000) 
+						forward("addAsh", "addAsh(incrementoAsh)" ,"sonar" ) 
+						delay(2000) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="home", cond=doswitch() )
 				}	 
 			}
 		}

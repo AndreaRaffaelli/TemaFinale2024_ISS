@@ -21,6 +21,8 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 
+				var as_status = 0
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -28,7 +30,47 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_s0", 
+				 	 					  scope, context!!, "local_tout_"+name+"_s0", 3000.toLong() )  //OCT2023
 					}	 	 
+					 transition(edgeName="t08",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_s0"))   
+					transition(edgeName="t09",targetState="ashUpdate",cond=whenDispatch("addAsh"))
+				}	 
+				state("ashUpdate") { //this:State
+					action { //it:State
+						 
+									as_status =  as_status +1
+									if(as_status>4){
+						forward("ledBlink", "ledBlink(lampeggia)" ,"monitoringdevice" ) 
+						
+									} else {
+						forward("ledOff", "ledOff(stop)" ,"monitoringdevice" ) 
+						
+									}
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_ashUpdate", 
+				 	 					  scope, context!!, "local_tout_"+name+"_ashUpdate", 3000.toLong() )  //OCT2023
+					}	 	 
+					 transition(edgeName="t010",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_ashUpdate"))   
+					transition(edgeName="t011",targetState="ashUpdate",cond=whenDispatch("addAsh"))
+				}	 
+				state("emptyStorage") { //this:State
+					action { //it:State
+						 
+									as_status = 0
+						forward("ledBlink", "ledBlink(lampeggia)" ,"monitoringdevice" ) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_emptyStorage", 
+				 	 					  scope, context!!, "local_tout_"+name+"_emptyStorage", 3000.toLong() )  //OCT2023
+					}	 	 
+					 transition(edgeName="t012",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_emptyStorage"))   
+					transition(edgeName="t013",targetState="ashUpdate",cond=whenDispatch("addAsh"))
 				}	 
 			}
 		}

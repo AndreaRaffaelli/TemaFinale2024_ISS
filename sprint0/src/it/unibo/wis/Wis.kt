@@ -24,6 +24,8 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 		
 				var ws_status = 0;
 				var as_status = 0;
+				var inc_status= false;
+				var robotWait = true;
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -43,24 +45,75 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="sonarHandler",cond=whenEvent("sonarUpdate"))
-					transition(edgeName="t01",targetState="scaleHandler",cond=whenEvent("scaleUpdate"))
+					 transition(edgeName="t00",targetState="sonarHandler",cond=whenDispatch("sonarUpdate"))
+					transition(edgeName="t01",targetState="scaleHandler",cond=whenDispatch("scaleUpdate"))
+					transition(edgeName="t02",targetState="startInc",cond=whenDispatch("depositRP"))
+					transition(edgeName="t03",targetState="stopInc",cond=whenDispatch("burnEnd"))
+				}	 
+				state("startInc") { //this:State
+					action { //it:State
+						forward("burnStart", "burnStart(parti)" ,"incinerator" ) 
+						inc_status=true 
+						forward("ledOn", "ledOn(parti)" ,"monitoringdevice" ) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+				}	 
+				state("stopInc") { //this:State
+					action { //it:State
+						inc_status=false 
+						forward("ledOff", "ledOff(stop)" ,"monitoringdevice" ) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
 				}	 
 				state("sonarHandler") { //this:State
 					action { //it:State
+						if( checkMsgContent( Term.createTerm("sonarUpdate(X)"), Term.createTerm("sonarUpdate(X)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 as_status = payloadArg(0).toInt()  
+								CommUtils.outblue("($name) sonarhandler: $as_status")
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition( edgeName="goto",targetState="controllo", cond=doswitch() )
 				}	 
 				state("scaleHandler") { //this:State
 					action { //it:State
+						if( checkMsgContent( Term.createTerm("scaleUpdate(X)"), Term.createTerm("scaleUpdate(X)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 ws_status = payloadArg(0).toInt()  
+								CommUtils.outblue("($name) scalehandler: $ws_status")
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition( edgeName="goto",targetState="controllo", cond=doswitch() )
+				}	 
+				state("controllo") { //this:State
+					action { //it:State
+						
+									if(ws_status>0 && ws_status>0 && inc_status==false && robotWait==true{
+						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
+						CommUtils.outblack("($name) controllo: condizioni corrette")
+						
+										robotWait=false;
+									}
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="idle", cond=doswitch() )
 				}	 
 			}
 		}
