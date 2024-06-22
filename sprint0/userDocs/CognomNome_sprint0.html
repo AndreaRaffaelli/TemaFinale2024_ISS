@@ -421,7 +421,7 @@
 						<li>
 							Indirizza il robot.
 						</li>
-					</ul>				
+					</ul>
 				</li>
 			</ul>
 			<h3>Modello delle Interazioni:</h3>
@@ -430,22 +430,28 @@
 					<strong>Command:</strong> Invia comando al OpRobot per l’inizio della routine di combustione.
 				</li>
 				<li>Incinerator -> WIS, OpRobot:<br>
-					<strong>Status Signal:</strong> Invia messaggi di status al WIS (aggiornamento facade e MonitoringDevice) e al robot (deve scaricare ceneri)
+					<strong>Status Signal:</strong> Invia messaggi di status al WIS (aggiornamento facade e
+					MonitoringDevice) e al robot (deve scaricare ceneri)
 				</li>
 				<li>WIS -> Incinerator:<br>
-					<strong>Activation Command:</strong> Invia comandi di attivazione all'Incinerator per iniziare il processo di bruciatura.
+					<strong>Activation Command:</strong> Invia comandi di attivazione all'Incinerator per iniziare il
+					processo di bruciatura.
 				</li>
 				<li>MonitoringDevice -> WIS:<br>
-					<strong>Sonar Data:</strong> Invia i dati del Sonar per determinare il livello delle ceneri nell'AshStorage.
+					<strong>Sonar Data:</strong> Invia i dati del Sonar per determinare il livello delle ceneri
+					nell'AshStorage.
 				</li>
 				<li>WIS -> MonitoringDevice:<br>
-					<strong>LED Status Command:</strong> Invia comandi al MonitoringDevice per attivare/disattivare il LED per segnalare lo stato dell'Incinerator.
+					<strong>LED Status Command:</strong> Invia comandi al MonitoringDevice per attivare/disattivare il
+					LED per segnalare lo stato dell'Incinerator.
 				</li>
 				<li>WIS -> ServiceStatusGUI (SSGUI):<br>
-					<strong>Update GUI:</strong> Invia aggiornamenti dello stato del WasteStorage, AshStorage, Incinerator e OpRobot per la visualizzazione sulla SSGUI.
+					<strong>Update GUI:</strong> Invia aggiornamenti dello stato del WasteStorage, AshStorage,
+					Incinerator e OpRobot per la visualizzazione sulla SSGUI.
 				</li>
-				<li>OpRobot ->  ServiceStatusGUI (SSGUI):<br>
-					<strong>Update GUI:</strong> Invia aggiornamenti dello stato dell’OpRobot, per la visualizzazione sulla SSGUI.
+				<li>OpRobot -> ServiceStatusGUI (SSGUI):<br>
+					<strong>Update GUI:</strong> Invia aggiornamenti dello stato dell’OpRobot, per la visualizzazione
+					sulla SSGUI.
 				</li>
 				<li>WasteStorage -> WIS<br>
 					<strong>Scale Data:</strong> Invia aggiornamenti degli RP da bruciare
@@ -454,16 +460,20 @@
 			<h3>Esempio Diagramma di Sequenza:</h3>
 			<ol>
 				<li><strong>WIS</strong> legge il peso totale dei RP nel <strong>Scale WasteStorage</strong>.</li>
-				<li><strong>Sonar</strong> invia la distanza misurata nel <strong>AshStorage</strong> a <strong>WIS</strong>.</li>
-				<li>WIS verifica lo stato del <strong>WasteStorage</strong> e dell'<strong>AshStorage</strong> tramite <strong>WIS</strong>.</li>
+				<li><strong>Sonar</strong> invia la distanza misurata nel <strong>AshStorage</strong> a
+					<strong>WIS</strong>.</li>
+				<li>WIS verifica lo stato del <strong>WasteStorage</strong> e dell'<strong>AshStorage</strong> tramite
+					<strong>WIS</strong>.</li>
 				<li><strong>WIS</strong> invia un comando di inizio lavoro a <strong>OpRobot</strong>.</li>
 				<li><strong>OpRobot</strong> si sposta al <strong>WasteStorage</strong> e raccoglie un RP.</li>
-				<li><strong>OpRobot</strong> si sposta al <strong>BURNIN port</strong> e deposita il RP nell'<strong>Incinerator</strong>.</li>
+				<li><strong>OpRobot</strong> si sposta al <strong>BURNIN port</strong> e deposita il RP
+					nell'<strong>Incinerator</strong>.</li>
 				<li>OP Robot aggiorna suo stato</li>
 				<li><strong>WIS</strong> invia un comando di attivazione all'<strong>Incinerator</strong>.</li>
 				<li><strong>Incinerator</strong> brucia il RP e alla fine invia un segnale al sistema.</li>
 				<li><strong>OpRobot</strong> va a raccogliere le ceneri dall'<strong>Incinerator</strong>.</li>
-				<li><strong>OpRobot</strong> raccoglie le ceneri dal <strong>BURNOUT port</strong> e le deposita nell'<strong>AshStorage</strong>.</li>
+				<li><strong>OpRobot</strong> raccoglie le ceneri dal <strong>BURNOUT port</strong> e le deposita
+					nell'<strong>AshStorage</strong>.</li>
 				<li><strong>WIS</strong> aggiorna lo stato del sistema sulla <strong>SSGUI</strong>.</li>
 			</ol>
 		</div>
@@ -477,8 +487,10 @@
 			<ul>
 				<li>
 					<strong>Test Case 1.1: Misurazione del livello delle ceneri.</strong><br>
-					Verificare che il Monitoring Device misuri correttamente il livello delle ceneri e invii i dati a WIS.<br>
-					<strong>Aspettativa:</strong> Il livello delle ceneri misurato è corretto e i dati sono ricevuti da WIS.
+					Verificare che il Monitoring Device misuri correttamente il livello delle ceneri e invii i dati a
+					WIS.<br>
+					<strong>Aspettativa:</strong> Il livello delle ceneri misurato è corretto e i dati sono ricevuti da
+					WIS.
 				</li>
 			</ul>
 		</li>
@@ -487,8 +499,10 @@
 			<ul>
 				<li>
 					<strong>Test Case 2.1: Ricezione dei comandi di attivazione</strong><br>
-					Verificare che l'inceneritore riceva e risponda correttamente ai comandi di attivazione inviati da WIS.<br>
-					<strong>Aspettativa:</strong> L'inceneritore inizia il processo di bruciatura alla ricezione del comando.
+					Verificare che l'inceneritore riceva e risponda correttamente ai comandi di attivazione inviati da
+					WIS.<br>
+					<strong>Aspettativa:</strong> L'inceneritore inizia il processo di bruciatura alla ricezione del
+					comando.
 				</li>
 				<li>
 					<strong>Test Case 2.2: Processo di bruciatura</strong><br>
@@ -497,7 +511,8 @@
 				</li>
 				<li>
 					<strong>Test Case 2.3: Emissione del segnale di fine incenerimento</strong><br>
-					Verificare che l'inceneritore emetta correttamente un segnale alla fine del processo di incenerimento.<br>
+					Verificare che l'inceneritore emetta correttamente un segnale alla fine del processo di
+					incenerimento.<br>
 					<strong>Aspettativa:</strong> Il segnale di fine incenerimento è emesso correttamente.
 				</li>
 			</ul>
@@ -507,7 +522,8 @@
 			<ul>
 				<li>
 					<strong>Test Case 3.1: Movimenti verso le posizioni</strong><br>
-					Verificare che OpRobot si sposti correttamente verso le posizioni WASTEIN, BURNIN, BURNOUT, ASHOUT.<br>
+					Verificare che OpRobot si sposti correttamente verso le posizioni WASTEIN, BURNIN, BURNOUT,
+					ASHOUT.<br>
 					<strong>Aspettativa:</strong> OpRobot raggiunge correttamente ogni posizione.
 				</li>
 			</ul>
@@ -526,11 +542,38 @@
 				</li>
 			</ul>
 		</li>
-	</ol>	
+	</ol>
+	<h2>Domande per il committente</h2>
+	<li>
+		Sonar e scale sono forniti?
+	</li>
+	<li>
+		Quali sono i valori del sonar da interpretare come totalmente vuoto o pieno? (sonar capisce che e’ vuoto
+		totalmente, e’ un messaggio esterno, oppure appena sotto DLImIT considerato vuoto?)
+	</li>
+	<li>
+		Quanto e` “approssimamente 0” nella bilancia?
+	</li>
+	<li>
+		L’inceneritore emana un segnale percepibile da OpRobot e WIS. A che serve farlo ricevere ad OpRobot se e`
+		controllato da WIS? (specifica iniziale: requires a software system service (WIS) that controls a robot (called
+		OpRobot))
+	</li>
+	<li>
+		Cosa accadrebbe se l’inceneritore venisse acceso senza RP?
+	</li>
+	<li>
+		Dobbiamo gestire la casistica per cui l’inceneritore potrebbe essere gia` pieno e oprobot NON puo` caricare RP,
+		oppure l’inceneritore ha ash e non puo` essere acceso fino a quando non e` scaricato?
+	</li>
 
-	<h2>Project</h2>
 
-	</div>
+
+
+
+
+	<!-- <h2>Project</h2>
+
 
 	<h2>Testing</h2>
 
@@ -538,7 +581,7 @@
 	<h2>Deployment</h2>
 
 
-	<h2>Maintenance</h2>
+	<h2>Maintenance</h2> -->
 
 	<!-- USEFUL
 <table style="width:100%" border="1">
