@@ -45,6 +45,7 @@ QActor wis context ctxLocale{
 		observeResource sonar msgid sonarUpdate
 		observeResource wastestorage msgid scaleUpdate
 		
+		
 	}
 	Goto idle
 	
@@ -87,7 +88,7 @@ QActor wis context ctxLocale{
 	
 	State controllo {
 		[#
-			if(ws_status>0 && ws_status>0 && inc_status === false && robotWait === true){
+			if(ws_status>0 && as_status>0 && inc_status === false && robotWait === true){
 				#]
 				forward oprobot -m robotStart : robotStart( parti )
 				println("($name) controllo: condizioni corrette")
@@ -201,6 +202,7 @@ QActor wastestorage context ctxLocale{
 		#]
 	State s0 initial{
 		printCurrentMessage
+		
 	}
 	Transition t0
 		whenTime 4000 -> loadScale

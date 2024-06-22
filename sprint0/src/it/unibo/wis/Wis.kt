@@ -102,7 +102,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				state("controllo") { //this:State
 					action { //it:State
 						
-									if(ws_status>0 && ws_status>0 && inc_status === false && robotWait === true){
+									if(ws_status>0 && as_status>0 && inc_status === false && robotWait === true){
 						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
 						CommUtils.outblack("($name) controllo: condizioni corrette")
 						
