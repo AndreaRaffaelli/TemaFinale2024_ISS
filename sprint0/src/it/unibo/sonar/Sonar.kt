@@ -26,6 +26,8 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -47,6 +49,8 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 						forward("ledOff", "ledOff(stop)" ,"monitoringdevice" ) 
 						
 									}
+						updateResourceRep(  "sonarUpdate($as_status)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -62,6 +66,8 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 						 
 									as_status = 0
 						forward("ledBlink", "ledBlink(lampeggia)" ,"monitoringdevice" ) 
+						updateResourceRep(  "sonarUpdate($as_status)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

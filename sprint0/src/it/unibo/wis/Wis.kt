@@ -48,12 +48,12 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					 transition(edgeName="t00",targetState="sonarHandler",cond=whenDispatch("sonarUpdate"))
 					transition(edgeName="t01",targetState="scaleHandler",cond=whenDispatch("scaleUpdate"))
 					transition(edgeName="t02",targetState="startInc",cond=whenDispatch("depositRP"))
-					transition(edgeName="t03",targetState="stopInc",cond=whenDispatch("burnEnd"))
+					transition(edgeName="t03",targetState="stopInc",cond=whenEvent("burnEnd"))
 				}	 
 				state("startInc") { //this:State
 					action { //it:State
 						forward("burnStart", "burnStart(parti)" ,"incinerator" ) 
-						inc_status=true 
+						 inc_status=true  
 						forward("ledOn", "ledOn(parti)" ,"monitoringdevice" ) 
 						//genTimer( actor, state )
 					}
@@ -63,7 +63,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				}	 
 				state("stopInc") { //this:State
 					action { //it:State
-						inc_status=false 
+						 inc_status=false  
 						forward("ledOff", "ledOff(stop)" ,"monitoringdevice" ) 
 						//genTimer( actor, state )
 					}
@@ -102,7 +102,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				state("controllo") { //this:State
 					action { //it:State
 						
-									if(ws_status>0 && ws_status>0 && inc_status==false && robotWait==true{
+									if(ws_status>0 && ws_status>0 && inc_status === false && robotWait === true){
 						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
 						CommUtils.outblack("($name) controllo: condizioni corrette")
 						

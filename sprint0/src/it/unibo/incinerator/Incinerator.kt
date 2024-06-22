@@ -21,6 +21,8 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		
+					val BTIME = 3000L;
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -34,8 +36,7 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				state("start") { //this:State
 					action { //it:State
 						delay(3000) 
-						forward("burnEnd", "burnEnd(stop)" ,"wis" ) 
-						forward("burnEnd", "burnEnd(stop)" ,"oprobot" ) 
+						emit("burnEnd", "burnEnd(stop)" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

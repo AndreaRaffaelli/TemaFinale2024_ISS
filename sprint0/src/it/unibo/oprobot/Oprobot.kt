@@ -30,7 +30,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t04",targetState="start",cond=whenDispatch("robotStart"))
-					transition(edgeName="t05",targetState="gatheringAsh",cond=whenDispatch("burnEnd"))
+					transition(edgeName="t05",targetState="gatheringAsh",cond=whenEvent("burnEnd"))
 				}	 
 				state("start") { //this:State
 					action { //it:State

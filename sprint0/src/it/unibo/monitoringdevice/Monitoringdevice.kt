@@ -21,6 +21,13 @@ class Monitoringdevice ( name: String, scope: CoroutineScope, isconfined: Boolea
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		
+					var led = 0;
+					/* 
+					 * led= 0 	spento
+					 * led= 1 	acceso
+					 * led= 2	blink
+					 * */
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -29,6 +36,48 @@ class Monitoringdevice ( name: String, scope: CoroutineScope, isconfined: Boolea
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t020",targetState="turnOnLed",cond=whenDispatch("ledOn"))
+					transition(edgeName="t021",targetState="turnOffLed",cond=whenDispatch("ledOff"))
+					transition(edgeName="t022",targetState="turnBlinkLed",cond=whenDispatch("ledBlink"))
+				}	 
+				state("turnOnLed") { //this:State
+					action { //it:State
+						
+									led = 1;
+						CommUtils.outgreen("($name)	Accensione Led")
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t023",targetState="turnOffLed",cond=whenDispatch("ledOff"))
+					transition(edgeName="t024",targetState="turnBlinkLed",cond=whenDispatch("ledBlink"))
+				}	 
+				state("turnOffLed") { //this:State
+					action { //it:State
+						
+									led = 0;
+						CommUtils.outred("($name)	Spegnimento Led")
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t025",targetState="turnOnLed",cond=whenDispatch("ledOn"))
+					transition(edgeName="t026",targetState="turnBlinkLed",cond=whenDispatch("ledBlink"))
+				}	 
+				state("turnBlinkLed") { //this:State
+					action { //it:State
+						
+									led = 2;
+						CommUtils.outyellow("($name)	Lampeggio Led")
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t027",targetState="turnOnLed",cond=whenDispatch("ledOn"))
+					transition(edgeName="t028",targetState="turnOffLed",cond=whenDispatch("ledOff"))
 				}	 
 			}
 		}

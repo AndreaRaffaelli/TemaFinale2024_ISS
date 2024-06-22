@@ -21,25 +21,57 @@ class Wastestorage ( name: String, scope: CoroutineScope, isconfined: Boolean=fa
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		
+					var w = 0;
+					
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						
-									var w = 0;
-									
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_s0", 
+				 	 					  scope, context!!, "local_tout_"+name+"_s0", 4000.toLong() )  //OCT2023
 					}	 	 
+					 transition(edgeName="t014",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_s0"))   
+					transition(edgeName="t015",targetState="unloadScale",cond=whenDispatch("decScale"))
 				}	 
-				state("carica") { //this:State
+				state("loadScale") { //this:State
 					action { //it:State
+						
+									w = w +1;
+									
+						updateResourceRep(  "scaleUpdate($w)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_loadScale", 
+				 	 					  scope, context!!, "local_tout_"+name+"_loadScale", 4000.toLong() )  //OCT2023
 					}	 	 
+					 transition(edgeName="t016",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_loadScale"))   
+					transition(edgeName="t017",targetState="unloadScale",cond=whenDispatch("decScale"))
+				}	 
+				state("unloadScale") { //this:State
+					action { //it:State
+						
+									w = w -1;
+									
+						updateResourceRep(  "scaleUpdate($w)"  
+						)
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_unloadScale", 
+				 	 					  scope, context!!, "local_tout_"+name+"_unloadScale", 4000.toLong() )  //OCT2023
+					}	 	 
+					 transition(edgeName="t018",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_unloadScale"))   
+					transition(edgeName="t019",targetState="unloadScale",cond=whenDispatch("decScale"))
 				}	 
 			}
 		}
