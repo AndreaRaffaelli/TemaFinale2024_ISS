@@ -1,11 +1,9 @@
-System sprint0
+System sprintzero
 
 //Context ctxRobot  ip [host="localhost" port=8001] 
 //Context ctxServiceArea  ip [host="localhost" port=8001] 
 //Context ctxWasteStorage  ip [host="localhost" port=8001] 
 //Context ctxAshStorage   ip [host="localhost" port=8001] 
-
-
 
 Dispatch sonarUpdate: sonarUpdate(X)
 Dispatch scaleUpdate: scaleUpdate(X)
@@ -25,14 +23,9 @@ Dispatch depositRP: depositRP(X)
 
 Dispatch addAsh: addAsh(X)
 
+Context ctxlocale   ip [host="localhost" port=8020] 
 
-
-
-Context ctxLocale   ip [host="localhost" port=8001] 
-
-
-
-QActor wis context ctxLocale{ 
+QActor wis context ctxlocale{ 
 	[#
 		var ws_status = 0;
 		var as_status = 0;
@@ -40,12 +33,11 @@ QActor wis context ctxLocale{
 		var robotWait = true;
 	#]
 	
-	
 	State s0 initial{
+		printCurrentMessage
+		delay 500
 		observeResource sonar msgid sonarUpdate
 		observeResource wastestorage msgid scaleUpdate
-		
-		
 	}
 	Goto idle
 	
@@ -105,8 +97,8 @@ QActor wis context ctxLocale{
 
 
 // In oprobot è da implementare gestione posizione del robot x gui
-QActor oprobot context ctxLocale{ 
-	State home initial{}
+QActor oprobot context ctxlocale{ 
+	State home initial{printCurrentMessage}
 	Transition t0
 		whenMsg robotStart -> start
 		whenEvent burnEnd -> gatheringAsh		// inc segnala fine combustione
@@ -129,11 +121,11 @@ QActor oprobot context ctxLocale{
 }
 
 
-QActor incinerator context ctxLocale{ 
+QActor incinerator context ctxlocale{ 
 	[#
 			val BTIME = 3000L;
 	#]
-	State s0 initial{}
+	State s0 initial{printCurrentMessage}
 	Transition t0
 		whenMsg burnStart -> start
 		
@@ -148,7 +140,7 @@ QActor incinerator context ctxLocale{
 
 
 
-QActor sonar context ctxLocale{ 	// Manca update resource
+QActor sonar context ctxlocale{ 	// Manca update resource
 	[# 
 		var as_status = 0
 	#]
@@ -195,15 +187,12 @@ QActor sonar context ctxLocale{ 	// Manca update resource
 
 
 
-QActor wastestorage context ctxLocale{ 
+QActor wastestorage context ctxlocale{ 
 	[#
 			var w = 0;
 			
 		#]
-	State s0 initial{
-		printCurrentMessage
-		
-	}
+	State s0 initial{ printCurrentMessage }
 	Transition t0
 		whenTime 4000 -> loadScale
 		whenMsg decScale -> unloadScale
@@ -235,7 +224,7 @@ QActor wastestorage context ctxLocale{
 
 
 
-QActor monitoringdevice context ctxLocale{ 
+QActor monitoringdevice context ctxlocale{ 
 	[#
 			var led = 0;
 			/* 
@@ -244,7 +233,9 @@ QActor monitoringdevice context ctxLocale{
 			 * led= 2	blink
 			 * */
 		#]
-	State s0 initial{}
+	State s0 initial{
+		printCurrentMessage
+	}
 	Transition t0
 		whenMsg ledOn -> turnOnLed
 		whenMsg ledOff -> turnOffLed
