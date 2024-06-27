@@ -9,6 +9,7 @@ Dispatch sonarUpdate: sonarUpdate(X)
 Dispatch scaleUpdate: scaleUpdate(X)
 
 Dispatch robotStart: robotStart(X)
+Dispatch robotUpdate: robotUpdate(X) //<--- nuovo
 
 Dispatch burnStart: burnStart(X)
 Event burnEnd: burnEnd(X)
@@ -31,13 +32,14 @@ QActor wis context ctxlocale{
 		var as_status = 0;
 		var inc_status= false;
 		var robotWait = true;
+		val DLIMIT = 3; //ipotetico
 	#]
 	
 	State s0 initial{
 		printCurrentMessage
 		delay 500
-		observeResource sonar msgid sonarUpdate
-		observeResource wastestorage msgid scaleUpdate
+//		observeResource sonar msgid sonarUpdate
+//		observeResource wastestorage msgid scaleUpdate
 	}
 	Goto idle
 	//
@@ -45,22 +47,23 @@ QActor wis context ctxlocale{
 	Transition t0
 		whenMsg sonarUpdate -> sonarHandler
 		whenMsg scaleUpdate -> scaleHandler
+		whenMsg robotUpdate -> robotHandler
 		whenMsg depositRP -> startInc
 		whenEvent burnEnd -> stopInc
 		
 	State startInc{
 		forward incinerator -m burnStart : burnStart( parti )
 		[# inc_status=true #]
-		forward monitoringdevice -m ledOn : ledOn( parti )
-		
+		forward monitoringdevice -m ledOn : ledOn( parti )	
 	}
+	Goto controllo
 	
 	State stopInc{
 		[# inc_status=false #]
-		forward monitoringdevice -m ledOff : ledOff( stop )
-		
+		forward monitoringdevice -m ledOff : ledOff( stop )	
 	}
-		
+	Goto controllo
+	
 	State sonarHandler {
 		onMsg( sonarUpdate:sonarUpdate(X)){
 			[# as_status = payloadArg(0).toInt() #]
@@ -70,6 +73,7 @@ QActor wis context ctxlocale{
 	Goto controllo
 	
 	State scaleHandler {
+		printCurrentMessage
 		onMsg( scaleUpdate:scaleUpdate(X)){
 			[# ws_status = payloadArg(0).toInt() #]
 			println("($name) scalehandler: $ws_status") color blue	
@@ -77,10 +81,22 @@ QActor wis context ctxlocale{
 	}
 	Goto controllo
 	
+	State robotHandler {//<--- nuovo
+		onMsg( robotUpdate:robotUpdate(X)){
+			[# 
+			var pl = payloadArg(0)
+			if(pl.equals("robotWait")){
+				robotWait=true;
+			}
+			#]
+			println("($name) robotUpdate: $pl") color blue	
+		}
+	}
+	Goto controllo
 	
 	State controllo {
 		[#
-			if(ws_status>0 && as_status>0 && inc_status === false && robotWait === true){
+			if(ws_status>0 && as_status< DLIMIT && inc_status === false && robotWait === true){
 				#]
 				forward oprobot -m robotStart : robotStart( parti )
 				println("($name) controllo: condizioni corrette")
@@ -98,24 +114,32 @@ QActor wis context ctxlocale{
 
 // In oprobot è da implementare gestione posizione del robot x gui
 QActor oprobot context ctxlocale{ 
-	State home initial{printCurrentMessage}
+	State home initial{
+		println("($name): home") color magenta 
+	}
 	Transition t0
 		whenMsg robotStart -> start
 		whenEvent burnEnd -> gatheringAsh		// inc segnala fine combustione
 		
 	State start{
+		println("($name): start") color magenta 
 		delay 2000			// Si sposta alla porta di wast storage			
+		println("($name): carico RP") color magenta 
 		forward wastestorage -m decScale : decScale( decrementa_bilancia ) 	// Svuotiamo il waste storage
 		delay 3000 // Va all'inc
+		println("($name): scarico RP") color magenta 
 		forward wis -m depositRP : depositRP( scaricoRP ) 	// Svuotiamo il waste storage
 		delay 2000 // va in home
 	}
 	Goto home
 	
 	State gatheringAsh{
+		println("($name): carico ash") color magenta 
 		delay 4000 // andiamo porta raccolta ash e scarichiamo nella porta di ashout
+		println("($name): scarico ash") color magenta 
 		forward sonar -m addAsh : addAsh( incrementoAsh ) // simuliamo comportamento del sonar: aggiunta polvere
 		delay 2000 // torna in home
+		forward wis -m robotUpdate : robotUpdate(robotWait)	//finita routine
 	}
 	Goto home
 }
@@ -130,7 +154,9 @@ QActor incinerator context ctxlocale{
 		whenMsg burnStart -> start
 		
 	State start{
+		println("($name): Inizio bruciatura") color red
 		delay 3000
+		println("($name): Fine bruciatura") color black
 		emit burnEnd : burnEnd( stop )
 	}
 	Transition t0
@@ -142,7 +168,8 @@ QActor incinerator context ctxlocale{
 
 QActor sonar context ctxlocale{ 	// Manca update resource
 	[# 
-		var as_status = 0
+		var As_status = 0
+		val DLIMIT = 3
 	#]
 	State s0 initial{
 		printCurrentMessage
@@ -152,9 +179,10 @@ QActor sonar context ctxlocale{ 	// Manca update resource
 		whenMsg addAsh -> ashUpdate
 		
 	State ashUpdate{
+//		printCurrentMessage
 		[# 
-			as_status =  as_status +1
-			if(as_status>4){
+			As_status =  As_status +1
+			if(As_status>DLIMIT){
 				#]
 				forward monitoringdevice -m ledBlink : ledBlink( lampeggia )
 				[#
@@ -164,19 +192,21 @@ QActor sonar context ctxlocale{ 	// Manca update resource
 				[#
 			}
 			#]
-			updateResource [#  "sonarUpdate($as_status)" #]
+//			updateResource [#  "sonarUpdate($As_status)" #]
+			forward wis -m sonarUpdate : sonarUpdate($As_status)
 	}
 	Transition t0
 		whenTime 3000 -> emptyStorage
 		whenMsg addAsh -> ashUpdate
 		
 	State emptyStorage{
+		println("($name): Svuotato contenitore ceneri") color cyan
 		[# 
-			as_status = 0
+			As_status = 0
 		#]
-		
 		forward monitoringdevice -m ledBlink : ledBlink( lampeggia )
-		updateResource [#  "sonarUpdate($as_status)" #]
+//		updateResource [#  "sonarUpdate($as_status)" #]
+		forward wis -m sonarUpdate : sonarUpdate($As_status)
 	}
 	Transition t0
 		whenTime 3000 -> emptyStorage
@@ -189,7 +219,7 @@ QActor sonar context ctxlocale{ 	// Manca update resource
 
 QActor wastestorage context ctxlocale{ 
 	[#
-			var w = 0;
+			var W = 0;
 			
 		#]
 	State s0 initial{ printCurrentMessage }
@@ -200,10 +230,11 @@ QActor wastestorage context ctxlocale{
 	
 	State loadScale{
 		[#
-			w = w +1;
+			W = W +1;
 			
 		#]
-		updateResource [#  "scaleUpdate($w)" #]
+//		updateResource [#  "scaleUpdate($W)" #]
+		forward wis -m scaleUpdate : scaleUpdate($W)
 	}
 	Transition t0
 		whenTime 4000 -> loadScale
@@ -211,10 +242,11 @@ QActor wastestorage context ctxlocale{
 	
 	State unloadScale{
 		[#
-			w = w -1;
+			W = W -1;
 			
 		#]
-		updateResource [#  "scaleUpdate($w)" #]
+//		updateResource [#  "scaleUpdate($W)" #]
+		forward wis -m scaleUpdate : scaleUpdate($W)
 	}
 	Transition t0
 		whenTime 4000 -> loadScale

@@ -31,8 +31,8 @@ QActor wis context testctx{
 	State s0 initial{
 		printCurrentMessage
 		delay 500
-		observeResource sonar msgid sonarUpdate
-		observeResource wastestorage msgid scaleUpdate
+//		observeResource sonar msgid sonarUpdate
+//		observeResource wastestorage msgid scaleUpdate
 	}
 	Goto idle
 	
@@ -71,7 +71,6 @@ QActor wis context testctx{
 			[# ws_status = payloadArg(0).toInt() #]
 			println("($name) scalehandler: $ws_status") color blue	
 		}	
-		println("here")
 	}
 	Goto controllo
 	
@@ -84,9 +83,7 @@ QActor wis context testctx{
 				println("($name) controllo: condizioni corrette")
 				[#
 				robotWait=false;
-			}
-			#
-		]
+			} 	#]
 	}
 	Goto idle
 }
@@ -101,18 +98,24 @@ QActor oprobot context testctx {
 		[#System.exit(0)#]
 	}
 }
-
+//
 QActor wastestorage context testctx {
+		[# val W=1 #]
 	State s0 initial{
-		
+		printCurrentMessage
+		delay 500
+		forward wis -m scaleUpdate:scaleUpdate($W)
 	}
 }
+//		updateResource [#"scaleUpdate($w)"#]//	
+
 QActor sonar context testctx {
-	[# val as_status=1 #]
+	[# val As_status=1 #]
 	State s0 initial{
 		printCurrentMessage
 		delay 600
-		updateResource [#  "$name, $as_status"#]
+		//updateResource [#"sonarUpdate($as_status)"#]	
+		forward wis -m sonarUpdate: sonarUpdate($As_status)
 	}
 }
 
@@ -123,10 +126,7 @@ QActor incinerator context testctx {
 }
 
 QActor monitoringdevice context testctx {
-	[# val w=1 #]
 	State s0 initial{
-		printCurrentMessage
-		delay 500
-		updateResource [#  "$name, $w" #]	
+		
 	}
 }
