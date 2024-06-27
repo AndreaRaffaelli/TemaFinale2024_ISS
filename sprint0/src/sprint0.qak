@@ -40,7 +40,7 @@ QActor wis context ctxlocale{
 		observeResource wastestorage msgid scaleUpdate
 	}
 	Goto idle
-	
+	//
 	State idle {}
 	Transition t0
 		whenMsg sonarUpdate -> sonarHandler

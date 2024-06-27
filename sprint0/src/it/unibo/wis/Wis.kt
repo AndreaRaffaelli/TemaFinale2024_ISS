@@ -29,8 +29,11 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						observeResource("localhost","8001","ctxLocale","sonar","sonarUpdate")
-						observeResource("localhost","8001","ctxLocale","wastestorage","scaleUpdate")
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						delay(500) 
+						observeResource("localhost","8020","ctxlocale","sonar","sonarUpdate")
+						observeResource("localhost","8020","ctxlocale","wastestorage","scaleUpdate")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

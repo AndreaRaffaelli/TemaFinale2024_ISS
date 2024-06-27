@@ -27,13 +27,21 @@ with Diagram('sprint0Arch', show=False, outformat='png', graph_attr=graphattr) a
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxLocale', graph_attr=nodeattr):
           wis=Custom('wis','./qakicons/symActorSmall.png')
-          sonar=Custom('sonar','./qakicons/symActorSmall.png')
-          wastestorage=Custom('wastestorage','./qakicons/symActorSmall.png')
           oprobot=Custom('oprobot','./qakicons/symActorSmall.png')
           incinerator=Custom('incinerator','./qakicons/symActorSmall.png')
-          mdevice=Custom('mdevice','./qakicons/symActorSmall.png')
-     sys >> Edge( label='sonarUpdate', **evattr, decorate='true', fontcolor='darkgreen') >> wis
-     sys >> Edge( label='scaleUpdate', **evattr, decorate='true', fontcolor='darkgreen') >> wis
-     wastestorage >> Edge(color='blue', style='solid',  decorate='true', label='<scaleUpdate &nbsp; >',  fontcolor='blue') >> wis
+          sonar=Custom('sonar','./qakicons/symActorSmall.png')
+          wastestorage=Custom('wastestorage','./qakicons/symActorSmall.png')
+          monitoringdevice=Custom('monitoringdevice','./qakicons/symActorSmall.png')
+     sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> wis
+     sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> oprobot
+     incinerator >> Edge( label='burnEnd', **eventedgeattr, decorate='true', fontcolor='red') >> sys
      sonar >> Edge(color='blue', style='solid',  decorate='true', label='<sonarUpdate &nbsp; >',  fontcolor='blue') >> wis
+     oprobot >> Edge(color='blue', style='solid',  decorate='true', label='<depositRP &nbsp; >',  fontcolor='blue') >> wis
+     oprobot >> Edge(color='blue', style='solid',  decorate='true', label='<addAsh &nbsp; >',  fontcolor='blue') >> sonar
+     wis >> Edge(color='blue', style='solid',  decorate='true', label='<ledOn &nbsp; ledOff &nbsp; >',  fontcolor='blue') >> monitoringdevice
+     wis >> Edge(color='blue', style='solid',  decorate='true', label='<burnStart &nbsp; >',  fontcolor='blue') >> incinerator
+     sonar >> Edge(color='blue', style='solid',  decorate='true', label='<ledBlink &nbsp; ledOff &nbsp; >',  fontcolor='blue') >> monitoringdevice
+     wastestorage >> Edge(color='blue', style='solid',  decorate='true', label='<scaleUpdate &nbsp; >',  fontcolor='blue') >> wis
+     wis >> Edge(color='blue', style='solid',  decorate='true', label='<robotStart &nbsp; >',  fontcolor='blue') >> oprobot
+     oprobot >> Edge(color='blue', style='solid',  decorate='true', label='<decScale &nbsp; >',  fontcolor='blue') >> wastestorage
 diag
