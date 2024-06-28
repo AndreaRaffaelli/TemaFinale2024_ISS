@@ -476,7 +476,14 @@
 					nell'<strong>AshStorage</strong>.</li>
 				<li><strong>WIS</strong> aggiorna lo stato del sistema sulla <strong>SSGUI</strong>.</li>
 			</ol>
+			<h3>Architettura del modello simulato:</h3>
+			<!-- Immagine messa al centro-->
+			<div style="text-align:center;">
+				<img src="./img/ModelloSimulato.png" alt="ModelloSimulato" width="60%" height="60%">
+			</div>
+			
 		</div>
+
 	</div>
 
 	<!-- <h2>Problem analysis</h2> -->
@@ -535,7 +542,7 @@
 					<strong>Test Case 4.1:</strong> Verificare che WIS invii comandi di inizio lavoro al OpRobot quando:
 					<ul>
 						<li>WasteStorage non è vuoto.</li>
-						<li>AshStorage non è vuoto.</li>
+						<li>AshStorage non è pieno (< DLIMIT).</li>
 						<li>L'inceneritore non è pieno.</li>
 					</ul>
 					<strong>Aspettativa:</strong> WIS invia correttamente i comandi al OpRobot.
@@ -549,7 +556,7 @@
 	</li>
 	<li>
 		Quali sono i valori del sonar da interpretare come totalmente vuoto o pieno? (sonar capisce che e’ vuoto
-		totalmente, e’ un messaggio esterno, oppure appena sotto DLImIT considerato vuoto?)
+		totalmente, e’ un messaggio esterno, oppure appena sotto DLIMIT considerato vuoto?)
 	</li>
 	<li>
 		Quanto e` “approssimamente 0” nella bilancia?
