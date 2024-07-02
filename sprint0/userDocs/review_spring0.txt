@@ -1,0 +1,37 @@
+Segnali -> solo quelli da testo
+
+Valori simbolici non formali. LW e LH 
+Mettere foto => mettere assi cartesiani 
+Mettere Mappa!!
+
+WasteStorage non e' un attore, (ne un contesto?).
+Waste Storage non esiste dal punto di vista del software(?). PEr catturare al meglio le proprieta' della bilancia la possiamo modellare come POJO -> Se c'e' o non c'e' >1 RP. La bilancia viene detto che viene progettata nell'analisi del problema!! Bilancia e Sonar devono essere appositamente progettati e implementati, quindi possono stare in qualsiasi contesto e fatti in qualsiasi modo.
+La bilancia da' un peso dal quale puoi inferire gli RP. Pojo: GET(value)  GETRPnumber().
+Sonar non e' un attore e non comunica! E' usato per misurare e non parla! sonar GEtvalue!!
+Il wis fa polling sulla bilancia e sul sonar!
+ASH Storage e' un contesto perche' il sonar e' un raspberry!!! (forse meglio cambiargli nome)
+
+Incenirator e' un attore perche' comunica con messaggi, non e' un pojo perche' essi non hanno la capacita' di comunicare.
+
+Attivazione dell'incenirator non e' spiegato da quale entita' viene! L'incenerator ha un accensione !!! LA bruciatura viene attivata in automatico quando viene riempito.
+
+Il DDr viene fornito quindi ha il suo contesto, ma non e' detto che sia nello stesso contesto. L'oprobot non maschera il DDRrobot. L'oprobot deve relazionarsi con esso!
+Il ddr robot e' il basic robot 24 -> un attore mettere il link alla sua pagina! e' un requisito!
+
+No modello eseguibile! 
+
+Gui entita' che esiste nel sistema!
+
+Sprint 1 analisi di alcuni requisiti
+-> WIS 
+-> Oprobot
+-> Inicenirator
+
+Mock object
+Componente software GUI -> e' un entita' attiva o no? Vediamo che dicono gli altri gruppi bho io metterei un adapter. WIS si deve mostrare e presentarsi. posso anche scrivere che la gui e' gia' dentro WIS (tipo pojo). 
+
+test plans
+Metto un rp dentro l'area
+-> inc siaccende
+-> dentro ash storage c'e' della cenere
+
