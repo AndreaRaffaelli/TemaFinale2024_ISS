@@ -1,0 +1,36 @@
+- cambia titolo pagina
+- la service area in base ai requisiti l'area può essere modellata come un rettangolo in un piano euclideo
+- cos'è lw lh?
+- definisci coordinate dell'inceneritore
+- dobbiamo dire alla macchina cos'è il wastestorage, come lo modelliamo?
+- inc. pojo o attore? Un pojo non ha intrinsecamente la capacità di riceve ed emettere informazioni al mondo esterno 
+- non è specificato che il wis attiva l'inceneritore -> non è un requisito
+
+ws come pojo: voglio catturare il numero di rp che contiene
+- wis deve sapere info di scale e sonar, ma da requisiti non c'è scritto come sono progettati e implementati. (analisi e progettazioni, non analisi dei requisiti)
+
+
+Modello: (non sono requisiti -> per lui è da astenersi dal modellarli)
+Bilancia pojo con i seguenti metodi:
+getValue o getRPNumber
+Per il sonar polling con get (solo in fase di progettazione possiamo assumere che siano osservabili) anche lui è un pojo
+
+ricnontrolla contesti:
+- monitoring device è ok che abbia un contesto tutto suo: è un rasp
+unico contesto è quello del ddrrobot
+
+
+il ddrobt (e il suo software) è il basic robot: è un'entità attiva che lavora nel suo contesto (E' DA REQUISITO!)
+
+
+oprobot non siamo così sicuri che sia un pojo: può avere attività asincrone
+
+terminata l'analisi dei requisiti diciamo quali sono i principali requisiti da approfondire nell'analisi del problema dei futuri sprint
+
+modello dallo sprint1, dove definisco quali requisiti copriamo. 
+	S1: primi requisiti wis oprobot e inc
+
+la wis mostra la gui, potrebbe essere un pojo di wis
+
+
+a questo livello fareste test plan funzionale -> Per l'oprobot: metto rp dentro l'area d'ingresso, devo vedere che l'inc. passa da stato attivo e che alla fine c'è più cenere di prima
