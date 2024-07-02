@@ -1,0 +1,55 @@
+System sprintzero
+
+Context ctxrasp  ip [host="localhost" port=8001] 
+
+
+
+QActor monitoringdevice context ctxrasp{ 
+//	[#
+//			var led = 0;
+//			/* 
+//			 * led= 0 	spento
+//			 * led= 1 	acceso
+//			 * led= 2	blink
+//			 * */
+//		#]
+	State s0 initial{
+		printCurrentMessage
+	}
+//	Transition t0
+//		whenMsg ledOn -> turnOnLed
+//		whenMsg ledOff -> turnOffLed
+//		whenMsg ledBlink -> turnBlinkLed
+//		
+//	State turnOnLed{
+//		[#
+//			led = 1;
+//		#]
+//		println ("($name)	Accensione Led") color green
+//	}
+//	Transition t0
+//		whenMsg ledOff -> turnOffLed
+//		whenMsg ledBlink -> turnBlinkLed
+//		
+//	State turnOffLed{
+//		[#
+//			led = 0;
+//		#]
+//		println ("($name)	Spegnimento Led") color red
+//	}
+//	Transition t0
+//		whenMsg ledOn -> turnOnLed
+//		whenMsg ledBlink -> turnBlinkLed
+//	
+//	State turnBlinkLed{
+//		[#
+//			led = 2;
+//		#]
+//		println ("($name)	Lampeggio Led") color yellow
+//	}
+//	Transition t0
+//		whenMsg ledOn -> turnOnLed
+//		whenMsg ledOff -> turnOffLed
+	
+}
+
