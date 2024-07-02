@@ -347,6 +347,10 @@
 			<ul>
 				<li>
 					Service Area: Area rettangolare delimitato da bordi con vertici in (0, 0) (LW, 0) (0, LH) (LW,LH)
+					<ul>
+						<li> Dove A,B, C,D,OA,OB,OC,OD sono dei punti. </li>
+						<li> LH, LW, AX, HX, HY sono quote</li>
+					</ul>
 				</li>
 				<li> WasteIn: segmento in (0, LH), (WX, LH) </li>
 				<li> AshOut: segmento in (AX, LH), (LW, LH)</li>
@@ -355,13 +359,38 @@
 				<li> BurnIn: segmento con vertici in A,B </li>
 				<li> BurnOut: segmento con vertici in B,C </li>
 				<li> Ostacolo: area non percorribile in OA, OB, OC, OD
-					<ul>
-						<li> Dove A,B, C,D,OA,OB,OC,OD sono dei punti. </li>
-					</ul>
 				</li>
 			</ul>
+			<img src="./img/mappaISS.png" alt="Map">
 			<h3>Modello Strutturale e Comportamentale:</h3>
 			<ul>
+				<li>
+				<li>
+					<b>DDR Robot:</b> <br>
+					<ul>
+						<li>Il committente ha specificato che il software di controllo e' BasicRobot24</li>
+						<!-- <li>Riceve messaggi con coordinate</li> -->
+					</ul>
+				</li>
+				<li>
+					<b>BasicRobot24:</b> <br>
+					<ul>
+						<li>Riceve messaggi con coordinate</li>
+						<li>Muove il robot fisico o virtuale</li>
+					</ul>
+				</li>
+				<b>OpRobot</b>
+				<ul>
+					<li>DDR robot che agisce come attuatore fisico.
+					</li>
+					<li>Può spostarsi tra diverse posizioni (HOME, WASTEIN, BURNIN, BURNOUT, ASHOUT).</li>
+					<li>Carica da WASTEIN gli RP e Scarica in BURNIN </li>
+					<li>Torna in HOME quando inceneritore è in fase di burn</li>
+					<li>Carica da BURNout e scarica in ASHOUT</li>
+					<li>Controllato da WIS</li>
+					<li>Controlla il DDR Robot --> Invia istruzioni al BasicRobot24</li>
+				</ul>
+				</li>
 				<li>
 					<b>Inceneritore:</b> <br>
 					<ul>
@@ -370,39 +399,6 @@
 						<li>Brucia un RP alla volta in BTIME secondi.</li>
 						<li>Invia un segnale acustico alla fine del processo di incenerimento.</li>
 						<li>Le ceneri sono estratte attraverso il BURNOUT port. </li>
-					</ul>
-				</li>
-				<li>
-					<b>MonitoringDevice:</b> <br>
-					<ul>
-						<li>Raggiunge le posizioni delle porte WASTEIN, BURNIN, BURNOUT, ASHOUT e HOME.</li>
-						<li>Carica gli RP dal WASTEIN e li scarica in BURNIN.</li>
-						<li>Torna a HOME durante la fase di bruciatura dell'inceneritore e quando non c'e` lavoro da
-							fare.</li>
-						<li>Carica le ceneri da BURNOUT e le scarica in ASHOUT.</li>
-					</ul>
-				</li>
-				<li>
-					<b>WasteStorage</b>
-					<ul>
-						<li>Misura il peso totale dei rifiuti presenti nel Waste Storage attraverso il weighing device
-							(scale).</li>
-						<li>Dotato di un dispositivo di pesatura (Scale) per misurare il peso totale dei RP.</li>
-						<li>Fornisce informazione sul peso degli RP attualmente contenuti in Waste Storage. </li>
-
-					</ul>
-				</li>
-				<li>
-					<b>OpRobot</b>
-					<ul>
-						<li>DDR robot che agisce come attuatore fisico.
-						</li>
-						<li>Può spostarsi tra diverse posizioni (HOME, WASTEIN, BURNIN, BURNOUT, ASHOUT).</li>
-						<li>Carica da WASTEIN gli RP e Scarica in BURNIN </li>
-						<li>Torna in HOME quando inceneritore è in fase di burn</li>
-						<li>Carica da BURNout e scarica in ASHOUT</li>
-						<li>Controllato da WIS</li>
-						<li>Controlla il DDR Robot</li>
 					</ul>
 				</li>
 				<li>
@@ -419,52 +415,56 @@
 							</ul>
 						</li>
 						<li>
+							Ha una Gui al suo interno per visualizzare lo stato del sistema.
+						</li>
+						<li>
 							Indirizza il robot.
 						</li>
 					</ul>
+
+				<li>
+					<b>Scale/Bilancia</b>
+					<ul>
+						<li>Misura il peso totale dei rifiuti presenti nel Waste Storage.</li>
+						<li>Fornisce informazione sul peso degli RP attualmente contenuti in Waste Storage.</li>
+						<li>E' un entita' passiva, Interfaccia che espone i seguenti metodi:
+							<ul>
+								<li> GetValue(): restituisce il peso attuale.</li>
+								<li> GetRpNumber(): restituisce il numero di RP.</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>Sonar</b>
+					<ul>
+						<li>Misura il livello delle ceneri nel AshStorage.</li>
+						<li>E' un entita' passiva, Interfaccia che espone i seguenti metodi:
+							<ul>
+								<li> GetDistance(): restituisce la distanza misurata.</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>MonitoringDevice:</b> <br>
+					<ul>
+						<li>Controlla il Led</li>
+						<li>Controlla il Sonar</li>
+						<li>E' implementato dal Raspberry</li>
+					</ul>
+				</li>
 				</li>
 			</ul>
 			<div style="text-align:center;">
 				<img src="./img/ModelloEntita.png" alt="ModelloEntita" width="30%" height="30%">
 			</div>
-			<h3>Modello delle Interazioni:</h3>
-			<ol>
-				<li>WIS -> OpRobot:<br>
-					<strong>Command:</strong> Invia comando al OpRobot per l’inizio della routine di combustione.
-				</li>
-				<li>Incinerator -> WIS, OpRobot:<br>
-					<strong>Status Signal:</strong> Invia messaggi di status al WIS (aggiornamento facade e
-					MonitoringDevice) e al robot (deve scaricare ceneri)
-				</li>
-				<li>WIS -> Incinerator:<br>
-					<strong>Activation Command:</strong> Invia comandi di attivazione all'Incinerator per iniziare il
-					processo di bruciatura.
-				</li>
-				<li>MonitoringDevice -> WIS:<br>
-					<strong>Sonar Data:</strong> Invia i dati del Sonar per determinare il livello delle ceneri
-					nell'AshStorage.
-				</li>
-				<li>WIS -> MonitoringDevice:<br>
-					<strong>LED Status Command:</strong> Invia comandi al MonitoringDevice per attivare/disattivare il
-					LED per segnalare lo stato dell'Incinerator.
-				</li>
-				<li>WIS -> ServiceStatusGUI (SSGUI):<br>
-					<strong>Update GUI:</strong> Invia aggiornamenti dello stato del WasteStorage, AshStorage,
-					Incinerator e OpRobot per la visualizzazione sulla SSGUI.
-				</li>
-				<li>OpRobot -> ServiceStatusGUI (SSGUI):<br>
-					<strong>Update GUI:</strong> Invia aggiornamenti dello stato dell’OpRobot, per la visualizzazione
-					sulla SSGUI.
-				</li>
-				<li>WasteStorage -> WIS<br>
-					<strong>Scale Data:</strong> Invia aggiornamenti degli RP da bruciare
-				</li>
-			</ol>
-			<h3>Modello Architettura dai Requisiti</h3>
+			?
+			<!-- <h3>Modello Architettura dai Requisiti</h3>
 			<div style="text-align:center;">
 				<img src="./img/ModelloRequisiti.png" alt="ModelloRequisiti" width="60%" height="60%">
-			</div>
-			<h3>Esempio Diagramma di Sequenza:</h3>
+			</div> -->
+			<!-- <h3>Esempio Diagramma di Sequenza:</h3>
 			<ol>
 				<li><strong>WIS</strong> legge il peso totale dei RP nel <strong>Scale WasteStorage</strong>.</li>
 				<li><strong>Sonar</strong> invia la distanza misurata nel <strong>AshStorage</strong> a
@@ -482,20 +482,20 @@
 				<li><strong>OpRobot</strong> raccoglie le ceneri dal <strong>BURNOUT port</strong> e le deposita
 					nell'<strong>AshStorage</strong>.</li>
 				<li><strong>WIS</strong> aggiorna lo stato del sistema sulla <strong>SSGUI</strong>.</li>
-			</ol>
-			<h3>Architettura del modello simulato:</h3>
+			</ol> -->
+			<!-- <h3>Architettura del modello simulato:</h3>
 			<!-- Immagine messa al centro-->
 			<div style="text-align:center;">
 				<img src="./img/ModelloSimulato.png" alt="ModelloSimulato" width="60%" height="60%">
-			</div>
-			
+			</div> -->
+
 		</div>
 
 	</div>
 
 	<!-- <h2>Problem analysis</h2> -->
 	<h2>Test plans</h2>
-	<ol>
+	<!-- <ol>
 		<li>
 			<strong>Monitoring Device</strong>
 			<ul>
@@ -556,31 +556,29 @@
 				</li>
 			</ul>
 		</li>
-	</ol>
+	</ol> -->
+	Test Funzionali:
+	<li>
+		<strong>Test Case:</strong><br>
+		<ol>
+			<li>Contenitori Scarichi</li>
+			<li>Incenirator si accende</li>
+			<li>Viene caricato RP in WasteStorage</li>
+			<li>Fine Esecuzione AshStorage non e' vuoto</li>
+			<li></li>
+		</ol>
+		<strong>Aspettativa:</strong> WasteStorage e' vuoto, Ash Storage e' stato riempito, il robot ha effettuato il
+		percorso.
+	</li>
 	<h2>Domande per il committente</h2>
-	<li>
-		Sonar e scale sono forniti?
-	</li>
-	<li>
-		Quali sono i valori del sonar da interpretare come totalmente vuoto o pieno? (sonar capisce che e’ vuoto
-		totalmente, e’ un messaggio esterno, oppure appena sotto DLIMIT considerato vuoto?)
-	</li>
-	<li>
-		Quanto e` “approssimamente 0” nella bilancia?
-	</li>
-	<li>
-		L’inceneritore emana un segnale percepibile da OpRobot e WIS. A che serve farlo ricevere ad OpRobot se e`
-		controllato da WIS? (specifica iniziale: requires a software system service (WIS) that controls a robot (called
-		OpRobot))
-	</li>
-	<li>
-		Cosa accadrebbe se l’inceneritore venisse acceso senza RP?
-	</li>
-	<li>
-		Dobbiamo gestire la casistica per cui l’inceneritore potrebbe essere gia` pieno e oprobot NON puo` caricare RP,
-		oppure l’inceneritore ha ash e non puo` essere acceso fino a quando non e` scaricato?
-	</li>
-
+	<ul>
+		<li>
+			L’inceneritore emana un segnale percepibile da OpRobot e WIS. A che serve farlo ricevere ad OpRobot se e`
+			controllato da WIS? (specifica iniziale: requires a software system service (WIS) that controls a robot
+			(called
+			OpRobot))
+		</li>
+	</ul>
 
 
 
@@ -612,11 +610,14 @@
 
 	<div style="background-color:rgba(86, 56, 253, 0.9); width:60%;text-align:left;color:white">
 		<div>By Andrea Raffaelli email: andrea.raffaelli2@studio.unibo.it
-			<img src="./img/araffaelli.jpg" alt="cyberandrea" width="15%" height="15%"></div> <br>
-			<div>By Edoardo De Divitiis email: edoardo.dedivitiis@studio.unibo.it
-			<img src="./img/edoardoFoto.jpg" alt="mbot" width="15%" height="15%"></div> <br>
-			<div>By Davide Moricoli email: davide.moricoli@studio.unibo.it
-			<img src="./img/davideFoto.jpeg" alt="mbot" width="15%" height="15%"></div> <br>
+			<img src="./img/araffaelli.jpg" alt="cyberandrea" width="15%" height="15%">
+		</div> <br>
+		<div>By Edoardo De Divitiis email: edoardo.dedivitiis@studio.unibo.it
+			<img src="./img/edoardoFoto.jpg" alt="mbot" width="15%" height="15%">
+		</div> <br>
+		<div>By Davide Moricoli email: davide.moricoli@studio.unibo.it
+			<img src="./img/davideFoto.jpeg" alt="mbot" width="15%" height="15%">
+		</div> <br>
 		GIT repo: https://github.com/AndreaRaffaelli/TemaFinale2024_ISS <br>
 	</div>
 </body>
