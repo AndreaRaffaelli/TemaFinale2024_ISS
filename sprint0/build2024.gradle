@@ -147,7 +147,7 @@ eclipse {
 
 application {
     //Define the main class for the application.
-    mainClassName    = 'it.unibo.ctxlocale.MainCtxlocaleKt'
+    mainClassName    = 'it.unibo.ctxservicearea.MainCtxserviceareaKt'
 }
  
  jar {
@@ -183,7 +183,7 @@ task run0(type: JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
-    main = 'it.unibo.ctxlocale.MainCtxlocaleKt'
+    main = 'it.unibo.ctxservicearea.MainCtxserviceareaKt'
 }
 
 /*

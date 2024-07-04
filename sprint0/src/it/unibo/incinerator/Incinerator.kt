@@ -33,18 +33,15 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t06",targetState="start",cond=whenDispatch("burnStart"))
 				}	 
 				state("start") { //this:State
 					action { //it:State
-						delay(3000) 
 						emit("burnEnd", "burnEnd(stop)" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t07",targetState="start",cond=whenDispatch("burnStart"))
 				}	 
 			}
 		}

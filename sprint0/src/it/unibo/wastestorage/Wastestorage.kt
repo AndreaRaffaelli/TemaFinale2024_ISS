@@ -22,7 +22,7 @@ class Wastestorage ( name: String, scope: CoroutineScope, isconfined: Boolean=fa
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		
-					var w = 0;
+					var W = 0;
 					
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
@@ -36,16 +36,15 @@ class Wastestorage ( name: String, scope: CoroutineScope, isconfined: Boolean=fa
 				 	 		stateTimer = TimerActor("timer_s0", 
 				 	 					  scope, context!!, "local_tout_"+name+"_s0", 4000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t014",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_s0"))   
-					transition(edgeName="t015",targetState="unloadScale",cond=whenDispatch("decScale"))
+					 transition(edgeName="t015",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_s0"))   
+					transition(edgeName="t016",targetState="unloadScale",cond=whenDispatch("decScale"))
 				}	 
 				state("loadScale") { //this:State
 					action { //it:State
 						
-									w = w +1;
+									W = W +1;
 									
-						updateResourceRep(  "scaleUpdate($w)"  
-						)
+						forward("scaleUpdate", "scaleUpdate($W)" ,"wis" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -53,16 +52,15 @@ class Wastestorage ( name: String, scope: CoroutineScope, isconfined: Boolean=fa
 				 	 		stateTimer = TimerActor("timer_loadScale", 
 				 	 					  scope, context!!, "local_tout_"+name+"_loadScale", 4000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t016",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_loadScale"))   
-					transition(edgeName="t017",targetState="unloadScale",cond=whenDispatch("decScale"))
+					 transition(edgeName="t017",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_loadScale"))   
+					transition(edgeName="t018",targetState="unloadScale",cond=whenDispatch("decScale"))
 				}	 
 				state("unloadScale") { //this:State
 					action { //it:State
 						
-									w = w -1;
+									W = W -1;
 									
-						updateResourceRep(  "scaleUpdate($w)"  
-						)
+						forward("scaleUpdate", "scaleUpdate($W)" ,"wis" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -70,8 +68,8 @@ class Wastestorage ( name: String, scope: CoroutineScope, isconfined: Boolean=fa
 				 	 		stateTimer = TimerActor("timer_unloadScale", 
 				 	 					  scope, context!!, "local_tout_"+name+"_unloadScale", 4000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t018",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_unloadScale"))   
-					transition(edgeName="t019",targetState="unloadScale",cond=whenDispatch("decScale"))
+					 transition(edgeName="t019",targetState="loadScale",cond=whenTimeout("local_tout_"+name+"_unloadScale"))   
+					transition(edgeName="t020",targetState="unloadScale",cond=whenDispatch("decScale"))
 				}	 
 			}
 		}
