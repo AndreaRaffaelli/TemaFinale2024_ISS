@@ -282,15 +282,16 @@
 		<div>
 			<ol>
 				<li><b>WasteStorage</b>
-<!-- 					<ul>
+					<!-- 					<ul>
 						R1.1: Misurare il peso totale dei rifiuti (RP) presenti nel Waste Storage attraverso il weighing
 						device (scale)
 					</ul> -->
 				</li>
 				<li><b>Monitoring Device</b>
 					<ul>
-<!-- 						<li>R2.1: Misurare il livello delle ceneri nel AshStorage tramite il sonar.</li>
- -->						<li>R2.2: Segnalare lo stato dell'inceneritore e del AshStorage tramite un LED.
+						<!-- 						<li>R2.1: Misurare il livello delle ceneri nel AshStorage tramite il sonar.</li>
+ -->
+						<li>R2.2: Segnalare lo stato dell'inceneritore e del AshStorage tramite un LED.
 							<ul>
 								<li>R2.2.1: Il LED deve essere acceso quando l'inceneritore è in fase di bruciatura.
 								</li>
@@ -302,35 +303,35 @@
 				</li>
 				<li><b>Incinerator</b>
 					<ul>
-						<li>R3.1: Ricevere comando di attivazione per iniziare il processo di bruciatura.</li>
-						<li>R3.2: Bruciare un RP alla volta in un tempo predefinito (BTIME).</li>
-						<li>R3.3: Emanare un segnale (acustico o altro) alla fine del processo di incenerimento.</li>
+						<li>R3.1: Ricevere comando di attivazione per l'accensione</li>
+						<li>R3.2: Inizia processo di bruciatura quando viene inserito un RP</li>
+						<li>R3.3: Bruciare un RP alla volta in un tempo predefinito (BTIME).</li>
+						<li>R3.4: Emanare un segnale (acustico o altro) alla fine del processo di incenerimento.</li>
 					</ul>
 				</li>
 				<li><b>OpRobot</b>
 					<ul>
-						<li>
-							R4.1: Raggiunge la posizione delle porte: WASTEIN, BURNIN, BURNOUT, ASHOUT e della HOME</li>
+						<li>R4.1: Raggiunge la posizione delle porte: WASTEIN, BURNIN, BURNOUT, ASHOUT e della HOME</li>
 						<li>R4.2: Caricare RP dal WASTEIN e scaricare in BURNIN.</li>
 						<li>R4.3: Tornare a HOME durante la fase di bruciatura dell'inceneritore e quando non c’e`
-							lavoro da
-							fare.</li>
+							lavoro da fare.</li>
 						<li>R4.4: Caricare ceneri da BURNOUT e scaricare in ASHOUT.</li>
 					</ul>
 				</li>
 				<li><b>WIS (Waste Incineration System)</b>
 					<ul>
-							<!-- Sicuro nel testo i requisiti richiedono che il wis gestisce l'oprobot? Penso di si ma ricontrolla -->
+						<!-- Sicuro nel testo i requisiti richiedono che il wis gestisce l'oprobot? Penso di si ma ricontrolla -->
 						<li>R5.1: Inviare comandi di inizio lavoro al OpRobot, secondo queste condizioni:
 							<ul>
 								<li>R5.1.1: WasteStorage non e’ vuoto</li>
 								<li>R5.1.2: AshStorage non e’ vuoto</li>
-								<li>R5.1.3: l'inceneritore non e’ pieno</li>
+								<li>R5.1.3: L'inceneritore non e’ pieno</li>
 							</ul>
 						</li>
 						<!-- Questo invece non mi sembra fosse un requisito -->
-<!-- 						<li>R5.2: Inviare comandi al Monitoring Device per attivare/disattivare il LED.</li>
- -->					</ul>
+						<!-- 						<li>R5.2: Inviare comandi al Monitoring Device per attivare/disattivare il LED.</li>
+ -->
+					</ul>
 				</li>
 				<li><b>ServiceStatusGUI (SSGUI)</b>
 					<ul>
@@ -350,18 +351,16 @@
 				<li>
 					Service Area: Area rettangolare delimitato da bordi con vertici in (0, 0) (LW, 0) (0, LH) (LW,LH)
 					<ul>
-						<li> Dove A, B, C, D, OA, OB, OC, OD sono dei punti. </li>
-						<li> LH, LW, AX, HX, HY sono quote</li>
+						<li> Dove A, B, C, D, OA, OB, OC, OD sono dei punti da definire con il committente </li>
+						<li> LH, LW, AX, HX, HY sono quote da definire con il committente </li>
 					</ul>
 				</li>
 				<li> WasteIn: segmento in (0, LH), (WX, LH) </li>
 				<li> AshOut: segmento in (AX, LH), (LW, LH)</li>
-				<li> Home: struttura rettangolare percorribile (0,0) (HX,0) (0, HY) (HX, HY)
-				</li>
+				<li> Home: struttura rettangolare percorribile (0,0) (HX,0) (0, HY) (HX, HY) </li>
 				<li> BurnIn: segmento con vertici in A,B </li>
 				<li> BurnOut: segmento con vertici in B,C </li>
-				<li> Ostacolo: area non percorribile in OA, OB, OC, OD
-				</li>
+				<li> Ostacolo: area non percorribile in OA, OB, OC, OD </li>
 			</ul>
 			<img src="./img/mappaISS.png" alt="Map"><br>
 			<p></p>
@@ -371,14 +370,15 @@
 					<b>DDR Robot:</b> <br>
 					<ul>
 						<li>Il committente ha specificato che il software di controllo e' BasicRobot24</li>
-						<!-- <li>Riceve messaggi con coordinate</li> -->
 					</ul>
 				</li>
 				<li>
 					<b>BasicRobot24:</b> <br>
 					<ul>
 						<li>Riceve messaggi con coordinate</li>
-						<li>Muove il robot fisico o virtuale</li>
+						<li>Muove il robot fisico o virtuale: ha un file di configurazione</li>
+						<li>Il software di controllo risponde ai seguenti messaggi: <a
+								href="./BasicRobot24.html#br24-messaggi">basicRobot24</a><br></li>
 					</ul>
 				</li>
 				<b>OpRobot</b>
@@ -408,7 +408,7 @@
 					<ul>
 						<li>Direttore del sistema
 						</li>
-<!-- 						<li> Legge gli input:
+						<!-- 						<li> Legge gli input:
 							<ul>
 								<li> Riceve il segnale inceneritore</li>
 								<li>Riceve Segnali da waste in</li>
@@ -416,7 +416,8 @@
 								</li>
 							</ul>
 						</li> -->
-						<li>Interagisce mediante polling con WasteStorage e AshStorage al fine di gestire stato della bilanicia e del sonar.</li>
+						<li>Interagisce mediante polling con WasteStorage e AshStorage al fine di gestire stato della
+							bilanicia e del sonar.</li>
 						<li>
 							Ha una Gui al suo interno per visualizzare lo stato del sistema.
 						</li>
@@ -436,6 +437,12 @@
 								<li> GetRpNumber(): restituisce il numero di RP.</li>
 							</ul>
 						</li>
+						<code>
+							public interface Scale { <br>
+								int GetValue(); <br>
+								int GetRpNumber(); <br>
+							} <br>
+						</code>
 					</ul>
 				</li>
 				<li>
@@ -447,6 +454,11 @@
 								<li> GetDistance(): restituisce la distanza misurata.</li>
 							</ul>
 						</li>
+						<code>
+							public interface Sonar { <br>
+								GetDistance(); <br>	
+							} <br>
+						</code>
 					</ul>
 				</li>
 				<li>
