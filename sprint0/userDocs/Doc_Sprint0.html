@@ -437,12 +437,7 @@
 								<li> GetRpNumber(): restituisce il numero di RP.</li>
 							</ul>
 						</li>
-						<code>
-							public interface Scale { <br>
-								int GetValue(); <br>
-								int GetRpNumber(); <br>
-							} <br>
-						</code>
+						<code> public interface Scale { int GetValue(); int GetRpNumber(); } </code>
 					</ul>
 				</li>
 				<li>
@@ -454,19 +449,18 @@
 								<li> GetDistance(): restituisce la distanza misurata.</li>
 							</ul>
 						</li>
-						<code>
-							public interface Sonar { <br>
-								GetDistance(); <br>	
-							} <br>
-						</code>
+						<code> public interface Sonar { GetDistance(); } </code>
 					</ul>
 				</li>
 				<li>
 					<b>MonitoringDevice:</b> <br>
 					<ul>
-						<li>Controlla il Led</li>
+						<li>Controlla il Led <br>
+							Il Led puo' essere modellato dalla seguente interfaccia: <br>
+							<code> public interface Led { void TurnOn(); void TurnOff(); void Blink(); } </code>
+						</li>
 						<li>Controlla il Sonar</li>
-						<li>E' implementato dal Raspberry</li>
+						<li>E' implementato nel Raspberry</li>
 					</ul>
 				</li>
 				</li>
