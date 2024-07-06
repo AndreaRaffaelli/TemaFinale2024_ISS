@@ -22,8 +22,7 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		 
-				var As_status = 0
-				val DLIMIT = 3
+				var as_status = 0
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -36,21 +35,22 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 				 	 		stateTimer = TimerActor("timer_s0", 
 				 	 					  scope, context!!, "local_tout_"+name+"_s0", 3000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t09",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_s0"))   
-					transition(edgeName="t010",targetState="ashUpdate",cond=whenDispatch("addAsh"))
+					 transition(edgeName="t08",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_s0"))   
+					transition(edgeName="t09",targetState="ashUpdate",cond=whenDispatch("addAsh"))
 				}	 
 				state("ashUpdate") { //this:State
 					action { //it:State
 						 
-									As_status =  As_status +1
-									if(As_status>DLIMIT){
+									as_status =  as_status +1
+									if(as_status>4){
 						forward("ledBlink", "ledBlink(lampeggia)" ,"monitoringdevice" ) 
 						
 									} else {
 						forward("ledOff", "ledOff(stop)" ,"monitoringdevice" ) 
 						
 									}
-						forward("sonarUpdate", "sonarUpdate($As_status)" ,"wis" ) 
+						updateResourceRep(  "sonarUpdate($as_status)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -58,16 +58,16 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 				 	 		stateTimer = TimerActor("timer_ashUpdate", 
 				 	 					  scope, context!!, "local_tout_"+name+"_ashUpdate", 3000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t011",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_ashUpdate"))   
-					transition(edgeName="t012",targetState="ashUpdate",cond=whenDispatch("addAsh"))
+					 transition(edgeName="t010",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_ashUpdate"))   
+					transition(edgeName="t011",targetState="ashUpdate",cond=whenDispatch("addAsh"))
 				}	 
 				state("emptyStorage") { //this:State
 					action { //it:State
-						CommUtils.outcyan("($name): Svuotato contenitore ceneri")
 						 
-									As_status = 0
+									as_status = 0
 						forward("ledBlink", "ledBlink(lampeggia)" ,"monitoringdevice" ) 
-						forward("sonarUpdate", "sonarUpdate($As_status)" ,"wis" ) 
+						updateResourceRep(  "sonarUpdate($as_status)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -75,8 +75,8 @@ class Sonar ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 				 	 		stateTimer = TimerActor("timer_emptyStorage", 
 				 	 					  scope, context!!, "local_tout_"+name+"_emptyStorage", 3000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t013",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_emptyStorage"))   
-					transition(edgeName="t014",targetState="ashUpdate",cond=whenDispatch("addAsh"))
+					 transition(edgeName="t012",targetState="emptyStorage",cond=whenTimeout("local_tout_"+name+"_emptyStorage"))   
+					transition(edgeName="t013",targetState="ashUpdate",cond=whenDispatch("addAsh"))
 				}	 
 			}
 		}

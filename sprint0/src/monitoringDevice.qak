@@ -4,7 +4,8 @@ Context ctxrasp  ip [host="localhost" port=8001]
 
 
 
-QActor monitoringdevice context ctxrasp{ 
+QActor monitoringdevice context ctxrasp
+	withobj d using "utils.Sonar.create()"{ 
 //	[#
 //			var led = 0;
 //			/* 

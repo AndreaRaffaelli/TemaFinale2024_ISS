@@ -1,13 +1,14 @@
 System sprintzero
 
 Event burnEnd : burnEnd(X)
+Event startUp : startUp(X)
 
 Context ctxservicearea  ip [host="localhost" port=8001] 
 
 QActor wis context ctxservicearea
-	withobj d using "utils.Sonar.create()"{ 
+	withobj d using "utils.Scale.create()"{ 
 	[#
-		val e = utils.Scale.create()
+//		val e = utils.Sonar.create()
 		var ws_status = 0;
 		var as_status = 0;
 		var inc_status= false;
@@ -33,6 +34,7 @@ QActor oprobot context ctxservicearea{
 	State home initial{
 		println("($name): home") color magenta 
 	}
+	Transition t0 whenEvent burnEnd -> gatheringAsh
 	
 	State gatheringAsh{
 	}
@@ -45,6 +47,10 @@ QActor incinerator context ctxservicearea{
 			val BTIME = 3000L;
 	#]
 	State s0 initial{printCurrentMessage}
+		Transition t0  whenEvent startUp -> acceso
+	
+	State acceso {printCurrentMessage}
+	
 	State start{
 		emit burnEnd : burnEnd( stop )
 	}

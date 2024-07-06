@@ -21,6 +21,7 @@ class Monitoringdevice ( name: String, scope: CoroutineScope, isconfined: Boolea
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 val d = utils.Sonar.create()
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State

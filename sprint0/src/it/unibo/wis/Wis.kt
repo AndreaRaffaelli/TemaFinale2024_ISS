@@ -21,14 +21,13 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val d = utils.Sonar.create()
+		 val d = utils.Scale.create()
 		
-				val e = utils.Scale.create()
+		//		val e = utils.Sonar.create()
 				var ws_status = 0;
 				var as_status = 0;
 				var inc_status= false;
 				var robotWait = true;
-				val DLIMIT = 3; //ipotetico
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
