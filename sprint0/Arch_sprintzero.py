@@ -31,5 +31,6 @@ with Diagram('sprintzeroArch', show=False, outformat='png', graph_attr=graphattr
           incinerator=Custom('incinerator','./qakicons/symActorSmall.png')
      sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> wis
      sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> oprobot
+     sys >> Edge( label='startUp', **evattr, decorate='true', fontcolor='darkgreen') >> incinerator
      incinerator >> Edge( label='burnEnd', **eventedgeattr, decorate='true', fontcolor='red') >> sys
 diag

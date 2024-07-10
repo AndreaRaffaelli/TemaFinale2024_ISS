@@ -6,10 +6,6 @@ bin/default
 .idea
 build
 logs 
-gradle
-.gradle
-.settings
-.vscode
 
 log4jInfo.log
 
