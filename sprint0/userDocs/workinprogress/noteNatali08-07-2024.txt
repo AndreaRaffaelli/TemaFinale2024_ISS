@@ -1,0 +1,22 @@
+link alla documentenzaione di ddr robot
+
+
+gli eventi non vanno messi: dai requisiti non sappiamo se sia un messaggio o un requisito. Vanno specificati dopo quando affrontiamo quel problema.
+
+Test sprint zero:
+quello funzionale che cattura meglio il comportamento del sistema -> il nostro ok ma scrivi meglio le rpecondizioni. E anche test per comportamenti anomali:
+	- E: ashout pieno -> non viene scaricato nulla
+
+- salvati tutte le versioni degli sprint, alla prossimo modifa spirnt0.1
+
+
+
+led pojo o attore? pojo gestito da monitoring device. Interfaccia da togliere, da requisiti non sappiamo se il monitoring device comunica con il wis
+
+sprint uno facciamo analisi del problema sia dell'inc che del wis e oprobot
+
+Nel modello manca gui: metti nell'elenco puntato e dibatti se è pojo o attore. nello sprint dedicato alla gui affronteremo problema se farla con una facede qak
+
+
+per ora il sonar e la sua info come lo implementiamo per far funzionare correttamente il wis?
+mokobject -> pojo o attore?
