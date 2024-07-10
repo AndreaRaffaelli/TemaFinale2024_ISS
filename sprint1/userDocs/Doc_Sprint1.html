@@ -244,6 +244,7 @@
 
 <title>Sprint 1</title>
 </head>
+
 <body>
 	<div id="top">
 		<h1>LABORATORIO DI INGEGNERIA DEI SISTEMI SOFTWARE <font size="5"></font>
@@ -253,12 +254,13 @@
 	<div class="body">
 		<h2>Introduction</h2>
 		<a href="./TemaFinale24.html">Richiesta del committente</a>
-		<h2> 
+		<h2>
 			Analisi dei Requisiti
 		</h2>
 		<a href="./Doc_Sprint02.html">Requisiti</a>
 		<h2> Goal Dello Sprint 1</h2>
-		Affrontare l'analisi dei problemi introdotti dai requisiti R2,R3,R4, generare un'architettura logica, un modello eseguibile e dei test automatizzati.
+		Affrontare l'analisi dei problemi introdotti dai requisiti R2,R3,R4, generare un'architettura logica, un modello
+		eseguibile e dei test automatizzati.
 		<h2>Entita'</h2>
 		<ol>
 			<li>Inicinerator</li>
@@ -269,14 +271,60 @@
 		<h2>Modello Interazioni</h2>
 		<ul>
 			<li><b>R2.1</b>: L'incinerator riceve messaggio di accensione wireless iniziale</li>
-				<ul>
-					<li>Chi lo invia? Con che semantica? </li>
-					<li>Dissertazione: L'incinerator non ha responsabilita' di risposta e non ha indicazioni sulla provenienza del comando.
-						Per questi motivi L'accensione e' modellabile con semantica ad Evento
-					</li>
-				</ul>
+			<ul>
+				<li>Chi lo invia? Con che semantica? </li>
+				<li>Dissertazione: L'incinerator non ha responsabilita' di risposta e non ha indicazioni sulla
+					provenienza del comando.
+					Per questi motivi l'accensione e' modellabile con semantica ad Evento.
+					Siccome dai requisiti non risulta esserci nessuna specifica per quanto riguarda il mittente,
+					l'Evento potrebbe essere inviato da WIS o da agente esterno al sistema.
+				</li>
+			</ul>
+			<li><b>R2.4</b>: Emanare un segnale (acustico o altro) alla fine del processo di incenerimento che puo'
+				essere percepito da OpRobot e da WIS</li>
+			<ul>
+				<li>Con che semantica?</li>
+				<li>Dissertazione: Il segnale emesso non necessita di contenuto e non richiede risposta, per questo
+					<b>e' asincrono</b>.
+					Per questo si <b>esclude</b> la semantica <b>request-response</b>.
+					Verra' percepito da <b>OpRobot</b> e <b>WIS</b>.
+					Il segnale emesso non e' sicuro che venga ricevuto solamente da WIS e OpRobot e quindi <b>non</b>
+					puo' essere in semantica <b>fire-and-forget</b>.
+					Si evince quindi una semantica ad <b>Evento</b>.
+				</li>
+			</ul>
+			<li><b>R3</b>: La comunicazione tra OpRobot e basicRobot24 e' gia' impostata dall'interfaccia di basicRobot24</li>
+			<li><b>R4.1</b>: Invio comandi da parte di <b>WIS</b> a <b>OpRobot</b> secondo determinate condizioni</li>
+			<ul>
+				<li>Con che semantica?</li>
+				<li>Dissertazione: 
+					OpRobot risponde al messaggio di WIS? Se risponde quando lo fa? In risposta alla ricezione o quando ha finito il ciclo?
+					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti, nella seconda casistica il WIS rimarrebbe immobilizzato.
+					Se non riceve un messaggio entro un intervallo di tempo (assumendo > BTIME) allora il comando non e' stato recepito correttamente.
+					I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di comunicazione/computazionali/fisici?
+				</li>
+			</ul>
 		</ul>
 
+		<h2>Problematiche</h2>
+		<ul>
+			<li><b>R2</b></li>
+			<ul>
+				<li>Come fa l'inceneritore ad accorgersi che ha un RP al suo interno?</li>
+				<li>Come fa l'inceneritore a notificare alla GUI il cambio di stato?
+					(dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??)
+				</li>
+			</ul>	
+			
+			<li><b>R2</b></li>
+			<ul>
+				<li>Come fa l'inceneritore ad accorgersi che ha un RP al suo interno?</li>
+				<li>Come fa l'inceneritore a notificare alla GUI il cambio di stato?
+					(dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??)
+				</li>
+			</ul>	
+		</ul>		
+		
 	</div>
 	<div style="background-color:rgba(86, 56, 253, 0.9);text-align:left;color:white">
 		<div>By Andrea Raffaelli email: andrea.raffaelli2@studio.unibo.it
