@@ -1,0 +1,30 @@
+Eventi: non poossiamo dirlo
+
+Scriviamo che ci sono messaggi, ma non mettiamoli nei modelli.  lo scriviamo nelle problematiche. Lo dobbiamo trattare nello sprint1. 
+
+Importante terminare sprint0 con ripartizione dei requisiti con processo di produzione e determinare sprint1. 
+
+Test mettere in luce in sprint0 il test funzionale che cattura meglio il comportamento del sistema.
+Il test -> riscrivere meglio
+ci potrebbero essere test anomali 
+Ash out troppo pieno -> non parte oprobot.
+
+Bilancia e sonar sono entita' software che danno valori, ma non possiamo specificare attori e robot. Da rimandare all'analisi del problema.
+Non si sa in che modo questa informazione venga resa disponibile. 
+
+Oprobot da requisito deve essere autonomo o deve riceverlo ? OpRobot 
+
+problematiche:
+monitoring device -> controlla il led e sonar. e' l'unico punto di accesso?? 
+
+Alla fine dello sprint1 dobbiamo portare modello funzionante modello centrale.
+
+Pensare ServicestatusGui. aggiungere a sprint0!
+PEnsare bene se usare o meno le facede di qak.<=== Specificare bene ragionamento e capire se il problema si presta all'uso della tecnologia.
+
+MockObject -> in sprint1 il wis dovra' consultare quacluno per realizzare comportamento di controllo sonar e scale. Io posso fare un mockobject(anche actor) che contiene informazioni -> posso scegliere di farlo attore o pojo. 
+
+Wis -> sonar request response!!!
+
+
+
