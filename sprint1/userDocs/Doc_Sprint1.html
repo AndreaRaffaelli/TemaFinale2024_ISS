@@ -332,15 +332,18 @@ Event burnEnd: burnEnd(X)
 					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti, 
 					nella seconda casistica il WIS rimarrebbe immobilizzato. Se non riceve un messaggio entro un 
 					intervallo di tempo (assumendo > BTIME) allora il comando non e' stato recepito correttamente.<br>
-					Con l'assunzione dell'impossibilità del <b>fallimento dei componenti</b> la semnatica del messaggio 
-					è dito dispatch (fire and forget) in quanto non vi è bisogno di risposta. Altrimenti si potrebbe si potrebbe
+					Con l'assunzione dell'impossibilità del <b>fallimento dei componenti</b> la semantica del messaggio 
+					è di tipo dispatch (fire and forget) in quanto non vi è bisogno di risposta. Altrimenti si potrebbe
 					prediligere una invitation o una request per garantire la ricezione del messaggio (reply/ack). <br>
+					In questa prima fase del progetto <b>non consideriamo il caso in cui i nodi falliscano</b>. Tale requisito potrebbe venir analizzato in una futura revisione 
+					del progetto. <br>
+					In questo caso il messaggio inviato da WIS ad OpRobot è di tipo <b>dispatch</b> in quanto non vi è bisogno di risposta.
 					WIS può dare segnali di avvio al'opRobot solo quando quest'ultimo <b>non è già impegnato</b> in un ciclo. 
 					Per questo motivo WIS deve essere sempre notificato della disponibilità dell'opRobot. <br>
 					A tal fine opRobot invierà un messaggio dispatch a WIS. 
-				</li>
 				<div>
 					<pre><code>
+Dispatch robotStart: robotStart(X)
 Dispatch robotUpdate: robotUpdate(X)
 
 </code></pre>
@@ -355,6 +358,16 @@ Dispatch robotUpdate: robotUpdate(X)
 			<li><b>R2</b></li>
 			<ul>
 				<li>Come fa l'inceneritore ad accorgersi che ha un RP al suo interno?</li>
+				<li>Dissertazione:
+					L'opRobot potrebbe inviare un messaggio di startBurn all'inceneritore.
+				</li>
+					<div>
+						<pre><code>
+Dispatch startBurn: startBurn(X)
+	
+</code></pre>
+					</div>
+
 				<li>Come fa l'inceneritore a notificare alla GUI il cambio di stato?
 					(dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??)
 				</li>
@@ -362,6 +375,7 @@ Dispatch robotUpdate: robotUpdate(X)
 		</ul>		
 
 		<h2>Architettura Logica</h2>
+
 
 
 
