@@ -1,7 +1,5 @@
-System sprintzero
+System sprintuno
 
-Dispatch sonarUpdate: sonarUpdate(X)
-Dispatch scaleUpdate: scaleUpdate(X)
 
 Dispatch robotStart: robotStart(X)
 Dispatch robotUpdate: robotUpdate(X) //<--- nuovo
@@ -11,14 +9,6 @@ Dispatch burnStart: burnStart(X)
 Event burnEnd: burnEnd(X)
 Event startIncinerator: startIncinerator(X)
 
-Dispatch ledOn: ledOn(X)
-Dispatch ledOff: ledOff(X)
-Dispatch ledBlink: ledBlink(X)
-
-Dispatch decScale: decScale(X)
-Dispatch depositRP: depositRP(X)
-
-Dispatch addAsh: addAsh(X)
 
 Context ctxServiceArea  ip [host="localhost" port=8001] 
 
