@@ -1,0 +1,300 @@
+System sprintzero
+
+Dispatch sonarUpdate: sonarUpdate(X)
+Dispatch scaleUpdate: scaleUpdate(X)
+
+Dispatch robotStart: robotStart(X)
+Dispatch robotUpdate: robotUpdate(X) //<--- nuovo
+
+Dispatch burnStart: burnStart(X)
+
+Event burnEnd: burnEnd(X)
+Event startIncinerator: startIncinerator(X)
+
+Dispatch ledOn: ledOn(X)
+Dispatch ledOff: ledOff(X)
+Dispatch ledBlink: ledBlink(X)
+
+Dispatch decScale: decScale(X)
+Dispatch depositRP: depositRP(X)
+
+Dispatch addAsh: addAsh(X)
+
+Context ctxServiceArea  ip [host="localhost" port=8001] 
+
+
+QActor wis context ctxServiceArea{ 
+	[#
+		var ws_status = 0;
+		var as_status = 0;
+		var inc_status= false;
+		var robotWait = true;
+	#]
+	
+	State s0 initial{
+		printCurrentMessage
+	}
+	Goto idle
+	//
+	State idle {}
+	Transition t0
+		whenMsg sonarUpdate -> sonarHandler
+		whenMsg scaleUpdate -> scaleHandler
+		whenMsg robotUpdate -> robotHandler
+		whenMsg depositRP -> startInc
+		whenEvent burnEnd -> stopInc
+		
+	State startInc{
+		forward incinerator -m burnStart : burnStart( parti )
+		[# inc_status=true #]
+		forward monitoringdevice -m ledOn : ledOn( parti )	
+	}
+	Goto controllo
+	
+	State stopInc{
+		[# inc_status=false #]
+		forward monitoringdevice -m ledOff : ledOff( stop )	
+	}
+	Goto controllo
+	
+	State sonarHandler {
+		onMsg( sonarUpdate:sonarUpdate(X)){
+			[# as_status = payloadArg(0).toInt() #]
+			println("($name) sonarhandler: $as_status") color blue	
+		}	
+	}
+	Goto controllo
+	
+	State scaleHandler {
+		printCurrentMessage
+		onMsg( scaleUpdate:scaleUpdate(X)){
+			[# ws_status = payloadArg(0).toInt() #]
+			println("($name) scalehandler: $ws_status") color blue	
+		}	
+	}
+	Goto controllo
+	
+	State robotHandler {//<--- nuovo
+		onMsg( robotUpdate:robotUpdate(X)){
+			[# 
+			var pl = payloadArg(0)
+			if(pl.equals("robotWait")){
+				robotWait=true;
+			}
+			#]
+			println("($name) robotUpdate: $pl") color blue	
+		}
+	}
+	Goto controllo
+	
+	State controllo {
+		[#
+			if(ws_status>0 && as_status< DLIMIT && inc_status === false && robotWait === true){
+				#]
+				forward oprobot -m robotStart : robotStart( parti )
+				println("($name) controllo: condizioni corrette")
+				[#
+				robotWait=false;
+			}
+			#
+		]
+	}
+	Goto idle
+}
+
+
+
+
+// In oprobot è da implementare gestione posizione del robot x gui
+QActor oprobot context ctxlocale{ 
+	State home initial{
+		println("($name): home") color magenta 
+	}
+	Transition t0
+		whenMsg robotStart -> start
+		whenEvent burnEnd -> gatheringAsh		// inc segnala fine combustione
+		
+	State start{
+		println("($name): start") color magenta 
+		delay 2000			// Si sposta alla porta di wast storage			
+		println("($name): carico RP") color magenta 
+		forward wastestorage -m decScale : decScale( decrementa_bilancia ) 	// Svuotiamo il waste storage
+		delay 3000 // Va all'inc
+		println("($name): scarico RP") color magenta 
+		forward wis -m depositRP : depositRP( scaricoRP ) 	
+		delay 2000 // va in home
+	}
+	Goto home
+	
+	State gatheringAsh{
+		println("($name): carico ash") color magenta 
+		delay 4000 // andiamo porta raccolta ash e scarichiamo nella porta di ashout
+		println("($name): scarico ash") color magenta 
+		forward sonar -m addAsh : addAsh( incrementoAsh ) // simuliamo comportamento del sonar: aggiunta polvere
+		delay 2000 // torna in home
+		forward wis -m robotUpdate : robotUpdate(robotWait)	//finita routine
+	}
+	Goto home
+}
+
+
+QActor incinerator context ctxlocale{ 
+	[#
+			val BTIME = 3000L;
+	#]
+	State s0 initial{printCurrentMessage}
+	Transition t0
+		whenMsg burnStart -> start
+		
+	State start{
+		println("($name): Inizio bruciatura") color red
+		delay 3000
+		println("($name): Fine bruciatura") color black
+		emit burnEnd : burnEnd( stop )
+	}
+	Transition t0
+		whenMsg burnStart -> start
+}
+
+
+
+
+QActor sonar context ctxlocale{ 	// Manca update resource
+	[# 
+		var As_status = 0
+		val DLIMIT = 3
+	#]
+	State s0 initial{
+		printCurrentMessage
+	}
+	Transition t0
+		whenTime 3000 -> emptyStorage
+		whenMsg addAsh -> ashUpdate
+		
+	State ashUpdate{
+//		printCurrentMessage
+		[# 
+			As_status =  As_status +1
+			if(As_status>DLIMIT){
+				#]
+				forward monitoringdevice -m ledBlink : ledBlink( lampeggia )
+				[#
+			} else {
+				#]
+				forward monitoringdevice -m ledOff : ledOff( stop )
+				[#
+			}
+			#]
+//			updateResource [#  "sonarUpdate($As_status)" #]
+			forward wis -m sonarUpdate : sonarUpdate($As_status)
+	}
+	Transition t0
+		whenTime 3000 -> emptyStorage
+		whenMsg addAsh -> ashUpdate
+		
+	State emptyStorage{
+		println("($name): Svuotato contenitore ceneri") color cyan
+		[# 
+			As_status = 0
+		#]
+		forward monitoringdevice -m ledBlink : ledBlink( lampeggia )
+//		updateResource [#  "sonarUpdate($as_status)" #]
+		forward wis -m sonarUpdate : sonarUpdate($As_status)
+	}
+	Transition t0
+		whenTime 3000 -> emptyStorage
+		whenMsg addAsh -> ashUpdate
+}
+
+
+
+
+
+QActor wastestorage context ctxlocale{ 
+	[#
+			var W = 0;
+			
+		#]
+	State s0 initial{ printCurrentMessage }
+	Transition t0
+		whenTime 4000 -> loadScale
+		whenMsg decScale -> unloadScale
+
+	
+	State loadScale{
+		[#
+			W = W +1;
+			
+		#]
+//		updateResource [#  "scaleUpdate($W)" #]
+		forward wis -m scaleUpdate : scaleUpdate($W)
+	}
+	Transition t0
+		whenTime 4000 -> loadScale
+		whenMsg decScale -> unloadScale
+	
+	State unloadScale{
+		[#
+			W = W -1;
+			
+		#]
+//		updateResource [#  "scaleUpdate($W)" #]
+		forward wis -m scaleUpdate : scaleUpdate($W)
+	}
+	Transition t0
+		whenTime 4000 -> loadScale
+		whenMsg decScale -> unloadScale
+}
+
+
+
+
+QActor monitoringdevice context ctxlocale{ 
+	[#
+			var led = 0;
+			/* 
+			 * led= 0 	spento
+			 * led= 1 	acceso
+			 * led= 2	blink
+			 * */
+		#]
+	State s0 initial{
+		printCurrentMessage
+	}
+	Transition t0
+		whenMsg ledOn -> turnOnLed
+		whenMsg ledOff -> turnOffLed
+		whenMsg ledBlink -> turnBlinkLed
+		
+	State turnOnLed{
+		[#
+			led = 1;
+		#]
+		println ("($name)	Accensione Led") color green
+	}
+	Transition t0
+		whenMsg ledOff -> turnOffLed
+		whenMsg ledBlink -> turnBlinkLed
+		
+	State turnOffLed{
+		[#
+			led = 0;
+		#]
+		println ("($name)	Spegnimento Led") color red
+	}
+	Transition t0
+		whenMsg ledOn -> turnOnLed
+		whenMsg ledBlink -> turnBlinkLed
+	
+	State turnBlinkLed{
+		[#
+			led = 2;
+		#]
+		println ("($name)	Lampeggio Led") color yellow
+	}
+	Transition t0
+		whenMsg ledOn -> turnOnLed
+		whenMsg ledOff -> turnOffLed
+	
+}
+

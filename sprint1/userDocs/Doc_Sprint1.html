@@ -114,13 +114,13 @@
 			font-size: 90%;
 		}
 
-		pre {
+/* 		pre {
 			font-family: "Consolas";
 			font-size: 85%;
 			background-color: #f5f5f5;
 			border: 1.5px solid silver;
 			padding: 5px;
-		}
+		} */
 
 		m {
 			font-family: "Helvetica";
@@ -233,11 +233,16 @@
 		}
 
 		pre code {
-		background-color: #eee;
-		border: 1px solid #999;
-		display: block;
-		text-align: left
-		}
+			background-color: #eee;
+			display: block;
+			text-align: left;
+			font-size: 85%;
+        }
+ 
+        code{
+            padding-left: 20px;
+        }
+ 
 	</style>
 
 
@@ -286,6 +291,12 @@
 					Siccome dai requisiti non risulta esserci nessuna specifica per quanto riguarda il mittente,
 					l'Evento potrebbe essere inviato da WIS o da agente esterno al sistema.
 				</li>
+				<div>
+					<pre><code>
+Event startIncinerator: startIncinerator(X)
+
+</code></pre>
+				</div>
 			</ul>
 			<li><b>R2.4</b>: Emanare un segnale (acustico o altro) alla fine del processo di incenerimento che puo'
 				essere percepito da OpRobot e da WIS</li>
@@ -293,12 +304,18 @@
 				<li>Con che semantica?</li>
 				<li>Dissertazione: Il segnale emesso non necessita di contenuto e non richiede risposta, per questo
 					<b>e' asincrono</b>.
-					Per questo si <b>esclude</b> la semantica <b>request-response</b>.
+					Di coseguenza si <b>esclude</b> la semantica <b>request-response</b>.
 					Verra' percepito da <b>OpRobot</b> e <b>WIS</b>.
 					Il segnale emesso non e' sicuro che venga ricevuto solamente da WIS e OpRobot e quindi <b>non</b>
 					puo' essere in semantica <b>fire-and-forget</b>.
 					Si evince quindi una semantica ad <b>Evento</b>.
 				</li>
+				<div>
+					<pre><code>
+Event burnEnd: burnEnd(X)
+
+</code></pre>
+				</div>
 			</ul>
 			<li><b>R3</b>: La comunicazione tra OpRobot e basicRobot24 e' gia' impostata dall'interfaccia di basicRobot24</li>
 			<li><b>R4.1</b>: Invio comandi da parte di <b>WIS</b> a <b>OpRobot</b> secondo determinate condizioni</li>
@@ -323,12 +340,10 @@
 					A tal fine opRobot invierà un messaggio dispatch a WIS. 
 				</li>
 				<div>
-					<pre>
-						<code>
-						p { color: red; }
-						body { background-color: #eee; }
-						</code>
-					</pre>
+					<pre><code>
+Dispatch robotUpdate: robotUpdate(X)
+
+</code></pre>
 				</div>
 
 			</ul>
@@ -345,6 +360,8 @@
 				</li>
 			</ul>	
 		</ul>		
+
+		<h2>Architettura Logica</h2>
 
 
 

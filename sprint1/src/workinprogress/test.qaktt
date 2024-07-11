@@ -1,0 +1,132 @@
+System testzero
+
+//Sensors
+Dispatch sonarUpdate: sonarUpdate(X)
+Dispatch scaleUpdate: scaleUpdate(X)
+//OProbot
+Dispatch robotStart: robotStart(X)
+//Incinerator
+Dispatch burnStart: burnStart(X)
+Event burnEnd: burnEnd(X)
+//Led MonitoringDevice
+Dispatch ledOn: ledOn(X)
+Dispatch ledOff: ledOff(X)
+Dispatch ledBlink: ledBlink(X)
+//WasteStorage
+Dispatch decScale: decScale(X)
+Dispatch depositRP: depositRP(X)
+//AshStorage
+Dispatch addAsh: addAsh(X)
+
+Context testctx ip [host='localhost' port=6969]
+
+QActor wis context testctx{ 
+	[#
+		var ws_status = 0;
+		var as_status = 0;
+		var inc_status= false;
+		var robotWait = true;
+	#]
+	
+	State s0 initial{
+		printCurrentMessage
+		delay 500
+//		observeResource sonar msgid sonarUpdate
+//		observeResource wastestorage msgid scaleUpdate
+	}
+	Goto idle
+	
+	State idle {}
+	Transition t0
+		whenMsg sonarUpdate -> sonarHandler
+		whenMsg scaleUpdate -> scaleHandler
+		whenMsg depositRP -> startInc
+		whenEvent burnEnd -> stopInc
+		
+	State startInc{
+		forward incinerator -m burnStart : burnStart( parti )
+		[# inc_status=true #]
+		forward monitoringdevice -m ledOn : ledOn( parti )
+		
+	}
+	
+	State stopInc{
+		[# inc_status=false #]
+		forward monitoringdevice -m ledOff : ledOff( stop )
+		
+	}
+		
+	State sonarHandler {
+		printCurrentMessage
+		onMsg( sonarUpdate:sonarUpdate(X)){
+			[# as_status = payloadArg(0).toInt() #]
+			println("($name) sonarhandler: $as_status") color blue	
+		}	
+	}
+	Goto controllo
+	
+	State scaleHandler {
+		printCurrentMessage
+		onMsg(scaleUpdate : scaleUpdate(X) ){
+			[# ws_status = payloadArg(0).toInt() #]
+			println("($name) scalehandler: $ws_status") color blue	
+		}	
+	}
+	Goto controllo
+	
+	
+	State controllo {
+		[#
+			if(ws_status>0 && as_status>0 && inc_status === false && robotWait === true){
+				#]
+				forward oprobot -m robotStart : robotStart( parti )
+				println("($name) controllo: condizioni corrette")
+				[#
+				robotWait=false;
+			} 	#]
+	}
+	Goto idle
+}
+
+
+QActor oprobot context testctx {
+	State s0 initial{}
+	Transition t0 
+		whenMsg robotStart -> fineTest
+	State fineTest{
+		println("Test Completato con Successo") color red
+		[#System.exit(0)#]
+	}
+}
+//
+QActor wastestorage context testctx {
+		[# val W=1 #]
+	State s0 initial{
+		printCurrentMessage
+		delay 500
+		forward wis -m scaleUpdate:scaleUpdate($W)
+	}
+}
+//		updateResource [#"scaleUpdate($w)"#]//	
+
+QActor sonar context testctx {
+	[# val As_status=1 #]
+	State s0 initial{
+		printCurrentMessage
+		delay 600
+		//updateResource [#"sonarUpdate($as_status)"#]	
+		forward wis -m sonarUpdate: sonarUpdate($As_status)
+	}
+}
+
+QActor incinerator context testctx {
+	State s0 initial{
+		
+	}
+}
+
+QActor monitoringdevice context testctx {
+	State s0 initial{
+		
+	}
+}
