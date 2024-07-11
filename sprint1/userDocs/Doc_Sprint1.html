@@ -231,6 +231,13 @@
 			width: 85%;
 			margin: auto;
 		}
+
+		pre code {
+		background-color: #eee;
+		border: 1px solid #999;
+		display: block;
+		text-align: left
+		}
 	</style>
 
 
@@ -296,14 +303,36 @@
 			<li><b>R3</b>: La comunicazione tra OpRobot e basicRobot24 e' gia' impostata dall'interfaccia di basicRobot24</li>
 			<li><b>R4.1</b>: Invio comandi da parte di <b>WIS</b> a <b>OpRobot</b> secondo determinate condizioni</li>
 			<ul>
-				<li>Con che semantica?</li>
-				<li>Dissertazione: 
-					OpRobot risponde al messaggio di WIS? Se risponde quando lo fa? In risposta alla ricezione o quando ha finito il ciclo?
-					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti, nella seconda casistica il WIS rimarrebbe immobilizzato.
-					Se non riceve un messaggio entro un intervallo di tempo (assumendo > BTIME) allora il comando non e' stato recepito correttamente.
-					I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di comunicazione/computazionali/fisici?
+				<li>Con che semantica? </li>
+				<li> OpRobot risponde al messaggio di WIS? 
+					<ul>
+						<li> Se risponde quando lo fa? In risposta alla ricezione o quando ha finito il ciclo?</li>
+						<li> I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di comunicazione/computazionali/fisici?</li>
+					</ul> 
+				<li> L'opRobot come notifica la sua disponibilità al WIS?</li>
 				</li>
+				<li>Dissertazione: <br>
+					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti, 
+					nella seconda casistica il WIS rimarrebbe immobilizzato. Se non riceve un messaggio entro un 
+					intervallo di tempo (assumendo > BTIME) allora il comando non e' stato recepito correttamente.<br>
+					Con l'assunzione dell'impossibilità del <b>fallimento dei componenti</b> la semnatica del messaggio 
+					è dito dispatch (fire and forget) in quanto non vi è bisogno di risposta. Altrimenti si potrebbe si potrebbe
+					prediligere una invitation o una request per garantire la ricezione del messaggio (reply/ack). <br>
+					WIS può dare segnali di avvio al'opRobot solo quando quest'ultimo <b>non è già impegnato</b> in un ciclo. 
+					Per questo motivo WIS deve essere sempre notificato della disponibilità dell'opRobot. <br>
+					A tal fine opRobot invierà un messaggio dispatch a WIS. 
+				</li>
+				<div>
+					<pre>
+						<code>
+						p { color: red; }
+						body { background-color: #eee; }
+						</code>
+					</pre>
+				</div>
+
 			</ul>
+
 		</ul>
 
 		<h2>Problematiche</h2>
@@ -315,17 +344,15 @@
 					(dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??)
 				</li>
 			</ul>	
-			
-			<li><b>R2</b></li>
-			<ul>
-				<li>Come fa l'inceneritore ad accorgersi che ha un RP al suo interno?</li>
-				<li>Come fa l'inceneritore a notificare alla GUI il cambio di stato?
-					(dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??)
-				</li>
-			</ul>	
 		</ul>		
-		
+
+
+
 	</div>
+
+
+
+
 	<div style="background-color:rgba(86, 56, 253, 0.9);text-align:left;color:white">
 		<div>By Andrea Raffaelli email: andrea.raffaelli2@studio.unibo.it
 			<img src="./img/araffaelli.jpg" alt="cyberandrea" width="15%" height="15%">
