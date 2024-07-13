@@ -30,10 +30,50 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="gatheringAsh",cond=whenEvent("burnEnd"))
+					 transition( edgeName="goto",targetState="engage", cond=doswitch() )
+				}	 
+				state("engage") { //this:State
+					action { //it:State
+						CommUtils.outyellow("$name | $MyName engaging ... ")
+						request("engage", "engage($MyName,330)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+				}	 
+				state("wait") { //this:State
+					action { //it:State
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t02",targetState="start",cond=whenDispatch("robotStart"))
+					transition(edgeName="t03",targetState="gatheringAsh",cond=whenEvent("burnEnd"))
+				}	 
+				state("start") { //this:State
+					action { //it:State
+						CommUtils.outmagenta("($name): start")
+						delay(2000) 
+						CommUtils.outmagenta("($name): carico RP")
+						delay(3000) 
+						CommUtils.outmagenta("($name): scarico RP")
+						delay(2000) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="home", cond=doswitch() )
 				}	 
 				state("gatheringAsh") { //this:State
 					action { //it:State
+						CommUtils.outmagenta("($name): carico ash")
+						delay(4000) 
+						CommUtils.outmagenta("($name): scarico ash")
+						delay(2000) 
+						forward("robotUpdate", "robotUpdate(robotWait)" ,"wis" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

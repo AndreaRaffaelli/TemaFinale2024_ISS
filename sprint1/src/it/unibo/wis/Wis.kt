@@ -21,20 +21,16 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val d = utils.Sonar.create()
 		
-				val e = utils.Scale.create()
 				var ws_status = 0;
 				var as_status = 0;
 				var inc_status= false;
 				var robotWait = true;
-				val DLIMIT = 3; //ipotetico
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						delay(500) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -49,15 +45,52 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="stopInc",cond=whenEvent("burnEnd"))
+					 transition(edgeName="t00",targetState="robotHandler",cond=whenDispatch("robotUpdate"))
+					transition(edgeName="t01",targetState="burnEndHandler",cond=whenEvent("burnEnd"))
 				}	 
-				state("stopInc") { //this:State
+				state("robotHandler") { //this:State
 					action { //it:State
+						if( checkMsgContent( Term.createTerm("robotUpdate(X)"), Term.createTerm("robotUpdate(X)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 
+											var pl = payloadArg(0)
+											if(pl.equals("robotWait")){
+												robotWait=true;
+											}
+								CommUtils.outblue("($name) robotUpdate: $pl")
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition( edgeName="goto",targetState="controllo", cond=doswitch() )
+				}	 
+				state("controllo") { //this:State
+					action { //it:State
+						
+									if(ws_status>0 && as_status< DLIMIT && inc_status === false && robotWait === true){
+						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
+						CommUtils.outblack("($name) controllo: condizioni corrette")
+						
+										robotWait=false;
+									} 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="idle", cond=doswitch() )
+				}	 
+				state("burnEndHandler") { //this:State
+					action { //it:State
+						CommUtils.outblue("($name): ricevuto segnale di fine combustione dall'inc")
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="idle", cond=doswitch() )
 				}	 
 			}
 		}

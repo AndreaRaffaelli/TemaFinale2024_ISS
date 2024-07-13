@@ -1,4 +1,137 @@
 System sprintuno
+ 
+ 
+Dispatch robotStart: robotStart(X)
+Dispatch robotUpdate: robotUpdate(X)
+ 
+Dispatch burnStart: burnStart(X)
+ 
+Event burnEnd: burnEnd(X)
+Event startIncinerator: startIncinerator(X)
 
-Context ctxlocal ip[host="localhost" port=6900]
+Request engage        : engage(CALLER)
+Reply   engagedone    : engagedone(ARG)
+Reply   engagerefused : engagerefused(ARG)
 
+Request  doplan   : doplan( PATH, STEPTIME )
+Reply doplandone  : doplandone( ARG )
+Reply doplanfailed  : doplanfailed( ARG )
+ 
+ 
+Context ctxservicearea  ip [host="localhost" port=8001]
+Context ctxbasicrobot ip [host="127.0.0.1"  port=8020   ]  
+
+ExternalQActor basicrobot context ctxbasicrobot 
+ 
+//to do -> change ws_status, as_status (randomly?)
+// 		-> startIncinerator (esterno o wis?)
+ 
+QActor wis context ctxservicearea{ 
+	[#
+		var ws_status = 0;
+		var as_status = 0;
+		var inc_status= false;
+		var robotWait = true;
+	#]
+	State s0 initial{
+		printCurrentMessage color blue 
+	}
+	Goto idle
+	
+	State idle {}
+	Transition t0
+		whenMsg robotUpdate -> robotHandler		
+		whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione
+		
+		
+	State robotHandler {
+		onMsg( robotUpdate:robotUpdate(X)){
+			[# 
+			var pl = payloadArg(0)
+			if(pl.equals("robotWait")){
+				robotWait=true;
+			}
+			#]
+			println("($name) robotUpdate: $pl") color blue	
+		}
+	}
+	Goto controllo
+	State controllo {
+		[#
+			if(ws_status>0 && as_status< DLIMIT && inc_status === false && robotWait === true){
+				#]
+				forward oprobot -m robotStart : robotStart( parti )
+				println("($name) controllo: condizioni corrette")
+				[#
+				robotWait=false;
+			}#]
+	}
+	Goto idle
+	
+	State burnEndHandler{
+		println("($name): ricevuto segnale di fine combustione dall'inc") color blue 
+	}
+	Goto idle
+}
+ 
+ 
+QActor oprobot context ctxservicearea{ 
+	State home initial{
+		println("($name): home") color magenta 
+	}
+		Goto engage
+	
+	State engage{
+		println("$name | $MyName engaging ... ") color yellow 
+		request basicrobot -m engage : engage($MyName,330)
+	}
+		
+//	Transition t0 whenReply engagedone   -> wait					// 	TODO
+// 	              whenReply engagerefused -> end
+ 	              
+ 	State wait{
+ 		
+ 	}
+ 	Transition t0
+		whenMsg robotStart -> start
+		whenEvent burnEnd -> gatheringAsh		// inc segnala fine combustione
+ 	              
+
+	State start{
+		println("($name): start") color magenta 
+		delay 2000			// Si sposta alla porta di wast storage			
+		println("($name): carico RP") color magenta 
+		delay 3000 // Va all'inc
+		println("($name): scarico RP") color magenta 
+		delay 2000 // va in home
+	}
+	Goto home
+	State gatheringAsh{
+		println("($name): carico ash") color magenta 
+		delay 4000 // andiamo porta raccolta ash e scarichiamo nella porta di ashout
+		println("($name): scarico ash") color magenta 
+		delay 2000 // torna in home
+		forward wis -m robotUpdate : robotUpdate(robotWait)	//finita routine
+	}
+	Goto home
+}
+ 
+ 
+QActor incinerator context ctxservicearea{ 
+	[#
+			val BTIME = 3000L;
+	#]
+	State s0 initial{
+		printCurrentMessage color red
+	}
+	Transition t0
+		whenMsg burnStart -> start
+	State start{
+		println("($name): Inizio bruciatura") color red
+		delay 3000
+		println("($name): Fine bruciatura") color red
+		emit burnEnd : burnEnd( stop )
+	}
+	Transition t0
+		whenMsg burnStart -> start
+}

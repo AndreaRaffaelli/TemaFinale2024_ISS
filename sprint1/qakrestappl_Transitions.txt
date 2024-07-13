@@ -1,0 +1,4 @@
+{"actor":"wis", "msgType":"dispatch", "curstate":"idle", "nextstate":"robotHandler", "msgId":"robotUpdate"}
+{"actor":"oprobot", "msgType":"dispatch", "curstate":"wait", "nextstate":"start", "msgId":"robotStart"}
+{"actor":"incinerator", "msgType":"dispatch", "curstate":"s0", "nextstate":"start", "msgId":"burnStart"}
+{"actor":"incinerator", "msgType":"dispatch", "curstate":"start", "nextstate":"start", "msgId":"burnStart"}
