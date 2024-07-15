@@ -3,6 +3,8 @@ System sprintuno
  
 Dispatch robotStart: robotStart(X)
 Dispatch robotUpdate: robotUpdate(X)
+
+Dispatch incUpdate: incUpdate(X)		// messaggi per update dell'obstest
  
 Dispatch burnStart: burnStart(X)
  
@@ -19,10 +21,10 @@ Reply doplanfailed  : doplanfailed( ARG )
  
  
 Context ctxservicearea  ip [host="localhost" port=8001]
-Context ctxbasicrobot ip [host="127.0.0.1"  port=8020   ]  
-
-ExternalQActor basicrobot context ctxbasicrobot 
- 
+//Context ctxbasicrobot ip [host="127.0.0.1"  port=8020   ]  
+//
+//ExternalQActor basicrobot context ctxbasicrobot 
+// 
 //to do -> change ws_status, as_status (randomly?)
 // 		-> startIncinerator (esterno o wis?)
  
@@ -32,11 +34,12 @@ QActor wis context ctxservicearea{
 		var as_status = 0;
 		var inc_status= false;
 		var robotWait = true;
+		var DLIMIT =0;		// zero non corretto
 	#]
 	State s0 initial{
 		printCurrentMessage color blue 
 	}
-	Goto idle
+//	Goto idle
 	
 	State idle {}
 	Transition t0
@@ -56,6 +59,7 @@ QActor wis context ctxservicearea{
 		}
 	}
 	Goto controllo
+	
 	State controllo {
 		[#
 			if(ws_status>0 && as_status< DLIMIT && inc_status === false && robotWait === true){
@@ -79,11 +83,11 @@ QActor oprobot context ctxservicearea{
 	State home initial{
 		println("($name): home") color magenta 
 	}
-		Goto engage
+//		Goto engage
 	
 	State engage{
 		println("$name | $MyName engaging ... ") color yellow 
-		request basicrobot -m engage : engage($MyName,330)
+//		request basicrobot -m engage : engage($MyName,330)
 	}
 		
 //	Transition t0 whenReply engagedone   -> wait					// 	TODO
@@ -120,18 +124,62 @@ QActor oprobot context ctxservicearea{
 QActor incinerator context ctxservicearea{ 
 	[#
 			val BTIME = 3000L;
+			val start =0;
 	#]
 	State s0 initial{
 		printCurrentMessage color red
+		delay 500
 	}
-	Transition t0
-		whenMsg burnStart -> start
+	   Goto start
+	
+//	Transition t0
+//		whenEvent startIncinerator -> start
+		
 	State start{
-		println("($name): Inizio bruciatura") color red
-		delay 3000
-		println("($name): Fine bruciatura") color red
-		emit burnEnd : burnEnd( stop )
+		println("($name): Inizio inceneritore") color red
+		[#
+			val start =1;
+		#]
+		updateResource [#  "incUpdate(1)" #]
 	}
-	Transition t0
-		whenMsg burnStart -> start
+//	Transition t0
+//		whenMsg burnStart -> start
+		
+		
+		
+		// Start combustione da fare:
+//	State start{
+//		println("($name): Inizio inceneritore") color red
+//		delay 3000
+//		println("($name): Fine bruciatura") color red
+//		emit burnEnd : burnEnd( stop )
+//	}
+//	Transition t0
+//		whenMsg burnStart -> start	
 }
+
+
+QActor testobserver context ctxservicearea{ 
+	[# var incStatus = 0; val TOBSMAX = 10000L #]
+	State s0 initial{
+		printCurrentMessage color blue
+		observeResource incinerator msgid incUpdate	
+	}
+	Transition t0  
+//	    whenTimeVar TOBSMAX -> endsystem
+		whenMsg incUpdate -> updateinfoInc
+		
+	State updateinfoInc{
+		onMsg( incUpdate :  incUpdate(X) ){
+    		[# incStatus = payloadArg(0).toInt() #]
+    	}
+    	[# System.exit(0) #]
+	}
+	
+	State endsystem{
+		//There is no testing unit
+		println("$name BYE") color magenta
+		[# System.exit(0) #]
+	}
+}
+

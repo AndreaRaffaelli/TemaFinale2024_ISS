@@ -23,30 +23,32 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		
 					val BTIME = 3000L;
+					val start =0;
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						delay(500) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t04",targetState="start",cond=whenDispatch("burnStart"))
+					 transition( edgeName="goto",targetState="start", cond=doswitch() )
 				}	 
 				state("start") { //this:State
 					action { //it:State
-						CommUtils.outred("($name): Inizio bruciatura")
-						delay(3000) 
-						CommUtils.outred("($name): Fine bruciatura")
-						emit("burnEnd", "burnEnd(stop)" ) 
+						CommUtils.outred("($name): Inizio inceneritore")
+						
+									val start =1;
+						updateResourceRep(  "incUpdate(1)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t05",targetState="start",cond=whenDispatch("burnStart"))
 				}	 
 			}
 		}

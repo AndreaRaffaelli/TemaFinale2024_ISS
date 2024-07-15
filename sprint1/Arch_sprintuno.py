@@ -29,12 +29,10 @@ with Diagram('sprintunoArch', show=False, outformat='png', graph_attr=graphattr)
           wis=Custom('wis','./qakicons/symActorSmall.png')
           oprobot=Custom('oprobot','./qakicons/symActorSmall.png')
           incinerator=Custom('incinerator','./qakicons/symActorSmall.png')
-     with Cluster('ctxbasicrobot', graph_attr=nodeattr):
-          basicrobot=Custom('basicrobot(ext)','./qakicons/externalQActor.png')
+          testobserver=Custom('testobserver','./qakicons/symActorSmall.png')
      sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> wis
      sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> oprobot
-     incinerator >> Edge( label='burnEnd', **eventedgeattr, decorate='true', fontcolor='red') >> sys
-     oprobot >> Edge(color='magenta', style='solid', decorate='true', label='<engage &nbsp; >',  fontcolor='magenta') >> basicrobot
+     incinerator >> Edge(color='blue', style='solid',  decorate='true', label='<incUpdate &nbsp; >',  fontcolor='blue') >> testobserver
      oprobot >> Edge(color='blue', style='solid',  decorate='true', label='<robotUpdate &nbsp; >',  fontcolor='blue') >> wis
      wis >> Edge(color='blue', style='solid',  decorate='true', label='<robotStart &nbsp; >',  fontcolor='blue') >> oprobot
 diag

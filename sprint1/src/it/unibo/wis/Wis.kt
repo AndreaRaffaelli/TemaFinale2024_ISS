@@ -26,6 +26,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				var as_status = 0;
 				var inc_status= false;
 				var robotWait = true;
+				var DLIMIT =0;		// zero non corretto
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -36,7 +37,6 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="idle", cond=doswitch() )
 				}	 
 				state("idle") { //this:State
 					action { //it:State

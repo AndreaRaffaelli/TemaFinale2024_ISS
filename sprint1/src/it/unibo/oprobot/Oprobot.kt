@@ -30,12 +30,10 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="engage", cond=doswitch() )
 				}	 
 				state("engage") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name | $MyName engaging ... ")
-						request("engage", "engage($MyName,330)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

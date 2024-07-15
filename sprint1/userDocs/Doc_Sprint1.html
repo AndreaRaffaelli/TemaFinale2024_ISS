@@ -358,9 +358,10 @@ Dispatch robotUpdate: robotUpdate(X)
 			<li><b>R2</b></li>
 			<ul>
 				<li>Come fa l'inceneritore ad accorgersi che ha un RP al suo interno?</li>
-				<li>Dissertazione:
+				<ul><li>Dissertazione:
 					L'opRobot potrebbe inviare un messaggio di startBurn all'inceneritore.
-				</li>
+				</li></ul>
+				
 					<div>
 						<pre><code>
 Dispatch startBurn: startBurn(X)
@@ -374,15 +375,17 @@ Dispatch startBurn: startBurn(X)
 				<li>L'opRobot come collega i luoghi fisici a quelli virtuali???
 				</li>
 				<img src="./img/griglia.png"  width="35%" height="35%"> <br>
-				Adottiamo il concetto di posizione introdotto da basicRobot e lo impieghiamo per costruire dei percorsi
-				all'interno della service area. 
-				<ul>
-					<li> Home -> Waste Storage: []  </li>
-						<br><b>CONTINUA DA QUA </b>: definisci mappa con coordinate dei punti di interesse.
+				Adottiamo il concetto di posizione introdotto da basicRobot, per cui è necessarioa la traduzione delle coordinate
+				fisiche ai relativi punti nella sua mappa interna. Per disaccoppiare la relazione dal codice può essere opportuno introdurre
+				un file di configurazione leggibile dall'opRobot. Nel suddetto file vengono specificati i valori (in scala del basicRobot) delle 
+				variabili utilizzate nella mappa già formalizzata nello sprint0.  <br>
+<!-- 						<br><b>CONTINUA DA QUA </b>: definisci mappa con coordinate dei punti di interesse.
 							Oprobot traducie luoghi logici in coordinate e manda comando moverobot(X,Y).
 							Per la mappa è sufficiente utilizzare quella già vista nel corso. <br>
 							Continua integrazione con basicrobot nel modello, vedi bwbscrbt.qak
-				</ul>
+							<br> -->
+<!-- 							<b>issLab24\planusage24\src\completemapobstacles.qaktt</b>
+ -->	
 			</ul>	
 		</ul>		
 
@@ -390,8 +393,9 @@ Dispatch startBurn: startBurn(X)
 		<img src="./img/archLogica.png" alt="imgAL" width="75%" height="75%">
 
 		<h2>Test Plans</h2>
-
-
+		<h3>Test Plan Inceneritore</h3>
+		Nel Test inviamo segnale di accensione all'inceneritore.<br>
+		<b>Continua modello testobserver. </b>
 
 	</div>
 
