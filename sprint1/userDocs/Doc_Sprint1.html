@@ -114,7 +114,7 @@
 			font-size: 90%;
 		}
 
-/* 		pre {
+		/* 		pre {
 			font-family: "Consolas";
 			font-size: 85%;
 			background-color: #f5f5f5;
@@ -237,12 +237,11 @@
 			display: block;
 			text-align: left;
 			font-size: 85%;
-        }
- 
-        code{
-            padding-left: 20px;
-        }
- 
+		}
+
+		code {
+			padding-left: 20px;
+		}
 	</style>
 
 
@@ -317,37 +316,42 @@ Event burnEnd: burnEnd(X)
 </code></pre>
 				</div>
 			</ul>
-			<li><b>R3</b>: La comunicazione tra OpRobot e basicRobot24 e' gia' impostata dall'interfaccia di basicRobot24</li>
+			<li><b>R3</b>: La comunicazione tra OpRobot e basicRobot24 e' gia' impostata dall'interfaccia di
+				basicRobot24</li>
 			<li><b>R4.1</b>: Invio comandi da parte di <b>WIS</b> a <b>OpRobot</b> secondo determinate condizioni</li>
 			<ul>
 				<li>Con che semantica? </li>
-				<li> OpRobot risponde al messaggio di WIS? 
+				<li> OpRobot risponde al messaggio di WIS?
 					<ul>
 						<li> Se risponde quando lo fa? In risposta alla ricezione o quando ha finito il ciclo?</li>
-						<li> I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di comunicazione/computazionali/fisici?</li>
-					</ul> 
+						<li> I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di
+							comunicazione/computazionali/fisici?</li>
+					</ul>
 				<li> L'opRobot come notifica la sua disponibilità al WIS?</li>
 				</li>
 				<li>Dissertazione: <br>
-					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti, 
-					nella seconda casistica il WIS rimarrebbe immobilizzato. Se non riceve un messaggio entro un 
+					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti,
+					nella seconda casistica il WIS rimarrebbe immobilizzato. Se non riceve un messaggio entro un
 					intervallo di tempo (assumendo > BTIME) allora il comando non e' stato recepito correttamente.<br>
-					Con l'assunzione dell'impossibilità del <b>fallimento dei componenti</b> la semantica del messaggio 
+					Con l'assunzione dell'impossibilità del <b>fallimento dei componenti</b> la semantica del messaggio
 					è di tipo dispatch (fire and forget) in quanto non vi è bisogno di risposta. Altrimenti si potrebbe
 					prediligere una invitation o una request per garantire la ricezione del messaggio (reply/ack). <br>
-					In questa prima fase del progetto <b>non consideriamo il caso in cui i nodi falliscano</b>. Tale requisito potrebbe venir analizzato in una futura revisione 
+					In questa prima fase del progetto <b>non consideriamo il caso in cui i nodi falliscano</b>. Tale
+					requisito potrebbe venir analizzato in una futura revisione
 					del progetto. <br>
-					In questo caso il messaggio inviato da WIS ad OpRobot è di tipo <b>dispatch</b> in quanto non vi è bisogno di risposta.
-					WIS può dare segnali di avvio al'opRobot solo quando quest'ultimo <b>non è già impegnato</b> in un ciclo. 
+					In questo caso il messaggio inviato da WIS ad OpRobot è di tipo <b>dispatch</b> in quanto non vi è
+					bisogno di risposta.
+					WIS può dare segnali di avvio al'opRobot solo quando quest'ultimo <b>non è già impegnato</b> in un
+					ciclo.
 					Per questo motivo WIS deve essere sempre notificato della disponibilità dell'opRobot. <br>
-					A tal fine opRobot invierà un messaggio dispatch a WIS. 
-				<div>
-					<pre><code>
+					A tal fine opRobot invierà un messaggio dispatch a WIS.
+					<div>
+						<pre><code>
 Dispatch robotStart: robotStart(X)
 Dispatch robotUpdate: robotUpdate(X)
 
 </code></pre>
-				</div>
+					</div>
 
 			</ul>
 
@@ -358,45 +362,108 @@ Dispatch robotUpdate: robotUpdate(X)
 			<li><b>R2</b></li>
 			<ul>
 				<li>Come fa l'inceneritore ad accorgersi che ha un RP al suo interno?</li>
-				<ul><li>Dissertazione:
-					L'opRobot potrebbe inviare un messaggio di startBurn all'inceneritore.
-				</li></ul>
-				
-					<div>
-						<pre><code>
+				<ul>
+					<li>Dissertazione:
+						L'opRobot potrebbe inviare un messaggio di startBurn all'inceneritore.
+					</li>
+				</ul>
+
+				<div>
+					<pre><code>
 Dispatch startBurn: startBurn(X)
 	
 </code></pre>
-					</div>
+				</div>
 
 				<li>Come fa l'inceneritore a notificare alla GUI il cambio di stato?
 					(dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??)
 				</li>
 				<li>L'opRobot come collega i luoghi fisici a quelli virtuali???
 				</li>
-				<img src="./img/griglia.png"  width="35%" height="35%"> <br>
-				Adottiamo il concetto di posizione introdotto da basicRobot, per cui è necessarioa la traduzione delle coordinate
-				fisiche ai relativi punti nella sua mappa interna. Per disaccoppiare la relazione dal codice può essere opportuno introdurre
-				un file di configurazione leggibile dall'opRobot. Nel suddetto file vengono specificati i valori (in scala del basicRobot) delle 
-				variabili utilizzate nella mappa già formalizzata nello sprint0.  <br>
-<!-- 						<br><b>CONTINUA DA QUA </b>: definisci mappa con coordinate dei punti di interesse.
+				<img src="./img/griglia.png" width="35%" height="35%"> <br>
+				Adottiamo il concetto di posizione introdotto da basicRobot, per cui è necessarioa la traduzione delle
+				coordinate
+				fisiche ai relativi punti nella sua mappa interna. Per disaccoppiare la relazione dal codice può essere
+				opportuno introdurre
+				un file di configurazione leggibile dall'opRobot. Nel suddetto file vengono specificati i valori (in
+				scala del basicRobot) delle
+				variabili utilizzate nella mappa già formalizzata nello sprint0. <br>
+				<!-- 						<br><b>CONTINUA DA QUA </b>: definisci mappa con coordinate dei punti di interesse.
 							Oprobot traducie luoghi logici in coordinate e manda comando moverobot(X,Y).
 							Per la mappa è sufficiente utilizzare quella già vista nel corso. <br>
 							Continua integrazione con basicrobot nel modello, vedi bwbscrbt.qak
 							<br> -->
-<!-- 							<b>issLab24\planusage24\src\completemapobstacles.qaktt</b>
- -->	
-			</ul>	
-		</ul>		
+				<!-- 							<b>issLab24\planusage24\src\completemapobstacles.qaktt</b>
+ -->
+			</ul>
+		</ul>
 
 		<h2>Architettura Logica</h2>
 		<img src="./img/archLogica.png" alt="imgAL" width="75%" height="75%">
 
 		<h2>Test Plans</h2>
 		<h3>Test Plan Inceneritore</h3>
-		Nel Test inviamo segnale di accensione all'inceneritore.<br>
-		<b>Continua modello testobserver. </b>
-
+		<h4>Test 1</h4>
+		Nel Test inviamo segnale di <code style="padding: 0%;">StartIncinerator</code> all'inceneritore.<br>
+		<ul>
+			<li>Verifichiamo che l'inceneritore riceva il segnale di accensione attraverso un entita' osservatrice:
+				<b>TestObserver</b></b><br>.
+				&#x2705;Il test e' superato se l'inceneritore riceve il segnale di accensione entro <code
+					style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.<br>
+				&#x274C;Il test fallisce se l'inceneritore non communta allo stato di accensione entro <code
+					style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
+			</li>
+		</ul>
+		<h4>Test 2</h4>
+		Nel test inviamo segnale di <code style="padding: 0%;">StartBurn</code> all'inceneritore. <br>
+		<ul>
+			<li>Verifichiamo
+				che entro
+				<code style="padding: 0%;">BTIME</code> l'inceneritore lanci l'evento <code
+					style="padding: 0%;">EndBurn</code><br>
+			</li>
+			&#x2705;Il Test e' superato se l'inceneritore lancia l'evento <code style="padding: 0%;">EndBurn</code><br>
+			&#x274C;Il Test fallisce se non viene lanciato l'evento <code style="padding: 0%;">EndBurn</code> entro
+			<code style="padding: 0%;">BTIME</code>.
+		</ul>
+		<h3>Test Plan OpRobot</h3>
+		<h4>Test 1</h4>
+		Nel test inviamo segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot. <br>
+		<ul>
+			<li>Verifichiamo che l'opRobot riceva il segnale di avvio attraverso uno stato interno osservabile:
+				<b>MentalState</b><br>
+				Quando l'opRobot riceve il segnale di avvio deve comandare il basicRobot24 di muoversi verso le varie
+				stazioni.<br>
+				Quando il basicRobot giunge ad una stazione, l'opRobot modifica il suo stato interno.<br>
+				&#x2705; Il test e' superato se lo stato di opRobot va da <code style="padding: 0%;">HOME</code> a <code
+					style="padding: 0%;">ASHOUT</code>.</br>
+				&#x274C; Il test fallisce se l'opRobot non modifica il suo stato interno entro <code
+					style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
+			</li>
+		</ul>
+		<h3>Test Plan WIS</h3>
+		<h4>Test 1</h4>
+		Verifichiamo che WIS invii il segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot quando le
+		condizioni sono corrette<br>
+		&#x2705; Il test e' superato se WIS invia il segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot
+		entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.<br>
+		&#x274C; Il test fallisce se WIS non invia il segnale di <code style="padding: 0%;">RobotStart</code>
+		all'opRobot entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
+		<h4>Test 2</h4>
+		Verifichiamo che WIS ricevi il segnale di <code style="padding: 0%;">EndBurn</code> dall'inceneritore<br>
+		&#x2705; Il test e' superato se WIS riceve il segnale di <code style="padding: 0%;">EndBurn</code>
+		dall'inceneritore
+		entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.<br>
+		&#x274C; Il test fallisce se WIS non riceve il segnale di <code style="padding: 0%;">EndBurn</code>
+		dall'inceneritore
+		entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
+		<h4>Test 3</h4>
+		Verifichiamo che WIS ricevi il segnale di <code style="padding: 0%;">RobotUpdate</code> dall'opRobot quando
+		l'opRobot torna in disponibile al lavoro<br>
+		&#x2705; Il test e' superato se WIS riceve il segnale di <code style="padding: 0%;">RobotUpdate</code>
+		dall'opRobot entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.<br>
+		&#x274C; Il test fallisce se WIS non riceve il segnale di <code style="padding: 0%;">RobotUpdate</code> dall'opRobot
+		entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
 	</div>
 
 
