@@ -25,14 +25,4 @@ with Diagram('sprintunoArch', show=False, outformat='png', graph_attr=graphattr)
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
-     with Cluster('ctxservicearea', graph_attr=nodeattr):
-          wis=Custom('wis','./qakicons/symActorSmall.png')
-          oprobot=Custom('oprobot','./qakicons/symActorSmall.png')
-          incinerator=Custom('incinerator','./qakicons/symActorSmall.png')
-          testobserver=Custom('testobserver','./qakicons/symActorSmall.png')
-     sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> wis
-     sys >> Edge( label='burnEnd', **evattr, decorate='true', fontcolor='darkgreen') >> oprobot
-     incinerator >> Edge(color='blue', style='solid',  decorate='true', label='<incUpdate &nbsp; >',  fontcolor='blue') >> testobserver
-     oprobot >> Edge(color='blue', style='solid',  decorate='true', label='<robotUpdate &nbsp; >',  fontcolor='blue') >> wis
-     wis >> Edge(color='blue', style='solid',  decorate='true', label='<robotStart &nbsp; >',  fontcolor='blue') >> oprobot
 diag

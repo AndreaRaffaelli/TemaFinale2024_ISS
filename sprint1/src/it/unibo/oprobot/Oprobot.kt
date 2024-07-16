@@ -21,24 +21,44 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 	
+			var RobotState = "IDLE";
+			var MentalState = "HOME";
+			val Waste_x = 0; //waste
+			val Waste_y = 5;		
+			val In_x = 3; //burnin
+			val In_y = 2;
+			val Ho_x = 0; //home
+			val Ho_y = 0;
+			val Bo_x = 4; //burnout
+			val Bo_y = 5;
+			val Ao_x = 7; //AshOut
+			val Ao_y = 7;
 		return { //this:ActionBasciFsm
 				state("home") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("($name): home")
+						 MentalState="HOME" 
+						CommUtils.outmagenta("($name): $MentalState")
+						updateResourceRep(  "info($MentalState)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition( edgeName="goto",targetState="engage", cond=doswitch() )
 				}	 
 				state("engage") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name | $MyName engaging ... ")
+						request("engage", "engage($MyName,330)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t00",targetState="wait",cond=whenReply("engagedone"))
+					transition(edgeName="t01",targetState="end",cond=whenReply("engagerefused"))
 				}	 
 				state("wait") { //this:State
 					action { //it:State
@@ -47,37 +67,113 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="start",cond=whenDispatch("robotStart"))
+					 transition(edgeName="t02",targetState="goToWasteIn",cond=whenDispatch("robotStart"))
 					transition(edgeName="t03",targetState="gatheringAsh",cond=whenEvent("burnEnd"))
 				}	 
-				state("start") { //this:State
+				state("goToWasteIn") { //this:State
 					action { //it:State
 						CommUtils.outmagenta("($name): start")
-						delay(2000) 
-						CommUtils.outmagenta("($name): carico RP")
-						delay(3000) 
-						CommUtils.outmagenta("($name): scarico RP")
-						delay(2000) 
+						request("moverobot", "moverobot(Waste_x,Waste_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="home", cond=doswitch() )
+					 transition(edgeName="t14",targetState="loadRP",cond=whenReply("moverobotdone"))
+					transition(edgeName="t15",targetState="end",cond=whenReply("moverobotfailed"))
+				}	 
+				state("loadRP") { //this:State
+					action { //it:State
+						 MentalState="WASTEIN" 
+						CommUtils.outmagenta("($name): $MentalState")
+						updateResourceRep(  "info($MentalState)"  
+						)
+						request("moverobot", "moverobot(In_x,In_y)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t26",targetState="startBurn",cond=whenReply("moverobotdone"))
+					transition(edgeName="t27",targetState="end",cond=whenReply("moverobotfailed"))
+				}	 
+				state("startBurn") { //this:State
+					action { //it:State
+						 MentalState="BURNIN" 
+						CommUtils.outmagenta("($name): $MentalState")
+						updateResourceRep(  "info($MentalState)"  
+						)
+						forward("startBurn", "startBurn(1)" ,"incinerator" ) 
+						request("moverobot", "moverobot(Ho_x,Ho_y)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t38",targetState="home_wait",cond=whenReply("moverobotdone"))
+					transition(edgeName="t39",targetState="end",cond=whenReply("moverobotfailed"))
+				}	 
+				state("home_wait") { //this:State
+					action { //it:State
+						 MentalState="HOME" 
+						CommUtils.outmagenta("($name): $MentalState")
+						updateResourceRep(  "info($MentalState)"  
+						)
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t410",targetState="home_go",cond=whenEvent("burnEnd"))
+				}	 
+				state("home_go") { //this:State
+					action { //it:State
+						request("moverobot", "moverobot(Bo_x,Bo_y)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t511",targetState="gatheringAsh",cond=whenReply("moverobotdone"))
+					transition(edgeName="t512",targetState="end",cond=whenReply("moverobotfailed"))
 				}	 
 				state("gatheringAsh") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("($name): carico ash")
-						delay(4000) 
-						CommUtils.outmagenta("($name): scarico ash")
-						delay(2000) 
-						forward("robotUpdate", "robotUpdate(robotWait)" ,"wis" ) 
+						 MentalState="BURNOUT" 
+						CommUtils.outmagenta("($name): $MentalState")
+						updateResourceRep(  "info($MentalState)"  
+						)
+						request("moverobot", "moverobot(Ao_x,Ao_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="home", cond=doswitch() )
+					 transition(edgeName="t613",targetState="unload",cond=whenReply("moverobotdone"))
+					transition(edgeName="t614",targetState="end",cond=whenReply("moverobotfailed"))
+				}	 
+				state("unload") { //this:State
+					action { //it:State
+						 MentalState="ASHOUT" 
+						CommUtils.outmagenta("($name): $MentalState")
+						updateResourceRep(  "info($MentalState)"  
+						)
+						request("moverobot", "moverobot(Ho_x,Ho_y)" ,"basicrobot" )  
+						forward("robotUpdate", "robotUpdate("idle")" ,"wis" ) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+				}	 
+				state("end") { //this:State
+					action { //it:State
+						System.exit(-1) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
 				}	 
 			}
 		}

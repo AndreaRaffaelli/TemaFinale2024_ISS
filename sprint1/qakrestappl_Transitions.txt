@@ -1,3 +1,2 @@
-{"actor":"wis", "msgType":"dispatch", "curstate":"idle", "nextstate":"robotHandler", "msgId":"robotUpdate"}
-{"actor":"oprobot", "msgType":"dispatch", "curstate":"wait", "nextstate":"start", "msgId":"robotStart"}
-{"actor":"testobserver", "msgType":"dispatch", "curstate":"s0", "nextstate":"updateinfoInc", "msgId":"incUpdate"}
+{"actor":"oprobot", "msgType":"dispatch", "curstate":"wait", "nextstate":"goToWasteIn", "msgId":"robotStart"}
+{"actor":"incinerator", "msgType":"dispatch", "curstate":"s0", "nextstate":"endBurn", "msgId":"startBurn"}

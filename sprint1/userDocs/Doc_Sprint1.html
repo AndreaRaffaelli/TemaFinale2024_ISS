@@ -462,12 +462,18 @@ Dispatch startBurn: startBurn(X)
 		l'opRobot torna in disponibile al lavoro<br>
 		&#x2705; Il test e' superato se WIS riceve il segnale di <code style="padding: 0%;">RobotUpdate</code>
 		dall'opRobot entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.<br>
-		&#x274C; Il test fallisce se WIS non riceve il segnale di <code style="padding: 0%;">RobotUpdate</code> dall'opRobot
+		&#x274C; Il test fallisce se WIS non riceve il segnale di <code style="padding: 0%;">RobotUpdate</code>
+		dall'opRobot
 		entro <code style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
 	</div>
 
 
-
+	<h2>Dove siamo arrivati</h2>
+	Quando siamo arrivati in ASHOUT, come capire se andare ad home o se andare a WasteIN? <br> WIS fa polling quando
+	oprobot manda "idle", ma idle lo manda quando dice "a casa!", il basic robot non si puo' fermare senza fare
+	danni(forse). <br> Quindi WIS deve fare polling su oprobot per capire se e' disponibile. <br> Se oprobot e'
+	disponibile, WIS manda il comando di andare a WasteIN, altrimenti manda il comando di andare a casa.
+	Come far attivare wis prima che si lanci Request "a casa?". Vogliamo richiesta di wis sulla coda di oprobot prima di tornare a casa (o nel mentre). <br>
 
 	<div style="background-color:rgba(86, 56, 253, 0.9);text-align:left;color:white">
 		<div>By Andrea Raffaelli email: andrea.raffaelli2@studio.unibo.it

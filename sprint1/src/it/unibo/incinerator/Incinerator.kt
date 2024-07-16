@@ -21,29 +21,20 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		
-					val BTIME = 3000L;
-					val start =0;
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						delay(500) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="start", cond=doswitch() )
+					 transition(edgeName="t015",targetState="endBurn",cond=whenDispatch("startBurn"))
 				}	 
-				state("start") { //this:State
+				state("endBurn") { //this:State
 					action { //it:State
-						CommUtils.outred("($name): Inizio inceneritore")
-						
-									val start =1;
-						updateResourceRep(  "incUpdate(1)"  
-						)
+						delay(500) 
+						emit("burnEnd", "burnEnd" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
