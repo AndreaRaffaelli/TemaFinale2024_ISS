@@ -37,29 +37,25 @@ QActor oprobot context ctxtest{
 	val Ao_x = 7; //AshOut
 	val Ao_y = 7;
 #]
-	State home initial{
-		[# MentalState="HOME"#]
-		println("($name): $MentalState") color magenta 
-		updateResource [#  "info($MentalState)" #]
-		
-	}
-	Goto engage
-	
-	State engage{
+	State initialize initial{
 		println("$name | $MyName engaging ... ") color yellow 
 		request basicrobot -m engage : engage($MyName,330)
 	}
-	Transition t0 whenReply engagedone   -> wait					// 	TODO
+	Transition t0 whenReply engagedone   -> home				// 	TODO
  	              whenReply engagerefused -> end					//Fallimento Grave
- 	              
- 	State wait{
- 		
- 	}
+
+ 	State home{
+		[# MentalState="HOME"#]
+		println("($name): $MentalState") color magenta 
+		updateResource [#  "info($MentalState)" #]
+		onMsg( engagedone : engagedone(X) ){			
+			forward wis -m robotUpdate : robotUpdate("idle")
+		}
+	}
  	Transition t0
 		whenMsg robotStart -> goToWasteIn
-		whenEvent burnEnd -> gatheringAsh		// DA Simulare
- 	              
-
+		whenEvent burnEnd -> home_go
+ 	
 	State goToWasteIn{
 		println("($name): start") color magenta 
 		request basicrobot -m moverobot : moverobot(Waste_x,Waste_y) //posizione WastePort
@@ -86,19 +82,13 @@ QActor oprobot context ctxtest{
 		request basicrobot -m moverobot : moverobot(Ho_x,Ho_y) //posizione BurnIn
 	}
 	Transition t3 
-			whenReply moverobotdone -> home_wait
+			whenReply moverobotdone -> home
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
-	State home_wait{
-		[# MentalState="HOME"#]
-		println("($name): $MentalState") color magenta 
-		updateResource [#  "info($MentalState)" #]
-	}
-	Transition t4 whenEvent burnEnd -> home_go
 	State home_go {
 		request basicrobot -m moverobot : moverobot(Bo_x,Bo_y) //posizione BurnOut	
 	}
-	Transition t5 			
+	Transition t4			
 			whenReply moverobotdone -> gatheringAsh
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 
@@ -108,7 +98,7 @@ QActor oprobot context ctxtest{
 		updateResource [#  "info($MentalState)" #]
 		request basicrobot -m moverobot : moverobot(Ao_x,Ao_y) //posizione ASHOUT
 	}
-	Transition t6 			
+	Transition t5 			
 			whenReply moverobotdone -> unload
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
@@ -119,12 +109,17 @@ QActor oprobot context ctxtest{
 		request basicrobot -m moverobot : moverobot(Ho_x,Ho_y) //posizione home
 		forward wis -m robotUpdate : robotUpdate("idle")
 	}
+	Transition t6		
+			whenReply moverobotdone -> home
+			whenReply moverobotfailed -> end //errore grave?? mossa fallita	
 	
 	//BasicRobot non disponibile, fallimento grave
 	State end {
 		[#System.exit(-1)#]
 	}
 }
+
+
 
 //Solo a scopo di test
 QActor wis context ctxtest{
