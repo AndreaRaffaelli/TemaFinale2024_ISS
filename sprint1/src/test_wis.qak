@@ -9,9 +9,10 @@ Context ctxtest ip [host="localhost" port=6969]
 QActor wis context ctxtest{ 
 	[#
 		var ws_status = 0;
-		var as_status = 0;
+        var as_status = 0;
+
 		var robotFree = true;
-		var DLIMIT = 0;		// zero non corretto
+		var DLIMIT = 3;		// zero non corretto
 	#]
 	State s0 initial{
 		printCurrentMessage color blue 
@@ -21,7 +22,7 @@ QActor wis context ctxtest{
 	State idle {}
 	Transition t0
 		whenMsg robotUpdate -> controllo		
-		whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
+		//whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
 	
 	State controllo {
         onMsg( robotUpdate:robotUpdate(X)){
@@ -37,7 +38,9 @@ QActor wis context ctxtest{
 		[#
         if( robotFree === true){
             //chiedi ws_status
+            ws_status = (0..5).random()            
             //chiedi as_status
+            as_status = (0..5).random()
         }
         #]
 
@@ -51,14 +54,17 @@ QActor wis context ctxtest{
         }
         #]
 	}
+    Goto idle if [# robotFree = false #] else polling
+
+    State polling{}
     Transition t1 
         whenTimeVar 2000 -> controllo
-        whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
+        //whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
 	
-	State burnEndHandler{
-		println("($name): ricevuto segnale di fine combustione dall'inc") color blue 
-	}
-	Goto idle
+	//State burnEndHandler{
+	//	println("($name): ricevuto segnale di fine combustione dall'inc") color blue 
+	//}
+	//Goto idle
 
     //polling
 }
