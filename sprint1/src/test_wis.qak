@@ -1,0 +1,64 @@
+System testwis
+
+Dispatch robotStart: robotStart(X)
+Dispatch robotUpdate: robotUpdate(X)
+Event burnEnd : burnEnd( ARG )
+
+Context ctxtest ip [host="localhost" port=6969]
+
+QActor wis context ctxtest{ 
+	[#
+		var ws_status = 0;
+		var as_status = 0;
+		var robotFree = true;
+		var DLIMIT = 0;		// zero non corretto
+	#]
+	State s0 initial{
+		printCurrentMessage color blue 
+	}
+	Goto idle
+	
+	State idle {}
+	Transition t0
+		whenMsg robotUpdate -> controllo		
+		whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
+	
+	State controllo {
+        onMsg( robotUpdate:robotUpdate(X)){
+			[# 
+			var pl = payloadArg(0)
+			if(pl.equals("robotFree")){
+				robotFree=true;
+			}
+			#]
+			println("($name) robotUpdate: $pl") color blue	
+		}
+
+		[#
+        if( robotFree === true){
+            //chiedi ws_status
+            //chiedi as_status
+        }
+        #]
+
+
+        if(ws_status>0 && as_status< DLIMIT && robotFree === true){
+            #]
+            forward oprobot -m robotStart : robotStart( parti )
+            println("($name) controllo: condizioni corrette")
+            [#
+            robotFree=false;
+        }
+        #]
+	}
+    Transition t1 
+        whenTimeVar 2000 -> controllo
+        whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
+	
+	State burnEndHandler{
+		println("($name): ricevuto segnale di fine combustione dall'inc") color blue 
+	}
+	Goto idle
+
+    //polling
+}
