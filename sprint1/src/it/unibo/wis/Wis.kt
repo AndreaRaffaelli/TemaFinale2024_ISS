@@ -21,14 +21,81 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		
+				var ws_status = 0;
+		        var as_status = 0;
+		
+				var robotFree = true;
+				var DLIMIT = 3;		// zero non corretto
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition( edgeName="goto",targetState="idle", cond=doswitch() )
+				}	 
+				state("idle") { //this:State
+					action { //it:State
+						CommUtils.outblue("($name) idle")
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t00",targetState="controllo",cond=whenDispatch("robotUpdate"))
+				}	 
+				state("controllo") { //this:State
+					action { //it:State
+						if( checkMsgContent( Term.createTerm("robotUpdate(X)"), Term.createTerm("robotUpdate(X)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 
+											var pl = payloadArg(0)
+											if(pl.equals("robotFree")){
+												robotFree=true;
+											}
+								CommUtils.outblue("($name) robotUpdate: $pl")
+						}
+						
+						        if( robotFree === true){
+						            //chiedi ws_status
+						            ws_status = (0..5).random()            
+						            //chiedi as_status
+						            as_status = (0..5).random()
+						        }
+								println("($name) ws_status: ($ws_status) , as_status: ($as_status)")
+						        
+						
+						
+						        if(ws_status>0 && as_status< DLIMIT && robotFree === true){
+						CommUtils.outblue("($name) controllo: condizioni corrette")
+						
+						            robotFree=false;
+						        }
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="idle", cond=doswitchGuarded({ robotFree === false 
+					}) )
+					transition( edgeName="goto",targetState="polling", cond=doswitchGuarded({! ( robotFree === false 
+					) }) )
+				}	 
+				state("polling") { //this:State
+					action { //it:State
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_polling", 
+				 	 					  scope, context!!, "local_tout_"+name+"_polling", 2000.toLong() )  //OCT2023
+					}	 	 
+					 transition(edgeName="t11",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_polling"))   
 				}	 
 			}
 		}

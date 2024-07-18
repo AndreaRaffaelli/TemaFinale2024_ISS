@@ -170,9 +170,9 @@ task dovesiamo {
 
 distributions {
     main {
-        distributionBaseName = 'testoprobot'
+        distributionBaseName = 'testwis'
         contents { 
-             from './testoprobot.pl'
+             from './testwis.pl'
              from './sysRules.pl'
              from './facadeConfig.json'
         }

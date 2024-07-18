@@ -19,8 +19,11 @@ QActor wis context ctxtest{
 	}
 	Goto idle
 	
-	State idle {}
-	Transition t0
+	State idle {
+			println("($name) idle") color blue	
+
+	}
+	Transition t0			
 		whenMsg robotUpdate -> controllo		
 		//whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
 	
@@ -35,6 +38,7 @@ QActor wis context ctxtest{
 			println("($name) robotUpdate: $pl") color blue	
 		}
 
+
 		[#
         if( robotFree === true){
             //chiedi ws_status
@@ -42,23 +46,25 @@ QActor wis context ctxtest{
             //chiedi as_status
             as_status = (0..5).random()
         }
-        #]
+		println("($name) ws_status: ($ws_status) , as_status: ($as_status)")
+        
 
 
         if(ws_status>0 && as_status< DLIMIT && robotFree === true){
             #]
-            forward oprobot -m robotStart : robotStart( parti )
-            println("($name) controllo: condizioni corrette")
+            //forward oprobot -m robotStart : robotStart( parti )
+            println("($name) controllo: condizioni corrette") color blue
             [#
             robotFree=false;
         }
         #]
-	}
-    Goto idle if [# robotFree = false #] else polling
+        
+	}   
+    Goto idle if [# robotFree === false#] else polling
 
     State polling{}
     Transition t1 
-        whenTimeVar 2000 -> controllo
+        whenTime 2000 -> controllo
         //whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
 	
 	//State burnEndHandler{
@@ -66,5 +72,13 @@ QActor wis context ctxtest{
 	//}
 	//Goto idle
 
-    //polling
 }
+
+
+QActor test context ctxtest{ 
+		State s0 initial{
+			delay 500
+			forward wis -m robotUpdate : robotUpdate( robotFree )
+		}
+}
+

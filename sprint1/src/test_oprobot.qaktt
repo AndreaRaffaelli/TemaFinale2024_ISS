@@ -22,7 +22,7 @@ Context ctxbasicrobot ip [host="127.0.0.1"  port=6970]
 
 ExternalQActor basicrobot context ctxbasicrobot
 
-QActor oprobot context ctxtest{ 
+QActor oprobot context ctxtest{   
 [# 	
 	var RobotState = "IDLE";
 	var MentalState = "HOME";
@@ -49,7 +49,7 @@ QActor oprobot context ctxtest{
 		println("($name): $MentalState") color magenta 
 		updateResource [#  "info($MentalState)" #]
 		onMsg( engagedone : engagedone(X) ){			
-			forward wis -m robotUpdate : robotUpdate("idle")
+			forward wis -m robotUpdate : robotUpdate(idle)
 		}
 	}
  	Transition t0
@@ -107,7 +107,7 @@ QActor oprobot context ctxtest{
 		println("($name): $MentalState") color magenta 
 		updateResource [#  "info($MentalState)" #]
 		request basicrobot -m moverobot : moverobot(Ho_x,Ho_y) //posizione home
-		forward wis -m robotUpdate : robotUpdate("idle")
+		forward wis -m robotUpdate : robotUpdate(idle) 
 	}
 	Transition t6		
 			whenReply moverobotdone -> home

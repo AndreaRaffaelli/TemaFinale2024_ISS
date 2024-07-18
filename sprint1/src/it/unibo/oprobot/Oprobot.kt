@@ -17,7 +17,7 @@ import it.unibo.kactor.sysUtil.createActor   //Sept2023
 class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
 	override fun getInitialState() : String{
-		return "home"
+		return "initialize"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
@@ -35,20 +35,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 			val Ao_x = 7; //AshOut
 			val Ao_y = 7;
 		return { //this:ActionBasciFsm
-				state("home") { //this:State
-					action { //it:State
-						 MentalState="HOME" 
-						CommUtils.outmagenta("($name): $MentalState")
-						updateResourceRep(  "info($MentalState)"  
-						)
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="engage", cond=doswitch() )
-				}	 
-				state("engage") { //this:State
+				state("initialize") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name | $MyName engaging ... ")
 						request("engage", "engage($MyName,330)" ,"basicrobot" )  
@@ -57,18 +44,26 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="wait",cond=whenReply("engagedone"))
+					 transition(edgeName="t00",targetState="home",cond=whenReply("engagedone"))
 					transition(edgeName="t01",targetState="end",cond=whenReply("engagerefused"))
 				}	 
-				state("wait") { //this:State
+				state("home") { //this:State
 					action { //it:State
+						 MentalState="HOME" 
+						CommUtils.outmagenta("($name): $MentalState")
+						updateResourceRep(  "info($MentalState)"  
+						)
+						if( checkMsgContent( Term.createTerm("engagedone(ARG)"), Term.createTerm("engagedone(X)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								forward("robotUpdate", "robotUpdate(idle)" ,"wis" ) 
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t02",targetState="goToWasteIn",cond=whenDispatch("robotStart"))
-					transition(edgeName="t03",targetState="gatheringAsh",cond=whenEvent("burnEnd"))
+					transition(edgeName="t03",targetState="home_go",cond=whenEvent("burnEnd"))
 				}	 
 				state("goToWasteIn") { //this:State
 					action { //it:State
@@ -110,21 +105,8 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t38",targetState="home_wait",cond=whenReply("moverobotdone"))
+					 transition(edgeName="t38",targetState="home",cond=whenReply("moverobotdone"))
 					transition(edgeName="t39",targetState="end",cond=whenReply("moverobotfailed"))
-				}	 
-				state("home_wait") { //this:State
-					action { //it:State
-						 MentalState="HOME" 
-						CommUtils.outmagenta("($name): $MentalState")
-						updateResourceRep(  "info($MentalState)"  
-						)
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t410",targetState="home_go",cond=whenEvent("burnEnd"))
 				}	 
 				state("home_go") { //this:State
 					action { //it:State
@@ -134,8 +116,8 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t511",targetState="gatheringAsh",cond=whenReply("moverobotdone"))
-					transition(edgeName="t512",targetState="end",cond=whenReply("moverobotfailed"))
+					 transition(edgeName="t410",targetState="gatheringAsh",cond=whenReply("moverobotdone"))
+					transition(edgeName="t411",targetState="end",cond=whenReply("moverobotfailed"))
 				}	 
 				state("gatheringAsh") { //this:State
 					action { //it:State
@@ -149,8 +131,8 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t613",targetState="unload",cond=whenReply("moverobotdone"))
-					transition(edgeName="t614",targetState="end",cond=whenReply("moverobotfailed"))
+					 transition(edgeName="t512",targetState="unload",cond=whenReply("moverobotdone"))
+					transition(edgeName="t513",targetState="end",cond=whenReply("moverobotfailed"))
 				}	 
 				state("unload") { //this:State
 					action { //it:State
@@ -159,12 +141,14 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						updateResourceRep(  "info($MentalState)"  
 						)
 						request("moverobot", "moverobot(Ho_x,Ho_y)" ,"basicrobot" )  
-						forward("robotUpdate", "robotUpdate("idle")" ,"wis" ) 
+						forward("robotUpdate", "robotUpdate(idle)" ,"wis" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t614",targetState="home",cond=whenReply("moverobotdone"))
+					transition(edgeName="t615",targetState="end",cond=whenReply("moverobotfailed"))
 				}	 
 				state("end") { //this:State
 					action { //it:State
