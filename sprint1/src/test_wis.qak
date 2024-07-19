@@ -7,7 +7,7 @@ Event burnEnd : burnEnd( ARG )
 Context ctxtest ip [host="localhost" port=6969]
 
 QActor wis context ctxtest{ 
-	[#
+	[#//
 		var ws_status = 0;
         var as_status = 0;
 

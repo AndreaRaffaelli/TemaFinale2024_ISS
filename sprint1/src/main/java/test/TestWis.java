@@ -53,15 +53,19 @@ public static void activateSystemUsingDeploy() {
 		public void run(){
 			try {
                 Process p;
-                if(System.getProperty("os.name")== "Linux") {
-                    Runtime.getRuntime().exec("tar -xvf ./build/distribution/sprintuno-1.0.tar");
+                if(System.getProperty("os.name").equals("Linux")) {
+                	p = Runtime.getRuntime().exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
+                    p.waitFor();
+                    p.destroy();                    
                     CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
-                    p = Runtime.getRuntime().exec("./build/distribution/sprintuno-1.0/bin/sprintuno");
+                    p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis");
                     showOutput(p,ColorsOut.BLACK);
                 } else {
-                    Runtime.getRuntime().exec("tar -xvf ./build/distribution/sprintuno-1.0.tar");
+                	p = Runtime.getRuntime().exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
+                    p.waitFor();
+                    p.destroy();
                     CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
-                    p = Runtime.getRuntime().exec("./build/distribution/sprintuno-1.0/bin/sprintuno.bat");
+                    p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis.bat");
                     showOutput(p,ColorsOut.BLACK);
                 }
 
@@ -76,8 +80,9 @@ public static void activateSystemUsingDeploy() {
 
 
 
-public static void main(){
-    activateSystemUsingDeploy();
+public static void main(String[] args){
+//	System.out.println(System.getProperty("os.name"));
+	activateSystemUsingDeploy();
 }
 
 
