@@ -72,7 +72,9 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						
 						
 						        if(ws_status>0 && as_status< DLIMIT && robotFree === true){
-						CommUtils.outblue("($name) controllo: condizioni corrette")
+						CommUtils.outblue("($name) invio messaggio start")
+						CommUtils.outblue("($name) controllo: condizioni corrette e start")
+						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
 						
 						            robotFree=false;
 						        }

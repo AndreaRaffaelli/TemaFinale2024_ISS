@@ -3,8 +3,11 @@ System testwis
 Dispatch robotStart: robotStart(X)
 Dispatch robotUpdate: robotUpdate(X)
 Event burnEnd : burnEnd( ARG )
+Request ciao : ciao(CIAO)
+Reply ciao : ciao(CIAO)
 
 Context ctxtest ip [host="localhost" port=6969]
+//Context ctxoprobot ip [host="localhost" port=8080]
 
 QActor wis context ctxtest{ 
 	[#//
@@ -52,8 +55,9 @@ QActor wis context ctxtest{
 
         if(ws_status>0 && as_status< DLIMIT && robotFree === true){
             #]
-            //forward oprobot -m robotStart : robotStart( parti )
-            println("($name) controllo: condizioni corrette") color blue
+            println("($name) invio messaggio start") color blue
+            println("($name) controllo: condizioni corrette e start") color blue
+            forward oprobot -m robotStart : robotStart( parti )
             [#
             robotFree=false;
         }
@@ -74,11 +78,19 @@ QActor wis context ctxtest{
 
 }
 
-
 QActor test context ctxtest{ 
 		State s0 initial{
+			printCurrentMessage color blue
 			delay 500
 			forward wis -m robotUpdate : robotUpdate( robotFree )
 		}
+//		Transition t0
+//			whenRequest ciao -> s1
+//			
+//		State s1{
+//			replyTo ciao with ciao : ciao(CIAO)
+//		}
 }
 
+
+ExternalQActor oprobot context ctxtest

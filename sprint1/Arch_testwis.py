@@ -28,5 +28,7 @@ with Diagram('testwisArch', show=False, outformat='png', graph_attr=graphattr) a
      with Cluster('ctxtest', graph_attr=nodeattr):
           wis=Custom('wis','./qakicons/symActorSmall.png')
           test=Custom('test','./qakicons/symActorSmall.png')
+          oprobot=Custom('oprobot(ext)','./qakicons/externalQActor.png')
      test >> Edge(color='blue', style='solid',  decorate='true', label='<robotUpdate &nbsp; >',  fontcolor='blue') >> wis
+     wis >> Edge(color='blue', style='solid',  decorate='true', label='<robotStart &nbsp; >',  fontcolor='blue') >> oprobot
 diag

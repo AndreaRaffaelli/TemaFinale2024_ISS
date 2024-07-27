@@ -1,5 +1,5 @@
 package main.java.test;
- 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import java.io.BufferedReader;
@@ -24,102 +24,103 @@ import unibo.basicomm23.utils.CommUtils;
 //import it.unibo.ctxreferee.MainCtxrefereeKt;
 import unibo.basicomm23.utils.ConnectionFactory;
 
-
-
 public class TestWis {
-private static Interaction connSupport;
+	private static Interaction connSupport;
 
-private static final String NAME = "opRobot";
-private static final String ADDRESS = "localhost"; // Indirizzo dell'host
-private static final int PORT = 8080;              // Porta (modificare secondo necessità)
-private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
- 
-	public void test() {
-        try { 
-            // Creazione della connessione utilizzando la ConnectionFactory
-            Interaction conn = ConnectionFactory.createClientSupport(
-                PROTOCOL, ADDRESS, String.valueOf(PORT)
-            );
- 
-            // Loop per ricevere messaggi
-            while (true) {
-                // Ricezione del messaggio
-                String receivedMessage = conn.receiveMsg();
-                CommUtils.outblue("opRobot | Received message: " + receivedMessage);
- 
-                // Logica di gestione del messaggio
-                handleMessage(receivedMessage);
-            }
- 
-        } catch (Exception e) {
-            CommUtils.outred("ERROR: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+	private static final String NAME = "oprobot";
+	private static final String ADDRESS = "localhost:6969"; // Indirizzo dell'host
+//	private static final int PORT = 6969; // Porta (modificare secondo necessità)
+	private static final String ENTRY = "ctxtest/oprobot"; // Porta (modificare secondo necessità)
+	
+	private static final ProtocolType PROTOCOL = ProtocolType.coap; // Protocollo da utilizzare
 
-   	private void handleMessage(String msg) {
-        // Implementazione della logica per gestire il messaggio ricevuto
-        CommUtils.outmagenta("Handling message: " + msg);
-        // Aggiungere qui la logica specifica per il trattamento del messaggio
-    }
+	public static void test() {
+		try {
+			// Creazione della connessione utilizzando la ConnectionFactory
+			Interaction conn = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS,ENTRY);
+			CommUtils.outblue("opRobot | creata connessione");
+			
+//			conn.request("msg(ciao,dispatch,oprobot,test,ciao,0)");
+//			System.out.println(conn.receiveMsg());
+			
+			// Loop per ricevere messaggi
+			while (true) {
+				// Ricezione del messaggio
+				String receivedMessage = conn.receiveMsg();
+				CommUtils.outblue("opRobot | Received message: " + receivedMessage);
 
-public static void showOutput(Process proc, String color){
-	new Thread(){
-		public void run(){
-			try {
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-			ColorsOut.outappl("Here is the standard output of the command:\n", color);
-			while (true){
-				String s = stdInput.readLine();
-				if ( s != null ) ColorsOut.outappl( s, color );
-			} 
-			}catch (IOException e) {
-				e.printStackTrace();
+				// Logica di gestione del messaggio
+				handleMessage(receivedMessage);
 			}
+
+		} catch (Exception e) {
+			CommUtils.outred("ERROR: " + e.getMessage());
+			e.printStackTrace();
 		}
-	}.start();
-}
+	}
 
+	private static void handleMessage(String msg) {
+		// Implementazione della logica per gestire il messaggio ricevuto
+		CommUtils.outmagenta("Handling message: " + msg);
+		// Aggiungere qui la logica specifica per il trattamento del messaggio
+	}
 
-public static void activateSystemUsingDeploy() { 
-	Thread th = new Thread(){
-		public void run(){
-			try {
-                Process p;
-                if(System.getProperty("os.name").equals("Linux")) {
-                	p = Runtime.getRuntime().exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
-                    p.waitFor();
-                    p.destroy();                    
-                    CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
-                    p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis");
-                    showOutput(p,ColorsOut.BLACK);
-                } else {
-                	p = Runtime.getRuntime().exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
-                    p.waitFor();
-                    p.destroy();
-                    CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
-                    p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis.bat");
-                    showOutput(p,ColorsOut.BLACK);
-                }
-
-				showOutput(p,ColorsOut.BLACK);
-			} catch ( Exception e) {
-				CommUtils.outred("TestWis activate ERROR " + e.getMessage());
+	public static void showOutput(Process proc, String color) {
+		new Thread() {
+			public void run() {
+				try {
+					BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+					BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+					ColorsOut.outappl("Here is the standard output of the command:\n", color);
+					while (true) {
+						String s = stdInput.readLine();
+						if (s != null)
+							ColorsOut.outappl(s, color);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-	};
-	th.start();
-}  
+		}.start();
+	}
 
+	public static void activateSystemUsingDeploy() {
+		Thread th = new Thread() {
+			public void run() {
+				try {
+					Process p;
+					if (System.getProperty("os.name").equals("Linux")) {
+						p = Runtime.getRuntime().exec("rm -rf build/distributions/testwis-1.0");
+						p = Runtime.getRuntime()
+								.exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
+						p.waitFor();
+						p.destroy();
+						CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
+						p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis");
+						showOutput(p, ColorsOut.BLACK);
+					} else {
+						p = Runtime.getRuntime()
+								.exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
+						p.waitFor();
+						p.destroy();
+						CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
+						p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis.bat");
+						showOutput(p, ColorsOut.BLACK);
+					}
 
-public static void activateFakeOpRobot{
+					showOutput(p, ColorsOut.BLACK);
+				} catch (Exception e) {
+					CommUtils.outred("TestWis activate ERROR " + e.getMessage());
+				}
+			}
+		};
+		th.start();
+	}
 
-}
-
-public static void main(String[] args){
+	public static void main(String[] args) {
 //	System.out.println(System.getProperty("os.name"));
-	activateSystemUsingDeploy();
-}
+		activateSystemUsingDeploy();
+		test();
+	}
 
 }
