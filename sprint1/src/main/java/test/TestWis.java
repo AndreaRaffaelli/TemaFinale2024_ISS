@@ -29,6 +29,40 @@ import unibo.basicomm23.utils.ConnectionFactory;
 public class TestWis {
 private static Interaction connSupport;
 
+private static final String NAME = "opRobot";
+private static final String ADDRESS = "localhost"; // Indirizzo dell'host
+private static final int PORT = 8080;              // Porta (modificare secondo necessità)
+private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
+ 
+	public void test() {
+        try { 
+            // Creazione della connessione utilizzando la ConnectionFactory
+            Interaction conn = ConnectionFactory.createClientSupport(
+                PROTOCOL, ADDRESS, String.valueOf(PORT)
+            );
+ 
+            // Loop per ricevere messaggi
+            while (true) {
+                // Ricezione del messaggio
+                String receivedMessage = conn.receiveMsg();
+                CommUtils.outblue("opRobot | Received message: " + receivedMessage);
+ 
+                // Logica di gestione del messaggio
+                handleMessage(receivedMessage);
+            }
+ 
+        } catch (Exception e) {
+            CommUtils.outred("ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+   	private void handleMessage(String msg) {
+        // Implementazione della logica per gestire il messaggio ricevuto
+        CommUtils.outmagenta("Handling message: " + msg);
+        // Aggiungere qui la logica specifica per il trattamento del messaggio
+    }
+
 public static void showOutput(Process proc, String color){
 	new Thread(){
 		public void run(){
@@ -79,11 +113,13 @@ public static void activateSystemUsingDeploy() {
 }  
 
 
+public static void activateFakeOpRobot{
+
+}
 
 public static void main(String[] args){
 //	System.out.println(System.getProperty("os.name"));
 	activateSystemUsingDeploy();
 }
-
 
 }
