@@ -2,22 +2,28 @@ System testwis
 
 Dispatch robotStart: robotStart(X)
 Dispatch robotUpdate: robotUpdate(X)
+
 Event burnEnd : burnEnd( ARG )
-Request ciao : ciao(CIAO)
-Reply ciao : ciao(CIAO)
+
+Dispatch info : info(N,VAR,VAL)
+
+Request testRequest : testRequest(X)
+Reply testReply : testReply(X)
 
 Context ctxtest ip [host="localhost" port=6969]
 //Context ctxoprobot ip [host="localhost" port=8080]
 
 QActor wis context ctxtest{ 
 	[#//
-		var ws_status = 0;
-        var as_status = 0;
+		var Ws_status = 0;
+        var As_status = 0;
 
-		var robotFree = true;
+		var RobotFree = true;
 		var DLIMIT = 3;		// zero non corretto
 	#]
 	State s0 initial{
+		delay 1000
+		updateResource [# "info($name,RobotFree,$RobotFree)" #]
 		printCurrentMessage color blue 
 	}
 	Goto idle
@@ -34,8 +40,8 @@ QActor wis context ctxtest{
         onMsg( robotUpdate:robotUpdate(X)){
 			[# 
 			var pl = payloadArg(0)
-			if(pl.equals("robotFree")){
-				robotFree=true;
+			if(pl.equals("RobotFree")){
+				RobotFree=true;
 			}
 			#]
 			println("($name) robotUpdate: $pl") color blue	
@@ -43,28 +49,34 @@ QActor wis context ctxtest{
 
 
 		[#
-        if( robotFree === true){
-            //chiedi ws_status
-            ws_status = (0..5).random()            
-            //chiedi as_status
-            as_status = (0..5).random()
+        if( RobotFree === true){
+            //chiedi Ws_status
+            Ws_status = (0..5).random()            
+            //chiedi As_status
+            As_status = (0..5).random()
         }
-		println("($name) ws_status: ($ws_status) , as_status: ($as_status)")
+		println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
         
 
 
-        if(ws_status>0 && as_status< DLIMIT && robotFree === true){
+        if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
             #]
             println("($name) invio messaggio start") color blue
             println("($name) controllo: condizioni corrette e start") color blue
             forward oprobot -m robotStart : robotStart( parti )
             [#
-            robotFree=false;
+            RobotFree=false;
+            #]
+						updateResource [# "info($name,RobotFree,$RobotFree)" #]
+                        updateResource [# "info($name,Ws_status,$Ws_status)" #]
+                        updateResource [# "info($name,As_status,$As_status)" #]
+            [#
         }
         #]
         
+        
 	}   
-    Goto idle if [# robotFree === false#] else polling
+    Goto idle if [# RobotFree === false#] else polling
 
     State polling{}
     Transition t1 
@@ -78,19 +90,51 @@ QActor wis context ctxtest{
 
 }
 
-QActor test context ctxtest{ 
+QActor test_observer context ctxtest{ 
+	 	[# var N = ""; var VAL = ""; var VAR = ""  ; var RobotFree = "";var As_status="" ; var Ws_status=""#]
+	
 		State s0 initial{
 			printCurrentMessage color blue
 			delay 500
-			forward wis -m robotUpdate : robotUpdate( robotFree )
+			observeResource wis msgid info
+			forward wis -m robotUpdate : robotUpdate( RobotFree )
 		}
-//		Transition t0
-//			whenRequest ciao -> s1
-//			
-//		State s1{
-//			replyTo ciao with ciao : ciao(CIAO)
-//		}
+		Transition t0
+			whenMsg info -> s1
+			
+		State s1{
+			onMsg( info :  info(N,VAL, VAR) ){
+    		[# N = payloadArg(0) #]
+			[# VAR = payloadArg(1)#]
+    	    [# VAL = payloadArg(2)#]
+    		
+    		println("$name views $N $VAR $VAL") color magenta
+    		[#if(VAR.equals("RobotFree")){
+    				RobotFree=VAL;
+    			} else if(VAR.equals("As_status")){
+    				As_status=VAL;
+    			} else{
+  					Ws_status=VAL;
+    			}
+    		#]
+ 		}
+ 		
+ 		}
+		Transition t1
+			whenMsg info -> s1
+			whenRequest testRequest -> s2  
+			
+		State s2{
+			replyTo testRequest with testReply : testReply($RobotFree, $As_status, $Ws_status)
+		}
+		Transition t1
+			whenMsg info -> s1
 }
 
 
-ExternalQActor oprobot context ctxtest
+
+QActor oprobot context ctxtest{
+	State s0 initial{
+		
+	}
+} 

@@ -22,14 +22,17 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		//
-				var ws_status = 0;
-		        var as_status = 0;
+				var Ws_status = 0;
+		        var As_status = 0;
 		
-				var robotFree = true;
+				var RobotFree = true;
 				var DLIMIT = 3;		// zero non corretto
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						delay(1000) 
+						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
+						)
 						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						//genTimer( actor, state )
@@ -55,37 +58,44 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 
 											var pl = payloadArg(0)
-											if(pl.equals("robotFree")){
-												robotFree=true;
+											if(pl.equals("RobotFree")){
+												RobotFree=true;
 											}
 								CommUtils.outblue("($name) robotUpdate: $pl")
 						}
 						
-						        if( robotFree === true){
-						            //chiedi ws_status
-						            ws_status = (0..5).random()            
-						            //chiedi as_status
-						            as_status = (0..5).random()
+						        if( RobotFree === true){
+						            //chiedi Ws_status
+						            Ws_status = (0..5).random()            
+						            //chiedi As_status
+						            As_status = (0..5).random()
 						        }
-								println("($name) ws_status: ($ws_status) , as_status: ($as_status)")
+								println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
 						        
 						
 						
-						        if(ws_status>0 && as_status< DLIMIT && robotFree === true){
+						        if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
 						CommUtils.outblue("($name) invio messaggio start")
 						CommUtils.outblue("($name) controllo: condizioni corrette e start")
 						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
 						
-						            robotFree=false;
+						            RobotFree=false;
+						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
+						)
+						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
+						)
+						updateResourceRep( "info($name,As_status,$As_status)"  
+						)
+						
 						        }
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="idle", cond=doswitchGuarded({ robotFree === false 
+					 transition( edgeName="goto",targetState="idle", cond=doswitchGuarded({ RobotFree === false 
 					}) )
-					transition( edgeName="goto",targetState="polling", cond=doswitchGuarded({! ( robotFree === false 
+					transition( edgeName="goto",targetState="polling", cond=doswitchGuarded({! ( RobotFree === false 
 					) }) )
 				}	 
 				state("polling") { //this:State

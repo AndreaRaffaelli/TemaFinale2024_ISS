@@ -35,27 +35,22 @@ public class TestWis {
 	private static final ProtocolType PROTOCOL = ProtocolType.coap; // Protocollo da utilizzare
 
 	public static void test() {
-		try {
-			// Creazione della connessione utilizzando la ConnectionFactory
-			Interaction conn = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS,ENTRY);
-			CommUtils.outblue("opRobot | creata connessione");
-			
-//			conn.request("msg(ciao,dispatch,oprobot,test,ciao,0)");
-//			System.out.println(conn.receiveMsg());
-			
-			// Loop per ricevere messaggi
-			while (true) {
-				// Ricezione del messaggio
-				String receivedMessage = conn.receiveMsg();
-				CommUtils.outblue("opRobot | Received message: " + receivedMessage);
-
-				// Logica di gestione del messaggio
-				handleMessage(receivedMessage);
-			}
-
+		IApplMessage req  = CommUtils.buildRequest( "tester", "testRequest", "testRequest(X)", "test_observer");
+ 		try {
+  			 CommUtils.outmagenta("test_observer ======================================= ");
+			while( connSupport == null ) {
+ 				connSupport = ConnectionFactory.createClientSupport(ProtocolType.tcp, "localhost", "6969");
+ 				CommUtils.outcyan("testwis another connect attempt ");
+ 				Thread.sleep(1000);
+ 			}
+ 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+			IApplMessage reply = connSupport.request(req);
+			CommUtils.outcyan("test_observer reply="+reply);
+			String answer = reply.msgContent();
+			assertEquals(answer, "obsinfo(5)");
 		} catch (Exception e) {
-			CommUtils.outred("ERROR: " + e.getMessage());
-			e.printStackTrace();
+			CommUtils.outred("testPingPong ERROR " + e.getMessage());
+			fail("testRequest " + e.getMessage());
 		}
 	}
 

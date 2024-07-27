@@ -4,11 +4,13 @@
 dispatch( robotStart, robotStart(X) ).
 dispatch( robotUpdate, robotUpdate(X) ).
 event( burnEnd, burnEnd(ARG) ).
-request( ciao, ciao(CIAO) ).
+dispatch( info, info(N,VAR,VAL) ).
+request( testRequest, testRequest(X) ).
 %====================================================================================
 context(ctxtest, "localhost",  "TCP", "6969").
  qactor( wis, ctxtest, "it.unibo.wis.Wis").
  static(wis).
-  qactor( test, ctxtest, "it.unibo.test.Test").
- static(test).
-  qactor( oprobot, ctxtest, "external").
+  qactor( test_observer, ctxtest, "it.unibo.test_observer.Test_observer").
+ static(test_observer).
+  qactor( oprobot, ctxtest, "it.unibo.oprobot.Oprobot").
+ static(oprobot).
