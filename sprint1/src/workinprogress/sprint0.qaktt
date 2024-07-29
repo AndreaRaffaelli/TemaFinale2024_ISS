@@ -5,7 +5,7 @@ Context ctxServiceArea  ip [host="localhost" port=8001]
 Context ctxWasteStorage  ip [host="localhost" port=8001] 
 Context ctxAshStorage   ip [host="localhost" port=8001] 
 
-//Dispatch sonarUpdate: sonarUpdate(X)
+Dispatch sonarUpdate: sonarUpdate(X)
 Dispatch scaleUpdate: scaleUpdate(X)
 
 Dispatch robotStart: robotStart(X)

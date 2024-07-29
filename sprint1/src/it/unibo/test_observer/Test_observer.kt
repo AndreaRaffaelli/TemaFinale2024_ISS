@@ -66,6 +66,8 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 						var RESULT = "$RobotFree,$As_status,$Ws_status" 
 						CommUtils.outyellow("$name print result: $RESULT")
 						answer("testRequest", "testReply", "testReply($RESULT)"   )  
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

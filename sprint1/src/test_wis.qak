@@ -118,6 +118,8 @@ QActor test_observer context ctxtest{
   					Ws_status=VAL;
     			}
     		#]
+    		//[#var RESULT = "$RobotFree,$As_status,$Ws_status"#]
+			//println("$name print result: $RESULT") color yellow
  		}
  		
  		}
@@ -128,7 +130,9 @@ QActor test_observer context ctxtest{
 		State s2{
 			[#var RESULT = "$RobotFree,$As_status,$Ws_status"#]
 			println("$name print result: $RESULT") color yellow
+			//[#System.out.println("$RESULT");				 #]
 			replyTo testRequest with testReply : testReply($RESULT)
+			printCurrentMessage
 		}
 		Transition t1
 			whenMsg info -> s1

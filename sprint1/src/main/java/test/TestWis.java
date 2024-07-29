@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import unibo.basicomm23.interfaces.IApplMessage;
@@ -26,46 +27,39 @@ import unibo.basicomm23.utils.ConnectionFactory;
 public class TestWis {
 	private static Interaction connSupport;
 
-	private static final String NAME = "oprobot";
-	private static final String ADDRESS = "localhost:6969"; // Indirizzo dell'host
-//	private static final int PORT = 6969; // Porta (modificare secondo necessità)
-	private static final String ENTRY = "ctxtest/oprobot"; // Porta (modificare secondo necessità)
-	
-	private static final ProtocolType PROTOCOL = ProtocolType.coap; // Protocollo da utilizzare
+	private static final String ADDRESS = "localhost"; // Indirizzo dell'host
+	private static final String PORT = "6969"; // Porta (modificare secondo necessità)
+	private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
+	private static final int DLIMIT = 3;
 
-	public static void test() {
-		IApplMessage req  = CommUtils.buildRequest( "tester", "testRequest", "testRequest(A)", "test_observer");
- 		try {
-  			 CommUtils.outmagenta("test_observer ======================================= ");
-			while( connSupport == null ) {
- 				connSupport = ConnectionFactory.createClientSupport(ProtocolType.tcp, "localhost", "6969");
- 				CommUtils.outcyan("testwis another connect attempt ");
- 				Thread.sleep(1000);
- 			}
- 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
- 			Thread.sleep(5000);
+	@Test
+	public void test() {
+		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
+		try {
+			CommUtils.outmagenta("test_observer ======================================= ");
+			while (connSupport == null) {
+				connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
+				CommUtils.outcyan("testwis another connect attempt ");
+				Thread.sleep(1000);
+			}
+			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+			Thread.sleep(5000);
 
- 			IApplMessage reply = connSupport.request(req);
-			CommUtils.outcyan("test_observer reply="+reply);
+			IApplMessage reply = connSupport.request(req);
+			CommUtils.outcyan("test_observer reply=" + reply);
 			String answer = reply.msgContent();
-	        String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
 			String[] s = parameters.split(",");
 
 			assertEquals(s[0], "false");
-			assertTrue(Integer.valueOf(s[1])<5);	// Minore 5 perchè il limite massimo imposto con la funione random
-			assertTrue(Integer.valueOf(s[2])>0);
+			assertTrue(Integer.valueOf(s[1]) < DLIMIT); // Minore del limite massimo
+			assertTrue(Integer.valueOf(s[2]) > 0);
 			CommUtils.outcyan("Test eseguiti con successo");
 
 		} catch (Exception e) {
 			CommUtils.outred("test_observer ERROR " + e.getMessage());
 			fail("testRequest " + e.getMessage());
 		}
-	}
-
-	private static void handleMessage(String msg) {
-		// Implementazione della logica per gestire il messaggio ricevuto
-		CommUtils.outmagenta("Handling message: " + msg);
-		// Aggiungere qui la logica specifica per il trattamento del messaggio
 	}
 
 	public static void showOutput(Process proc, String color) {
@@ -87,7 +81,8 @@ public class TestWis {
 		}.start();
 	}
 
-	public static void activateSystemUsingDeploy() {
+	@Before
+	public void activateSystemUsingDeploy() {
 		Thread th = new Thread() {
 			public void run() {
 				try {
@@ -100,7 +95,7 @@ public class TestWis {
 						p.destroy();
 						CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
 						p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis");
-						showOutput(p, ColorsOut.BLACK);
+//						showOutput(p, ColorsOut.BLACK);
 					} else {
 						p = Runtime.getRuntime()
 								.exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
@@ -108,9 +103,8 @@ public class TestWis {
 						p.destroy();
 						CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
 						p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis.bat");
-						showOutput(p, ColorsOut.BLACK);
+//						showOutput(p, ColorsOut.BLACK);
 					}
-
 					showOutput(p, ColorsOut.BLACK);
 				} catch (Exception e) {
 					CommUtils.outred("TestWis activate ERROR " + e.getMessage());
@@ -120,10 +114,10 @@ public class TestWis {
 		th.start();
 	}
 
-	public static void main(String[] args) {
-//	System.out.println(System.getProperty("os.name"));
-		activateSystemUsingDeploy();
-		test();
-	}
+//	public static void main(String[] args) {
+////	System.out.println(System.getProperty("os.name"));
+//		activateSystemUsingDeploy();
+//		test();
+//	}
 
 }

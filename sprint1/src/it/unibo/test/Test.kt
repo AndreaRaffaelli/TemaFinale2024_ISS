@@ -24,8 +24,6 @@ class Test ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) :
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
 						delay(500) 
 						forward("robotUpdate", "robotUpdate(robotFree)" ,"wis" ) 
 						//genTimer( actor, state )
