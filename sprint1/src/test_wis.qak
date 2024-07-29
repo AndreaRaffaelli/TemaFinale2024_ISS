@@ -8,7 +8,7 @@ Event burnEnd : burnEnd( ARG )
 Dispatch info : info(N,VAR,VAL)
 
 Request testRequest : testRequest(X)
-Reply testReply : testReply(X)
+Reply testReply : testReply(X,Y,Z)
 
 Context ctxtest ip [host="localhost" port=6969]
 //Context ctxoprobot ip [host="localhost" port=8080]
@@ -81,6 +81,7 @@ QActor wis context ctxtest{
     State polling{}
     Transition t1 
         whenTime 2000 -> controllo
+        
         //whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
 	
 	//State burnEndHandler{
@@ -125,10 +126,13 @@ QActor test_observer context ctxtest{
 			whenRequest testRequest -> s2  
 			
 		State s2{
-			replyTo testRequest with testReply : testReply($RobotFree, $As_status, $Ws_status)
+			[#var RESULT = "$RobotFree,$As_status,$Ws_status"#]
+			println("$name print: $RESULT") color yellow
+			replyTo testRequest with testReply : testReply($RESULT)
 		}
 		Transition t1
 			whenMsg info -> s1
+			whenRequest testRequest -> s2  
 }
 
 

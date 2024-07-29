@@ -63,13 +63,16 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 				}	 
 				state("s2") { //this:State
 					action { //it:State
-						answer("testRequest", "testReply", "testReply($RobotFree,$As_status,$Ws_status)"   )  
+						var RESULT = "$RobotFree,$As_status,$Ws_status" 
+						CommUtils.outyellow("$name print: $RESULT")
+						answer("testRequest", "testReply", "testReply($RESULT)"   )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t15",targetState="s1",cond=whenDispatch("info"))
+					transition(edgeName="t16",targetState="s2",cond=whenRequest("testRequest"))
 				}	 
 			}
 		}
