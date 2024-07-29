@@ -127,7 +127,7 @@ QActor test_observer context ctxtest{
 			
 		State s2{
 			[#var RESULT = "$RobotFree,$As_status,$Ws_status"#]
-			println("$name print: $RESULT") color yellow
+			println("$name print result: $RESULT") color yellow
 			replyTo testRequest with testReply : testReply($RESULT)
 		}
 		Transition t1

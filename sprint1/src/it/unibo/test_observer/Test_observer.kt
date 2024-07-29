@@ -64,7 +64,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 				state("s2") { //this:State
 					action { //it:State
 						var RESULT = "$RobotFree,$As_status,$Ws_status" 
-						CommUtils.outyellow("$name print: $RESULT")
+						CommUtils.outyellow("$name print result: $RESULT")
 						answer("testRequest", "testReply", "testReply($RESULT)"   )  
 						//genTimer( actor, state )
 					}

@@ -1,6 +1,7 @@
 package main.java.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,12 +43,19 @@ public class TestWis {
  				Thread.sleep(1000);
  			}
  			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
- 			Thread.sleep(10000);
+ 			Thread.sleep(5000);
 
  			IApplMessage reply = connSupport.request(req);
 			CommUtils.outcyan("test_observer reply="+reply);
 			String answer = reply.msgContent();
-//			assertEquals(answer, "obsinfo(5)");
+	        String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+			String[] s = parameters.split(",");
+
+			assertEquals(s[0], "false");
+			assertTrue(Integer.valueOf(s[1])<5);	// Minore 5 perchè il limite massimo imposto con la funione random
+			assertTrue(Integer.valueOf(s[2])>0);
+			CommUtils.outcyan("Test eseguiti con successo");
+
 		} catch (Exception e) {
 			CommUtils.outred("test_observer ERROR " + e.getMessage());
 			fail("testRequest " + e.getMessage());
