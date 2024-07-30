@@ -81,43 +81,76 @@ public class TestWis {
 		}.start();
 	}
 
-	@Before
-	public void activateSystemUsingDeploy() {
-		Thread th = new Thread() {
-			public void run() {
-				try {
-					Process p;
-					if (System.getProperty("os.name").equals("Linux")) {
-						p = Runtime.getRuntime().exec("rm -rf build/distributions/testwis-1.0");
-						p = Runtime.getRuntime()
-								.exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
-						p.waitFor();
-						p.destroy();
-						CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
-						p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis");
-//						showOutput(p, ColorsOut.BLACK);
-					} else {
-						p = Runtime.getRuntime()
-								.exec("tar -xvf build/distributions/testwis-1.0.tar -C build/distributions/");
-						p.waitFor();
-						p.destroy();
-						CommUtils.outmagenta("TestWis activateSystemUsingDeploy ");
-						p = Runtime.getRuntime().exec("./build/distributions/testwis-1.0/bin/testwis.bat");
-//						showOutput(p, ColorsOut.BLACK);
-					}
-					showOutput(p, ColorsOut.BLACK);
-				} catch (Exception e) {
-					CommUtils.outred("TestWis activate ERROR " + e.getMessage());
+	@BeforeClass
+	public static void activateSystemUsingDeploy() {
+		Thread th = new Thread(() -> {
+			Process p = null;
+			try {
+				String osName = System.getProperty("os.name");
+				if (osName.startsWith("Linux")) {
+					cleanOldDeployment();
+					extractTarball();
+					p = startProcess("./build/distributions/testwis-1.0/bin/testwis");
+				} else if (osName.startsWith("Windows")) {
+					extractTarball();
+					p = startProcess("./build/distributions/testwis-1.0/bin/testwis.bat");
+				} else {
+					CommUtils.outred("Unsupported operating system: " + osName);
+					return;
+				}
+
+				showOutput(p, ColorsOut.BLACK);
+				int exitCode = p.waitFor();
+				CommUtils.outmagenta("Process exited with code: " + exitCode);
+
+			} catch (Exception e) {
+				CommUtils.outred("Error during deployment: " + e.getMessage());
+			} finally {
+				if (p != null) {
+					p.destroy();
 				}
 			}
-		};
+		});
 		th.start();
 	}
-
+//
 //	public static void main(String[] args) {
 ////	System.out.println(System.getProperty("os.name"));
 //		activateSystemUsingDeploy();
 //		test();
 //	}
+
+	private static void cleanOldDeployment() throws IOException {
+		ProcessBuilder pb = new ProcessBuilder("rm", "-rf", "build/distributions/testwis-1.0");
+		Process p = pb.start();
+		try {
+			p.waitFor();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			CommUtils.outred("Cleanup interrupted");
+		} finally {
+			p.destroy();
+		}
+	}
+
+	private static void extractTarball() throws IOException {
+		ProcessBuilder pb = new ProcessBuilder("tar", "-xvf", "build/distributions/testwis-1.0.tar", "-C",
+				"build/distributions/");
+		Process p = pb.start();
+		try {
+			p.waitFor();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			CommUtils.outred("Extraction interrupted");
+		} finally {
+			p.destroy();
+		}
+	}
+
+	private static Process startProcess(String command) throws IOException {
+		ProcessBuilder pb = new ProcessBuilder(command.split(" "));
+		pb.redirectErrorStream(true); // Redirects error stream to output stream
+		return pb.start();
+	}
 
 }
