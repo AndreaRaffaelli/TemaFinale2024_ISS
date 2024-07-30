@@ -31,6 +31,7 @@ public class TestWis {
 	private static final String PORT = "6969"; // Porta (modificare secondo necessità)
 	private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
 	private static final int DLIMIT = 3;
+	private static String pid_context = "";
 
 	@Test
 	public void test() {
@@ -91,6 +92,7 @@ public class TestWis {
 					cleanOldDeployment();
 					extractTarball();
 					p = startProcess("./build/distributions/testwis-1.0/bin/testwis");
+					pid_context = Long.toString(p.pid());
 				} else if (osName.startsWith("Windows")) {
 					extractTarball();
 					p = startProcess("./build/distributions/testwis-1.0/bin/testwis.bat");
@@ -113,6 +115,35 @@ public class TestWis {
 		});
 		th.start();
 	}
+
+	@AfterClass
+	public static void terminateSystemUsingDeploy() throws IOException {
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Linux")) {
+			ProcessBuilder pb = new ProcessBuilder("kill", "-15", pid_context);
+			Process p = pb.start();
+			try {
+				p.waitFor();
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				CommUtils.outred("Context stopped");
+			} finally {
+				p.destroy();
+			}
+		} else if (osName.startsWith("Windows")) {
+			ProcessBuilder pb = new ProcessBuilder("taskkill", "/F", "/PID", pid_context);
+			Process p = pb.start();
+			try {
+				p.waitFor();
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				CommUtils.outred("Context stopped");
+			} finally {
+				p.destroy();
+			}
+		}
+	}
+
 //
 //	public static void main(String[] args) {
 ////	System.out.println(System.getProperty("os.name"));
