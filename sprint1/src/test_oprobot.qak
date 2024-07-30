@@ -18,7 +18,7 @@ Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
 
 
 Context ctxtest ip [host="localhost" port=6969]
-Context ctxbasicrobot ip [host="127.0.0.1"  port=6970]
+Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
 
 ExternalQActor basicrobot context ctxbasicrobot
 
