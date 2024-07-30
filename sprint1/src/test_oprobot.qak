@@ -52,8 +52,10 @@ QActor oprobot context ctxtest{
 			forward wis -m robotUpdate : robotUpdate(idle)
 		}
 	}
+
  	Transition t0
-		whenMsg robotStart -> goToWasteIn
+//		whenMsg robotStart -> goToWasteIn
+		whenTime 1000 -> goToWasteIn
 		whenEvent burnEnd -> home_go
  	
 	State goToWasteIn{
@@ -118,7 +120,6 @@ QActor oprobot context ctxtest{
 		[#System.exit(-1)#]
 	}
 }
-
 
 
 //Solo a scopo di test

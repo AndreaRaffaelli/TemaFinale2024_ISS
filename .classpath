@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="unibolibs/2p301.jar"/>
+	<classpathentry kind="lib" path="unibolibs/it.unibo.Qactork_1.5.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/it.unibo.Qactork.ide_1.5.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/it.unibo.Qactork.ui_1.5.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/qakdisplaygui24-1.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/qakdisplaygui24-1.0-plain.jar"/>
+	<classpathentry kind="lib" path="unibolibs/radarPojo.jar"/>
+	<classpathentry kind="lib" path="unibolibs/servicefacade24-1.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/servicefacade24-1.0-plain.jar"/>
+	<classpathentry kind="lib" path="unibolibs/unibo.basicomm23-1.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/unibo.planner23-1.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/unibo.qakactor23-5.0.jar"/>
+	<classpathentry kind="lib" path="unibolibs/uniboInterfaces.jar"/>
+	<classpathentry kind="lib" path="unibolibs/unibonoawtsupports.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
