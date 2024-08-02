@@ -12,7 +12,7 @@ reply( moverobotdone, moverobotok(ARG) ).  %%for moverobot
 reply( moverobotfailed, moverobotfailed(PLANDONE,PLANTODO) ).  %%for moverobot
 %====================================================================================
 context(ctxtest, "localhost",  "TCP", "6969").
-context(ctxbasicrobot, "127.0.0.1",  "TCP", "6970").
+context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
  qactor( basicrobot, ctxbasicrobot, "external").
   qactor( oprobot, ctxtest, "it.unibo.oprobot.Oprobot").
  static(oprobot).

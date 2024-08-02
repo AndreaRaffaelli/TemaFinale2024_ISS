@@ -33,7 +33,7 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("endBurn") { //this:State
 					action { //it:State
-						delay(500) 
+						delay(5000) 
 						emit("burnEnd", "burnEnd" ) 
 						//genTimer( actor, state )
 					}

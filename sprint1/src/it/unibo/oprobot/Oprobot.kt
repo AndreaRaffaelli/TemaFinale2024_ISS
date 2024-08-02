@@ -100,6 +100,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						CommUtils.outmagenta("($name): $MentalState")
 						updateResourceRep(  "info($MentalState)"  
 						)
+						delay(5000) 
 						forward("startBurn", "startBurn(1)" ,"incinerator" ) 
 						request("moverobot", "moverobot($Ho_x,$Ho_y)" ,"basicrobot" )  
 						//genTimer( actor, state )

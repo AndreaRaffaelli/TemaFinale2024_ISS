@@ -80,6 +80,7 @@ QActor oprobot context ctxtest{
 		[# MentalState="BURNIN"#]
 		println("($name): $MentalState") color magenta 
 		updateResource [#  "info($MentalState)" #]
+		delay 5000
 		forward incinerator -m startBurn: startBurn(1)
 		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione BurnIn
 	}
@@ -135,7 +136,7 @@ QActor incinerator context ctxtest{
 	}
 	Transition t0 whenMsg startBurn -> endBurn
 	State endBurn {
-		delay 500
+		delay 5000
 		emit burnEnd: burnEnd
 	}
 	

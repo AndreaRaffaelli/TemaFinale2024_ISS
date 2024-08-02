@@ -1,4 +1,1 @@
-{"actor":"wis", "msgType":"dispatch", "curstate":"idle", "nextstate":"controllo", "msgId":"robotUpdate"}
-{"actor":"test_observer", "msgType":"dispatch", "curstate":"s0", "nextstate":"s1", "msgId":"info"}
-{"actor":"test_observer", "msgType":"dispatch", "curstate":"s1", "nextstate":"s1", "msgId":"info"}
-{"actor":"test_observer", "msgType":"dispatch", "curstate":"s2", "nextstate":"s1", "msgId":"info"}
+{"actor":"incinerator", "msgType":"dispatch", "curstate":"s0", "nextstate":"endBurn", "msgId":"startBurn"}
