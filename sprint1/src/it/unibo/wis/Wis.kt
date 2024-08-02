@@ -24,6 +24,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						forward("robotStart", "robotStart(X)" ,"oprobot" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

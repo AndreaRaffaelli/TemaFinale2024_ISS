@@ -61,10 +61,8 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
-				 	 		stateTimer = TimerActor("timer_home", 
-				 	 					  scope, context!!, "local_tout_"+name+"_home", 1000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t02",targetState="goToWasteIn",cond=whenTimeout("local_tout_"+name+"_home"))   
+					 transition(edgeName="t02",targetState="goToWasteIn",cond=whenDispatch("robotStart"))
 					transition(edgeName="t03",targetState="home_go",cond=whenEvent("burnEnd"))
 				}	 
 				state("goToWasteIn") { //this:State

@@ -41,7 +41,7 @@ QActor oprobot context ctxtest{
 		println("$name | $MyName engaging ... ") color yellow 
 		request basicrobot -m engage : engage($MyName,330)
 	}
-	Transition t0 whenReply engagedone   -> home				// 	TODO
+	Transition t0 whenReply engagedone   -> home				
  	              whenReply engagerefused -> end					//Fallimento Grave
 
  	State home{
@@ -52,10 +52,8 @@ QActor oprobot context ctxtest{
 			forward wis -m robotUpdate : robotUpdate(idle)
 		}
 	}
-
  	Transition t0
-//		whenMsg robotStart -> goToWasteIn
-		whenTime 1000 -> goToWasteIn
+		whenMsg robotStart -> goToWasteIn
 		whenEvent burnEnd -> home_go
  	
 	State goToWasteIn{
@@ -126,7 +124,7 @@ QActor oprobot context ctxtest{
 //Solo a scopo di test
 QActor wis context ctxtest{
 	State s0 initial{
-		
+		forward oprobot -m robotStart : robotStart(X)
 	}
 }
 

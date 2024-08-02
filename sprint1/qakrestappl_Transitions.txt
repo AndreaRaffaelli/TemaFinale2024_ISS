@@ -1,1 +1,2 @@
+{"actor":"oprobot", "msgType":"dispatch", "curstate":"home", "nextstate":"goToWasteIn", "msgId":"robotStart"}
 {"actor":"incinerator", "msgType":"dispatch", "curstate":"s0", "nextstate":"endBurn", "msgId":"startBurn"}
