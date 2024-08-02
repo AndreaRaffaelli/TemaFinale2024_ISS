@@ -27,15 +27,15 @@ QActor oprobot context ctxtest{
 	var RobotState = "IDLE";
 	var MentalState = "HOME";
 	val Waste_x = 0; //waste
-	val Waste_y = 5;		
+	val Waste_y = 4;		
 	val In_x = 3; //burnin
-	val In_y = 2;
+	val In_y = 1;
 	val Ho_x = 0; //home
 	val Ho_y = 0;
 	val Bo_x = 4; //burnout
-	val Bo_y = 5;
-	val Ao_x = 7; //AshOut
-	val Ao_y = 7;
+	val Bo_y = 3;
+	val Ao_x = 6; //AshOut
+	val Ao_y = 4;
 #]
 	State initialize initial{
 		println("$name | $MyName engaging ... ") color yellow 
@@ -60,7 +60,7 @@ QActor oprobot context ctxtest{
  	
 	State goToWasteIn{
 		println("($name): start") color magenta 
-		request basicrobot -m moverobot : moverobot(Waste_x,Waste_y) //posizione WastePort
+		request basicrobot -m moverobot : moverobot($Waste_x,$Waste_y) //posizione WastePort
 	}
 	Transition t1
 		whenReply moverobotdone -> loadRP
@@ -70,7 +70,7 @@ QActor oprobot context ctxtest{
 		[# MentalState="WASTEIN"#]
 		println("($name): $MentalState") color magenta 
 		updateResource [#  "info($MentalState)" #]
-		request basicrobot -m moverobot : moverobot(In_x,In_y) //posizione BurnIn
+		request basicrobot -m moverobot : moverobot($In_x,$In_y) //posizione BurnIn
 	}
 	Transition t2
 		whenReply moverobotdone -> startBurn
@@ -81,14 +81,14 @@ QActor oprobot context ctxtest{
 		println("($name): $MentalState") color magenta 
 		updateResource [#  "info($MentalState)" #]
 		forward incinerator -m startBurn: startBurn(1)
-		request basicrobot -m moverobot : moverobot(Ho_x,Ho_y) //posizione BurnIn
+		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione BurnIn
 	}
 	Transition t3 
 			whenReply moverobotdone -> home
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
 	State home_go {
-		request basicrobot -m moverobot : moverobot(Bo_x,Bo_y) //posizione BurnOut	
+		request basicrobot -m moverobot : moverobot($Bo_x,$Bo_y) //posizione BurnOut	
 	}
 	Transition t4			
 			whenReply moverobotdone -> gatheringAsh
@@ -98,7 +98,7 @@ QActor oprobot context ctxtest{
 		[# MentalState="BURNOUT"#]
 		println("($name): $MentalState") color magenta 
 		updateResource [#  "info($MentalState)" #]
-		request basicrobot -m moverobot : moverobot(Ao_x,Ao_y) //posizione ASHOUT
+		request basicrobot -m moverobot : moverobot($Ao_x,$Ao_y) //posizione ASHOUT
 	}
 	Transition t5 			
 			whenReply moverobotdone -> unload
@@ -108,7 +108,7 @@ QActor oprobot context ctxtest{
 		[# MentalState="ASHOUT"#]
 		println("($name): $MentalState") color magenta 
 		updateResource [#  "info($MentalState)" #]
-		request basicrobot -m moverobot : moverobot(Ho_x,Ho_y) //posizione home
+		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione home
 		forward wis -m robotUpdate : robotUpdate(idle) 
 	}
 	Transition t6		

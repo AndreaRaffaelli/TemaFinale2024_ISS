@@ -25,15 +25,15 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 			var RobotState = "IDLE";
 			var MentalState = "HOME";
 			val Waste_x = 0; //waste
-			val Waste_y = 5;		
+			val Waste_y = 4;		
 			val In_x = 3; //burnin
-			val In_y = 2;
+			val In_y = 1;
 			val Ho_x = 0; //home
 			val Ho_y = 0;
 			val Bo_x = 4; //burnout
-			val Bo_y = 5;
-			val Ao_x = 7; //AshOut
-			val Ao_y = 7;
+			val Bo_y = 3;
+			val Ao_x = 6; //AshOut
+			val Ao_y = 4;
 		return { //this:ActionBasciFsm
 				state("initialize") { //this:State
 					action { //it:State
@@ -70,7 +70,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				state("goToWasteIn") { //this:State
 					action { //it:State
 						CommUtils.outmagenta("($name): start")
-						request("moverobot", "moverobot(Waste_x,Waste_y)" ,"basicrobot" )  
+						request("moverobot", "moverobot($Waste_x,$Waste_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -85,7 +85,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						CommUtils.outmagenta("($name): $MentalState")
 						updateResourceRep(  "info($MentalState)"  
 						)
-						request("moverobot", "moverobot(In_x,In_y)" ,"basicrobot" )  
+						request("moverobot", "moverobot($In_x,$In_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -101,7 +101,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						updateResourceRep(  "info($MentalState)"  
 						)
 						forward("startBurn", "startBurn(1)" ,"incinerator" ) 
-						request("moverobot", "moverobot(Ho_x,Ho_y)" ,"basicrobot" )  
+						request("moverobot", "moverobot($Ho_x,$Ho_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -112,7 +112,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("home_go") { //this:State
 					action { //it:State
-						request("moverobot", "moverobot(Bo_x,Bo_y)" ,"basicrobot" )  
+						request("moverobot", "moverobot($Bo_x,$Bo_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -127,7 +127,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						CommUtils.outmagenta("($name): $MentalState")
 						updateResourceRep(  "info($MentalState)"  
 						)
-						request("moverobot", "moverobot(Ao_x,Ao_y)" ,"basicrobot" )  
+						request("moverobot", "moverobot($Ao_x,$Ao_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -142,7 +142,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						CommUtils.outmagenta("($name): $MentalState")
 						updateResourceRep(  "info($MentalState)"  
 						)
-						request("moverobot", "moverobot(Ho_x,Ho_y)" ,"basicrobot" )  
+						request("moverobot", "moverobot($Ho_x,$Ho_y)" ,"basicrobot" )  
 						forward("robotUpdate", "robotUpdate(idle)" ,"wis" ) 
 						//genTimer( actor, state )
 					}
