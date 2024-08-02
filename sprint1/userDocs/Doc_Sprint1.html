@@ -344,15 +344,19 @@ Event burnEnd: burnEnd(X)
 					WIS può dare segnali di avvio al'opRobot solo quando quest'ultimo <b>non è già impegnato</b> in un
 					ciclo.
 					Per questo motivo WIS deve essere sempre notificato della disponibilità dell'opRobot. <br>
-					A tal fine opRobot invierà un messaggio dispatch a WIS.
+					A tal fine opRobot si renderà osservabile dal WIS.
 					<div>
 						<pre><code>
 Dispatch robotStart: robotStart(X)
-Dispatch robotUpdate: robotUpdate(X)
 
 </code></pre>
-					</div>
+					</div> <br>
+					<div>
+						<pre><code>
+updateResource [#  "info($name,RobotState,$RobotState)" #] 	// RobotState = "WORKING" or "IDLE"
 
+</code></pre>
+					</div> <br>
 			</ul>
 
 		</ul>
@@ -436,8 +440,7 @@ Dispatch startBurn: startBurn(X)
 				stazioni.<br>
 				Quando il basicRobot giunge ad una stazione, l'opRobot modifica il suo stato interno.<br>
 				&#x2705; Il test e' superato se lo stato di opRobot va da <code style="padding: 0%;">HOME</code> a <code
-					style="padding: 0%;">ASHOUT</code> e viene inviato il segnale </code> a <code
-					style="padding: 0%;">RobotUpdate</code>.</br>
+					style="padding: 0%;">ASHOUT</code> e viene aggiornato correttamente il suo stato interno.</br>
 				&#x274C; Il test fallisce se l'opRobot non modifica il suo stato interno entro <code
 					style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
 			</li>
