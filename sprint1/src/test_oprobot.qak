@@ -1,8 +1,10 @@
 System testoprobot
 
 Dispatch robotStart: robotStart(X)
+
 Dispatch robotUpdate: robotUpdate(X)
 Dispatch startBurn : startBurn(X)
+Dispatch info : info(X, Y, Z)
 Request engage        : engage(CALLER)
 Reply   engagedone    : engagedone(ARG)
 Reply   engagerefused : engagerefused(ARG)
@@ -16,6 +18,9 @@ Request moverobot    :  moverobot(TARGETX, TARGETY)
 Reply moverobotdone  :  moverobotok(ARG)                    for moverobot
 Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
 
+Request testStart : testStart(X)
+Request testRequest : testRequest(X)
+Reply testReply : testReply(X ,Y)
 
 Context ctxtest ip [host="localhost" port=6969]
 Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
@@ -38,18 +43,22 @@ QActor oprobot context ctxtest{
 	val Ao_y = 4;
 #]
 	State initialize initial{
-		println("$name | $MyName engaging ... ") color yellow 
+		printCurrentMessage color yellow
+		delay 500
+		println("$name | $MyName engaging ... ") color magenta 
 		request basicrobot -m engage : engage($MyName,330)
 	}
 	Transition t0 whenReply engagedone   -> home				
  	              whenReply engagerefused -> end					//Fallimento Grave
 
  	State home{
-		[# MentalState="HOME"#]
-		println("($name): $MentalState") color magenta 
-		updateResource [#  "info($MentalState)" #]
+ 		printCurrentMessage color yellow
+		//[# MentalState="HOME"#]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
 		onMsg( engagedone : engagedone(X) ){			
-			forward wis -m robotUpdate : robotUpdate(idle)
+//			forward wis -m robotUpdate : robotUpdate(idle)
+			updateResource [#  "info($name,RobotState,$RobotState)" #]
 		}
 	}
  	Transition t0
@@ -57,7 +66,10 @@ QActor oprobot context ctxtest{
 		whenEvent burnEnd -> home_go
  	
 	State goToWasteIn{
-		println("($name): start") color magenta 
+		printCurrentMessage color yellow
+		[# RobotState="WORKING"#]
+		updateResource [#  "info($name,RobotState,$RobotState)" #]
+		//println("($name): start") color magenta 
 		request basicrobot -m moverobot : moverobot($Waste_x,$Waste_y) //posizione WastePort
 	}
 	Transition t1
@@ -65,9 +77,10 @@ QActor oprobot context ctxtest{
 		whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
 	State loadRP{
+		printCurrentMessage color yellow
 		[# MentalState="WASTEIN"#]
-		println("($name): $MentalState") color magenta 
-		updateResource [#  "info($MentalState)" #]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
 		request basicrobot -m moverobot : moverobot($In_x,$In_y) //posizione BurnIn
 	}
 	Transition t2
@@ -75,9 +88,10 @@ QActor oprobot context ctxtest{
 		whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
 	State startBurn{
+		printCurrentMessage color yellow
 		[# MentalState="BURNIN"#]
-		println("($name): $MentalState") color magenta 
-		updateResource [#  "info($MentalState)" #]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
 		delay 5000
 		forward incinerator -m startBurn: startBurn(1)
 		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione BurnIn
@@ -87,6 +101,7 @@ QActor oprobot context ctxtest{
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
 	State home_go {
+		printCurrentMessage color yellow
 		request basicrobot -m moverobot : moverobot($Bo_x,$Bo_y) //posizione BurnOut	
 	}
 	Transition t4			
@@ -94,9 +109,11 @@ QActor oprobot context ctxtest{
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 
 	State gatheringAsh{
+		printCurrentMessage color yellow
 		[# MentalState="BURNOUT"#]
-		println("($name): $MentalState") color magenta 
-		updateResource [#  "info($MentalState)" #]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
+		delay 1000
 		request basicrobot -m moverobot : moverobot($Ao_x,$Ao_y) //posizione ASHOUT
 	}
 	Transition t5 			
@@ -104,11 +121,14 @@ QActor oprobot context ctxtest{
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
 	State unload{
+		printCurrentMessage color yellow
 		[# MentalState="ASHOUT"#]
-		println("($name): $MentalState") color magenta 
-		updateResource [#  "info($MentalState)" #]
+		[# RobotState="IDLE"#]
+		updateResource [#  "info($name,RobotState,$RobotState)" #]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
 		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione home
-		forward wis -m robotUpdate : robotUpdate(idle) 
+		//forward wis -m robotUpdate : robotUpdate(idle) 
 	}
 	Transition t6		
 			whenReply moverobotdone -> home
@@ -116,17 +136,69 @@ QActor oprobot context ctxtest{
 	
 	//BasicRobot non disponibile, fallimento grave
 	State end {
+		printCurrentMessage color red
 		[#System.exit(-1)#]
 	}
 }
 
 
 //Solo a scopo di test
-QActor wis context ctxtest{
-	State s0 initial{
-		forward oprobot -m robotStart : robotStart(X)
-	}
+QActor test_observer context ctxtest{
+	 	[# var MentalState=""; var RobotState=""; var N = ""; var VAL = ""; var VAR = "";#]
+	
+		// Continua da qui: Start tramite messaggio di richiesta
+		State s0 initial{
+			printCurrentMessage color yellow
+			observeResource oprobot msgid info
+			
+		}
+		Transition t0
+			whenMsg info -> handleInfo
+			
+		State handleInfo{
+			printCurrentMessage color yellow
+			onMsg( info :  info(N,VAL, VAR) ){
+    		[# N = payloadArg(0) #]
+			[# VAR = payloadArg(1)#]
+    	    [# VAL = payloadArg(2)#]
+    		
+    		println("$name views $N $VAR $VAL") color magenta
+    		[#if(VAR.equals("RobotState")){
+    				RobotState=VAL;
+    			} else {
+  					MentalState=VAL;
+    			}
+    		#]
+ 		}
+ 		
+ 		}
+		Transition t1
+			whenMsg info -> handleInfo			
+			whenRequest testStart -> handleStart  
+			whenRequest testRequest -> handleRequest 
+			
+		State handleStart{
+			[#var RESULT = "$MentalState,$RobotState"#]
+			printCurrentMessage  color yellow
+			println("START: $name print result: $RESULT") color magenta
+			forward oprobot -m robotStart : robotStart( parti )
+			replyTo testStart with testReply : testReply($RESULT)
+		}
+		Transition t2
+			whenMsg info -> handleInfo
+			whenRequest testRequest -> handleRequest 
+			
+		State handleRequest{
+			[#var RESULT = "$MentalState,$RobotState"#]
+			printCurrentMessage  color yellow
+			println("$name print result: $RESULT") color magenta
+			replyTo testRequest with testReply : testReply($RESULT)
+		}
+		Transition t2
+			whenMsg info -> handleInfo
+			whenRequest testRequest -> handleRequest 
 }
+
 
 QActor incinerator context ctxtest{
 	State s0 initial{

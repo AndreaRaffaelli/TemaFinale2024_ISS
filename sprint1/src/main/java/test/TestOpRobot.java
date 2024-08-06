@@ -20,6 +20,8 @@ import unibo.basicomm23.msg.ApplMessage;
 import unibo.basicomm23.msg.ProtocolType;
 import unibo.basicomm23.utils.ColorsOut;
 import unibo.basicomm23.utils.CommUtils;
+import unibo.basicomm23.utils.ConnectionFactory;
+
 
 public class TestOpRobot {
 	private static Interaction connSupport;
@@ -29,9 +31,51 @@ public class TestOpRobot {
 	private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
 	private static final int DLIMIT = 3;
 	private static String pid_context = "";
+
+
 	@Test
 	public void test() {
-//		fail("Not yet implemented");
+		IApplMessage start = CommUtils.buildRequest("tester", "testStart", "testStart(A)", "test_observer");
+		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
+
+		try {
+			CommUtils.outmagenta("test_observer ======================================= ");
+			while (connSupport == null) {
+				connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
+				CommUtils.outcyan("testoprobot another connect attempt ");
+				Thread.sleep(1000);
+			}
+			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+
+			Thread.sleep(2000);	// Aspettiamo che l'obs sia nello stato che attende il messaggio testStart
+			IApplMessage reply = connSupport.request(start);
+			CommUtils.outcyan("START: test_observer reply=" + reply);
+			String answer = reply.msgContent();
+			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+			String[] s = parameters.split(",");
+
+			assertEquals(s[0], "HOME");
+			assertEquals(s[1], "IDLE");
+			
+			
+			Thread.sleep(15000);	// TOBSMAX
+
+			
+			reply = connSupport.request(req);
+			CommUtils.outcyan("test_observer reply=" + reply);
+			answer = reply.msgContent();
+			parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+			s = parameters.split(",");
+
+			assertEquals(s[0], "ASHOUT");
+			assertEquals(s[1], "IDLE");
+
+			CommUtils.outcyan("Test eseguiti con successo");
+
+		} catch (Exception e) {
+			CommUtils.outred("test_observer ERROR " + e.getMessage());
+			fail("testRequest " + e.getMessage());
+		}
 	}
 	
 	@BeforeClass
@@ -43,10 +87,10 @@ public class TestOpRobot {
 				if (osName.startsWith("Linux")) {
 					cleanOldDeployment();
 					extractTarball();
-					p = startProcess("./build/distributions/testwis-1.0/bin/testwis");
+					p = startProcess("./build/distributions/testoprobot-1.0/bin/testoprobot");
 				} else if (osName.startsWith("Windows")) {
 					extractTarball();
-					p = startProcess("./build/distributions/testwis-1.0/bin/testwis.bat");
+					p = startProcess("./build/distributions/testoprobot-1.0/bin/testoprobot.bat");
 				} else {
 					CommUtils.outred("Unsupported operating system: " + osName);
 					return;
@@ -97,7 +141,7 @@ public class TestOpRobot {
 
 	
 	private static void cleanOldDeployment() throws IOException {
-		ProcessBuilder pb = new ProcessBuilder("rm", "-rf", "build/distributions/testwis-1.0");
+		ProcessBuilder pb = new ProcessBuilder("rm", "-rf", "build/distributions/testoprobot-1.0");
 		Process p = pb.start();
 		try {
 			p.waitFor();
@@ -110,7 +154,7 @@ public class TestOpRobot {
 	}
 
 	private static void extractTarball() throws IOException {
-		ProcessBuilder pb = new ProcessBuilder("tar", "-xvf", "build/distributions/testwis-1.0.tar", "-C",
+		ProcessBuilder pb = new ProcessBuilder("tar", "-xvf", "build/distributions/testoprobot-1.0.tar", "-C",
 				"build/distributions/");
 		Process p = pb.start();
 		try {
