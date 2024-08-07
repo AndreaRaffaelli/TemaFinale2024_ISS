@@ -17,29 +17,24 @@ import it.unibo.kactor.sysUtil.createActor   //Sept2023
 class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
 	override fun getInitialState() : String{
-		return "home"
+		return "s0"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		return { //this:ActionBasciFsm
-				state("home") { //this:State
+				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("($name): home")
+						delay(5000) 
+						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						 val RobotState="IDLE" 
+						updateResourceRep(  "info($name,RobotState,$RobotState)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="gatheringAsh",cond=whenEvent("burnEnd"))
-				}	 
-				state("gatheringAsh") { //this:State
-					action { //it:State
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="home", cond=doswitch() )
 				}	 
 			}
 		}

@@ -52,7 +52,7 @@ public class TestWis {
 			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
 			String[] s = parameters.split(",");
 
-			assertEquals(s[0], "false");
+			assertEquals("false", s[0]);
 			assertTrue(Integer.valueOf(s[1]) < DLIMIT); // Minore del limite massimo
 			assertTrue(Integer.valueOf(s[2]) > 0);
 			CommUtils.outcyan("Test eseguiti con successo");

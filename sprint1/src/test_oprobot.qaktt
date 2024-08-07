@@ -30,7 +30,7 @@ ExternalQActor basicrobot context ctxbasicrobot
 QActor oprobot context ctxtest{   
 [# 	
 	var RobotState = "IDLE";
-	var MentalState = "HOME";
+	var MentalState = "";
 	val Waste_x = 0; //waste
 	val Waste_y = 4;		
 	val In_x = 3; //burnin
@@ -53,14 +53,14 @@ QActor oprobot context ctxtest{
 
  	State home{
  		printCurrentMessage color yellow
-		//[# MentalState="HOME"#]
+		[# MentalState="HOME"#]
 		//println("($name): $MentalState") color magenta 
 		updateResource [#  "info($name,MentalState,$MentalState)" #]
 		onMsg( engagedone : engagedone(X) ){			
 //			forward wis -m robotUpdate : robotUpdate(idle)
 			updateResource [#  "info($name,RobotState,$RobotState)" #]
 		}
-	}
+	}   
  	Transition t0
 		whenMsg robotStart -> goToWasteIn
 		whenEvent burnEnd -> home_go

@@ -21,20 +21,21 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val d = utils.Sonar.create()
+		//
+				var Ws_status = 0;
+		        var As_status = 0;
 		
-				val e = utils.Scale.create()
-				var ws_status = 0;
-				var as_status = 0;
-				var inc_status= false;
-				var robotWait = true;
-				val DLIMIT = 3; //ipotetico
+				var RobotFree = true;
+				var DLIMIT = 3;		// zero non corretto
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						delay(1000) 
+						observeResource("localhost","6969","ctxtest","oprobot","info")
+						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
+						)
+						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						delay(500) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -44,20 +45,79 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				}	 
 				state("idle") { //this:State
 					action { //it:State
+						CommUtils.outblue("($name) idle")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="stopInc",cond=whenEvent("burnEnd"))
+					 transition(edgeName="t00",targetState="controllo",cond=whenDispatch("info"))
 				}	 
-				state("stopInc") { //this:State
+				state("controllo") { //this:State
+					action { //it:State
+						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						if( checkMsgContent( Term.createTerm("info(N,VAR,VAL)"), Term.createTerm("info(N,VAL,VAR)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val N = payloadArg(0)   
+								 val VAR = payloadArg(1) 
+								 val VAL = payloadArg(2) 
+								 var RobotState = ""    
+								CommUtils.outmagenta("$name views $N $VAR $VAL")
+								
+											if(N.equals("oprobot") && VAR.equals("RobotState")){
+												RobotState = VAL;
+												if(RobotState.equals("IDLE")){
+													RobotFree = true;
+												}
+												else{
+													RobotFree = false;
+												}
+											}
+						}
+						
+						        if( RobotFree === true){
+						            //chiedi Ws_status
+						            Ws_status = (0..5).random()            
+						            //chiedi As_status
+						            As_status = (0..5).random()
+						    	}
+								println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
+						
+						        if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
+						CommUtils.outblue("($name) invio messaggio start")
+						CommUtils.outblue("($name) controllo: condizioni corrette e start")
+						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
+						
+						        	RobotFree=false;
+						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
+						)
+						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
+						)
+						updateResourceRep( "info($name,As_status,$As_status)"  
+						)
+						
+						        }
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="idle", cond=doswitchGuarded({ RobotFree === false 
+					}) )
+					transition( edgeName="goto",targetState="polling", cond=doswitchGuarded({! ( RobotFree === false 
+					) }) )
+				}	 
+				state("polling") { //this:State
 					action { //it:State
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_polling", 
+				 	 					  scope, context!!, "local_tout_"+name+"_polling", 2000.toLong() )  //OCT2023
 					}	 	 
+					 transition(edgeName="t11",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_polling"))   
 				}	 
 			}
 		}

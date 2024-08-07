@@ -23,54 +23,62 @@ QActor wis context ctxtest{
 	#]
 	State s0 initial{
 		delay 1000
+		observeResource oprobot msgid info
 		updateResource [# "info($name,RobotFree,$RobotFree)" #]
 		printCurrentMessage color blue 
 	}
 	Goto idle
 	
 	State idle {
-			println("($name) idle") color blue	
-
+		
+		println("($name) idle") color blue	
 	}
 	Transition t0			
-		whenMsg robotUpdate -> controllo		
+		whenMsg info -> controllo		
 		//whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
 	
 	State controllo {
-        onMsg( robotUpdate:robotUpdate(X)){
-			[# 
-			var pl = payloadArg(0)
-			if(pl.equals("RobotFree")){
-				RobotFree=true;
+       	printCurrentMessage color yellow
+		onMsg( info :  info(N,VAL, VAR) ){
+			[# val N = payloadArg(0)  #]
+			[# val VAR = payloadArg(1)#]
+		    [# val VAL = payloadArg(2)#]
+			[# var RobotState = ""   #]
+			println("$name views $N $VAR $VAL") color magenta
+			[#
+			if(N.equals("oprobot") && VAR.equals("RobotState")){
+				RobotState = VAL;
+				if(RobotState.equals("IDLE")){
+					RobotFree = true;
+				}
+				else{
+					RobotFree = false;
+				}
 			}
 			#]
-			println("($name) robotUpdate: $pl") color blue	
 		}
-
-
+	
 		[#
         if( RobotFree === true){
             //chiedi Ws_status
             Ws_status = (0..5).random()            
             //chiedi As_status
             As_status = (0..5).random()
-        }
+    	}
 		println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
-        
-
 
         if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
-            #]
-            println("($name) invio messaggio start") color blue
-            println("($name) controllo: condizioni corrette e start") color blue
-            forward oprobot -m robotStart : robotStart( parti )
-            [#
-            RobotFree=false;
-            #]
-						updateResource [# "info($name,RobotFree,$RobotFree)" #]
-                        updateResource [# "info($name,Ws_status,$Ws_status)" #]
-                        updateResource [# "info($name,As_status,$As_status)" #]
-            [#
+        #]
+        	println("($name) invio messaggio start") color blue
+        	println("($name) controllo: condizioni corrette e start") color blue
+        	forward oprobot -m robotStart : robotStart( parti )
+        	[#
+        	RobotFree=false;
+        	#]
+			updateResource [# "info($name,RobotFree,$RobotFree)" #]
+            updateResource [# "info($name,Ws_status,$Ws_status)" #]
+            updateResource [# "info($name,As_status,$As_status)" #]
+        [#
         }
         #]
         
@@ -98,7 +106,7 @@ QActor test_observer context ctxtest{
 			printCurrentMessage color blue
 			delay 500
 			observeResource wis msgid info
-			forward wis -m robotUpdate : robotUpdate( RobotFree )
+//			forward wis -m robotUpdate : robotUpdate( RobotFree )
 		}
 		Transition t0
 			whenMsg info -> s1
@@ -143,6 +151,9 @@ QActor test_observer context ctxtest{
 
 QActor oprobot context ctxtest{
 	State s0 initial{
-		
+		delay 5000
+		printCurrentMessage color yellow
+		[# val RobotState="IDLE"#] 
+		updateResource [#  "info($name,RobotState,$RobotState)" #]
 	}
 } 

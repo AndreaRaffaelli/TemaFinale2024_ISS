@@ -58,7 +58,7 @@ public class TestOpRobot {
 			assertEquals(s[1], "IDLE");
 			
 			
-			Thread.sleep(15000);	// TOBSMAX
+			Thread.sleep(30000);	// TOBSMAX
 
 			
 			reply = connSupport.request(req);
@@ -88,6 +88,7 @@ public class TestOpRobot {
 					cleanOldDeployment();
 					extractTarball();
 					p = startProcess("./build/distributions/testoprobot-1.0/bin/testoprobot");
+					System.out.println("TEST LANCIATO con PID: "+p.pid());
 				} else if (osName.startsWith("Windows")) {
 					extractTarball();
 					p = startProcess("./build/distributions/testoprobot-1.0/bin/testoprobot.bat");
