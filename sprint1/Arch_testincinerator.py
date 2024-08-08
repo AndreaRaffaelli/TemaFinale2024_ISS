@@ -21,15 +21,12 @@ evattr = {
     'color': 'darkgreen',
     'style': 'dotted'
 }
-with Diagram('testwisArch', show=False, outformat='png', graph_attr=graphattr) as diag:
+with Diagram('testincineratorArch', show=False, outformat='png', graph_attr=graphattr) as diag:
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxtest', graph_attr=nodeattr):
-          wis=Custom('wis','./qakicons/symActorSmall.png')
-          test_observer=Custom('test_observer','./qakicons/symActorSmall.png')
-          oprobot=Custom('oprobot','./qakicons/symActorSmall.png')
-     wis >> Edge(color='blue', style='solid',  decorate='true', label='<info &nbsp; >',  fontcolor='blue') >> test_observer
-     oprobot >> Edge(color='blue', style='solid',  decorate='true', label='<info &nbsp; >',  fontcolor='blue') >> wis
-     wis >> Edge(color='blue', style='solid',  decorate='true', label='<robotStart &nbsp; >',  fontcolor='blue') >> oprobot
+          incinerator=Custom('incinerator','./qakicons/symActorSmall.png')
+     sys >> Edge( label='startIncinerator', **evattr, decorate='true', fontcolor='darkgreen') >> incinerator
+     incinerator >> Edge( label='burnEnd', **eventedgeattr, decorate='true', fontcolor='red') >> sys
 diag

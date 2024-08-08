@@ -1,0 +1,42 @@
+System testincinerator
+
+Dispatch startBurn : startBurn(X)
+Event burnEnd : burnEnd( ARG )
+Dispatch info : info(N,VAR,VAL)
+
+Event startIncinerator: startIncinerator(X)
+
+
+Context ctxtest ip [host="localhost" port=6969]
+
+QActor incinerator context ctxtest{ 
+	[#
+        val BTIME = 3000L;
+        var start = "off";
+	#]
+	State s0 initial{
+		printCurrentMessage color yellow
+		delay 500
+	}	
+	Transition t0
+		whenEvent startIncinerator -> start
+		
+	State start{
+		printCurrentMessage color yellow
+		println("($name): Inizio inceneritore") color magenta
+		[# start ="on"; #]
+		updateResource [# "info($name,start,$start)" #]
+	}
+	Transition t1
+		whenMsg startBurn -> handleBurnStart
+		
+	State handleBurnStart{
+		printCurrentMessage color yellow
+		println("($name): Inizio bruciatura") color magenta
+		delay 5000
+		println("($name): Fine bruciatura") color magenta
+		emit burnEnd : burnEnd( stop )
+	}
+	Transition t2
+		whenMsg startBurn -> handleBurnStart	
+}
