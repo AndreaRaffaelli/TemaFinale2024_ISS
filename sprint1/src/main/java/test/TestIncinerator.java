@@ -39,7 +39,7 @@ public class TestIncinerator {
 
 	@Test
 	public void test() {
-		IApplMessage msgStart = CommUtils.buildDispatch("tester", "startBurn", "startBurn(A)", "incinerator");
+		IApplMessage requestStart = CommUtils.buildRequest("tester", "startBurn", "startBurn(A)", "incinerator");
 		
 		try {
 			CommUtils.outmagenta("test_observer ======================================= ");
@@ -55,22 +55,13 @@ public class TestIncinerator {
 			connSupport.forward(eventStart);
 			
 			Thread.sleep(2000);
-			IApplMessage resultEvent =connSupport.request(msgStart);
+			IApplMessage reply =connSupport.request(requestStart);
+			CommUtils.outcyan("test_observer reply=" + reply);
+			String answer = reply.msgContent();
+			String s = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
 
-//			IApplMessage resultEvent= connSupport.receive();
-			CommUtils.outcyan(""+ resultEvent);
-
-
-			
-//			CommUtils.outcyan("test_observer reply=" + reply);
-//			String answer = reply.msgContent();
-//			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
-//			String[] s = parameters.split(",");
-//
-//			assertEquals("false", s[0]);
-//			assertTrue(Integer.valueOf(s[1]) < DLIMIT); // Minore del limite massimo
-//			assertTrue(Integer.valueOf(s[2]) > 0);
-//			CommUtils.outcyan("Test eseguiti con successo");
+			assertEquals("burnEnd", s);
+			CommUtils.outcyan("Test eseguito con successo");
 
 		} catch (Exception e) {
 			CommUtils.outred("test_observer ERROR " + e.getMessage());

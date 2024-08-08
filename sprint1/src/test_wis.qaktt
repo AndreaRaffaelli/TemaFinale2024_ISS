@@ -22,10 +22,10 @@ QActor wis context ctxtest{
 		var DLIMIT = 3;		// zero non corretto
 	#]
 	State s0 initial{
+		printCurrentMessage color yellow
 		delay 1000
 		observeResource oprobot msgid info
 		updateResource [# "info($name,RobotFree,$RobotFree)" #]
-		printCurrentMessage color blue 
 	}
 	Goto idle
 	
@@ -69,8 +69,8 @@ QActor wis context ctxtest{
 
         if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
         #]
-        	println("($name) invio messaggio start") color blue
-        	println("($name) controllo: condizioni corrette e start") color blue
+        	println("($name) invio messaggio start") color magenta
+        	println("($name) controllo: condizioni corrette e start") color magenta
         	forward oprobot -m robotStart : robotStart( parti )
         	[#
         	RobotFree=false;
@@ -103,7 +103,7 @@ QActor test_observer context ctxtest{
 	 	[# var N = ""; var VAL = ""; var VAR = ""  ; var RobotFree = "";var As_status="" ; var Ws_status=""#]
 	
 		State s0 initial{
-			printCurrentMessage color blue
+			printCurrentMessage color yellow
 			delay 500
 			observeResource wis msgid info
 //			forward wis -m robotUpdate : robotUpdate( RobotFree )
@@ -112,6 +112,7 @@ QActor test_observer context ctxtest{
 			whenMsg info -> s1
 			
 		State s1{
+			printCurrentMessage color yellow	
 			onMsg( info :  info(N,VAL, VAR) ){
     		[# N = payloadArg(0) #]
 			[# VAR = payloadArg(1)#]
@@ -136,11 +137,11 @@ QActor test_observer context ctxtest{
 			whenRequest testRequest -> s2  
 			
 		State s2{
+			printCurrentMessage color yellow
 			[#var RESULT = "$RobotFree,$As_status,$Ws_status"#]
-			println("$name print result: $RESULT") color yellow
+			println("$name print result: $RESULT") color magenta
 			//[#System.out.println("$RESULT");				 #]
 			replyTo testRequest with testReply : testReply($RESULT)
-			printCurrentMessage
 		}
 		Transition t1
 			whenMsg info -> s1

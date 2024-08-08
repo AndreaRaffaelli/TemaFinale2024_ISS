@@ -1,7 +1,7 @@
 %====================================================================================
 % testincinerator description   
 %====================================================================================
-dispatch( startBurn, startBurn(X) ).
+request( startBurn, startBurn(X) ).
 event( burnEnd, burnEnd(ARG) ).
 dispatch( info, info(N,VAR,VAL) ).
 event( startIncinerator, startIncinerator(X) ).

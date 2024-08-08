@@ -1,6 +1,8 @@
 System testincinerator
 
-Dispatch startBurn : startBurn(X)
+Request startBurn : startBurn(X)
+Reply testReply : testReply(X,Y,Z)
+
 Event burnEnd : burnEnd( ARG )
 Dispatch info : info(N,VAR,VAL)
 
@@ -28,7 +30,7 @@ QActor incinerator context ctxtest{
 		updateResource [# "info($name,start,$start)" #]
 	}
 	Transition t1
-		whenMsg startBurn -> handleBurnStart
+		whenRequest startBurn -> handleBurnStart
 		
 	State handleBurnStart{
 		printCurrentMessage color yellow
@@ -36,7 +38,8 @@ QActor incinerator context ctxtest{
 		delay 5000
 		println("($name): Fine bruciatura") color magenta
 		emit burnEnd : burnEnd( stop )
+		replyTo startBurn with testReply : testReply(burnEnd)
 	}
 	Transition t2
-		whenMsg startBurn -> handleBurnStart	
+		whenRequest startBurn -> handleBurnStart	
 }
