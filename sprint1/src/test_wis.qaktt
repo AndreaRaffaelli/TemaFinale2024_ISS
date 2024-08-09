@@ -30,8 +30,7 @@ QActor wis context ctxtest{
 	Goto idle
 	
 	State idle {
-		
-		println("($name) idle") color blue	
+		printCurrentMessage color yellow	
 	}
 	Transition t0			
 		whenMsg info -> controllo		
