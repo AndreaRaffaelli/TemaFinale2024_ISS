@@ -45,13 +45,13 @@ QActor wis context ctxtest{
 		delay 1000
 		emit startIncinerator : startIncinerator( stop )
 		observeResource oprobot msgid info
-		//updateResource [# "info($name,RobotFree,$RobotFree)" #]			Update di test per l'observer_test
+		//updateResource [# "info($name,RobotFree,$RobotFree)" #]			Update di test per l'observer_tests
+		
 	}
 	Goto idle
 	
 	State idle {
-		
-		println("($name) idle") color blue	
+		printCurrentMessage color yellow
 	}
 	Transition t0			
 		whenMsg info -> controllo		

@@ -3,7 +3,7 @@ System testoprobot
 Dispatch robotStart: robotStart(X)
 
 Dispatch robotUpdate: robotUpdate(X)
-Dispatch startBurn : startBurn(X)
+Dispatch startBurn : startBurn(X)    
 Dispatch info : info(X, Y, Z)
 Request engage        : engage(CALLER)
 Reply   engagedone    : engagedone(ARG)

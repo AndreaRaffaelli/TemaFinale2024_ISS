@@ -1,4 +1,6 @@
-{"actor":"wis", "msgType":"dispatch", "curstate":"idle", "nextstate":"controllo", "msgId":"info"}
 {"actor":"oprobot", "msgType":"dispatch", "curstate":"home", "nextstate":"goToWasteIn", "msgId":"robotStart"}
-{"actor":"incinerator", "msgType":"dispatch", "curstate":"start", "nextstate":"handleBurnStart", "msgId":"startBurn"}
-{"actor":"incinerator", "msgType":"dispatch", "curstate":"handleBurnStart", "nextstate":"handleBurnStart", "msgId":"startBurn"}
+{"actor":"test_observer", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleInfo", "msgId":"info"}
+{"actor":"test_observer", "msgType":"dispatch", "curstate":"handleInfo", "nextstate":"handleInfo", "msgId":"info"}
+{"actor":"test_observer", "msgType":"dispatch", "curstate":"handleStart", "nextstate":"handleInfo", "msgId":"info"}
+{"actor":"test_observer", "msgType":"dispatch", "curstate":"handleRequest", "nextstate":"handleInfo", "msgId":"info"}
+{"actor":"incinerator", "msgType":"dispatch", "curstate":"s0", "nextstate":"endBurn", "msgId":"startBurn"}
