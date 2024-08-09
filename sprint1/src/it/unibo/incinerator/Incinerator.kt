@@ -29,13 +29,12 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						delay(500) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="start",cond=whenEvent("startIncinerator"))
+					 transition(edgeName="t018",targetState="start",cond=whenEvent("startIncinerator"))
 				}	 
 				state("start") { //this:State
 					action { //it:State
@@ -50,7 +49,7 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t11",targetState="handleBurnStart",cond=whenRequest("startBurn"))
+					 transition(edgeName="t119",targetState="handleBurnStart",cond=whenDispatch("startBurn"))
 				}	 
 				state("handleBurnStart") { //this:State
 					action { //it:State
@@ -60,13 +59,12 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						delay(5000) 
 						CommUtils.outmagenta("($name): Fine bruciatura")
 						emit("burnEnd", "burnEnd(stop)" ) 
-						answer("startBurn", "testReply", "testReply(burnEnd)"   )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t22",targetState="handleBurnStart",cond=whenRequest("startBurn"))
+					 transition(edgeName="t220",targetState="handleBurnStart",cond=whenDispatch("startBurn"))
 				}	 
 			}
 		}

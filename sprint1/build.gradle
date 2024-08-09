@@ -170,9 +170,9 @@ task dovesiamo {
 
 distributions {
     main {
-        distributionBaseName = 'testincinerator'
+        distributionBaseName = 'sprintuno'
         contents { 
-             from './testincinerator.pl'
+             from './sprintuno.pl'
              from './sysRules.pl'
              from './facadeConfig.json'
         }

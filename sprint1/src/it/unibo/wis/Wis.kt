@@ -30,12 +30,11 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						delay(1000) 
-						observeResource("localhost","6969","ctxtest","oprobot","info")
-						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
-						)
-						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						delay(1000) 
+						emit("startIncinerator", "startIncinerator(stop)" ) 
+						observeResource("localhost","6969","ctxtest","oprobot","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -57,7 +56,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("info(N,VAR,VAL)"), Term.createTerm("info(N,VAL,VAR)"), 
+						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(N,VAL,VAR)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val N = payloadArg(0)   
 								 val VAR = payloadArg(1) 
@@ -85,8 +84,8 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 								println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
 						
 						        if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
-						CommUtils.outblue("($name) invio messaggio start")
-						CommUtils.outblue("($name) controllo: condizioni corrette e start")
+						CommUtils.outmagenta("($name) invio messaggio start")
+						CommUtils.outmagenta("($name) controllo: condizioni corrette e start")
 						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
 						
 						        	RobotFree=false;
