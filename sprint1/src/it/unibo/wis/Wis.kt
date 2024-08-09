@@ -46,6 +46,12 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
+						)
+						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
+						)
+						updateResourceRep( "info($name,As_status,$As_status)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

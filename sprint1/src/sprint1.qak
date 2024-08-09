@@ -52,6 +52,9 @@ QActor wis context ctxtest{
 	
 	State idle {
 		printCurrentMessage color yellow
+		updateResource [# "info($name,RobotFree,$RobotFree)" #]
+		updateResource [# "info($name,Ws_status,$Ws_status)" #]
+		updateResource [# "info($name,As_status,$As_status)" #]
 	}
 	Transition t0			
 		whenMsg info -> controllo		
@@ -123,7 +126,7 @@ QActor wis context ctxtest{
 
 
 
-
+//
 QActor oprobot context ctxtest{   
 [# 	
 	var RobotState = "IDLE";
@@ -141,7 +144,7 @@ QActor oprobot context ctxtest{
 #]
 	State initialize initial{
 		printCurrentMessage color yellow
-		//delay 500
+		delay 1000
 		println("$name | $MyName engaging ... ") color magenta 
 		request basicrobot -m engage : engage($MyName,330)
 	}
@@ -151,9 +154,11 @@ QActor oprobot context ctxtest{
  	State home{
  		printCurrentMessage color yellow
 		[# MentalState="HOME"#]
-		//println("($name): $MentalState") color magenta 
+		println("($name): $MentalState") color magenta 
+		forward test_observer -m info : info(ciao)
 		updateResource [#  "info($name,MentalState,$MentalState)" #]
-		onMsg( engagedone : engagedone(X) ){			
+		onMsg( engagedone : engagedone(X) ){		
+			println("($name): $RobotState") color magenta
 //			forward wis -m robotUpdate : robotUpdate(idle)
 			updateResource [#  "info($name,RobotState,$RobotState)" #]
 		}
@@ -245,7 +250,7 @@ QActor incinerator context ctxtest{
 	#]
 	State s0 initial{
 		printCurrentMessage color yellow
-		//delay 500
+		delay 1000
 	}	
 	Transition t0
 		whenEvent startIncinerator -> start
@@ -272,6 +277,24 @@ QActor incinerator context ctxtest{
 }
 
 
+
+//QActor test_observer context ctxtest{
+//	State s0 initial{
+//		printCurrentMessage color yellow
+//		delay 500
+//		observeResource wis msgid info
+//		observeResource oprobot msgid info
+//		observeResource incinerator msgid info
+//	}
+//	Transition t0
+//		whenMsg info -> monitor
+//	
+//	State monitor{
+//		printCurrentMessage color red
+//	}
+//	Transition t1
+//		whenMsg info -> monitor
+//}
 
 
 

@@ -21,75 +21,32 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 var MentalState=""; var RobotState=""; var N = ""; var VAL = ""; var VAR = ""; 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						delay(500) 
+						observeResource("localhost","6969","ctxtest","wis","info")
 						observeResource("localhost","6969","ctxtest","oprobot","info")
+						observeResource("localhost","6969","ctxtest","incinerator","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t016",targetState="handleInfo",cond=whenDispatch("info"))
+					 transition(edgeName="t021",targetState="monitor",cond=whenDispatch("info"))
 				}	 
-				state("handleInfo") { //this:State
+				state("monitor") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(N,VAL,VAR)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								 N = payloadArg(0)  
-								 VAR = payloadArg(1) 
-								 VAL = payloadArg(2) 
-								CommUtils.outmagenta("$name views $N $VAR $VAL")
-								if(VAR.equals("RobotState")){
-								    				RobotState=VAL;
-								    			} else {
-								  					MentalState=VAL;
-								    			}
-						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t117",targetState="handleInfo",cond=whenDispatch("info"))
-					transition(edgeName="t118",targetState="handleStart",cond=whenRequest("testStart"))
-					transition(edgeName="t119",targetState="handleRequest",cond=whenRequest("testRequest"))
-				}	 
-				state("handleStart") { //this:State
-					action { //it:State
-						var RESULT = "$MentalState,$RobotState" 
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						CommUtils.outmagenta("START: $name print result: $RESULT")
-						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
-						answer("testStart", "testReply", "testReply($RESULT)"   )  
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t220",targetState="handleInfo",cond=whenDispatch("info"))
-					transition(edgeName="t221",targetState="handleRequest",cond=whenRequest("testRequest"))
-				}	 
-				state("handleRequest") { //this:State
-					action { //it:State
-						var RESULT = "$MentalState,$RobotState" 
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						CommUtils.outmagenta("$name print result: $RESULT")
-						answer("testRequest", "testReply", "testReply($RESULT)"   )  
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t222",targetState="handleInfo",cond=whenDispatch("info"))
-					transition(edgeName="t223",targetState="handleRequest",cond=whenRequest("testRequest"))
+					 transition(edgeName="t122",targetState="monitor",cond=whenDispatch("info"))
 				}	 
 			}
 		}
