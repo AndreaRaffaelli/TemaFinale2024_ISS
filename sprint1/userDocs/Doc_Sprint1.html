@@ -283,7 +283,7 @@
 		<ul>
 			<li><b>R2.1</b>: L'incinerator riceve messaggio di accensione wireless iniziale</li>
 			<ul>
-				<li>Chi lo invia? Con che semantica? </li>
+				<!-- <li>Chi lo invia? Con che semantica? </li> -->
 				<li>Dissertazione: L'incinerator non ha responsabilita' di risposta e non ha indicazioni sulla
 					provenienza del comando.
 					Per questi motivi l'accensione e' modellabile con semantica ad Evento.
@@ -300,7 +300,7 @@ Event startIncinerator: startIncinerator(X)
 			<li><b>R2.4</b>: Emanare un segnale (acustico o altro) alla fine del processo di incenerimento che puo'
 				essere percepito da OpRobot e da WIS</li>
 			<ul>
-				<li>Con che semantica?</li>
+				<!-- <li>Con che semantica?</li> -->
 				<li>Dissertazione: Il segnale emesso non necessita di contenuto e non richiede risposta, per questo
 					<b>e' asincrono</b>.
 					Di coseguenza si <b>esclude</b> la semantica <b>request-response</b>.
@@ -320,15 +320,14 @@ Event burnEnd: burnEnd(X)
 				basicRobot24</li>
 			<li><b>R4.1</b>: Invio comandi da parte di <b>WIS</b> a <b>OpRobot</b> secondo determinate condizioni</li>
 			<ul>
-				<li>Con che semantica? </li>
-				<li> OpRobot risponde al messaggio di WIS?
-					<ul>
-						<li> Se risponde quando lo fa? In risposta alla ricezione o quando ha finito il ciclo?</li>
-						<li> I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di
-							comunicazione/computazionali/fisici?</li>
-					</ul>
-				<li> L'opRobot come notifica la sua disponibilità al WIS?</li>
-				</li>
+				<!-- <li>Con che semantica? </li> -->
+				<!-- <li> OpRobot risponde al messaggio di WIS? -->
+					<!-- <ul> -->
+						<!-- <li> Se risponde quando lo fa? In risposta alla ricezione o quando ha finito il ciclo?</li> -->
+						<!-- <li> I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di -->
+							<!-- comunicazione/computazionali/fisici?</li> -->
+					<!-- </ul> -->
+				L'opRobot come notifica la sua disponibilità al WIS?</li>
 				<li>Dissertazione: <br>
 					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti,
 					nella seconda casistica il WIS rimarrebbe immobilizzato. Se non riceve un messaggio entro un
@@ -379,19 +378,19 @@ Dispatch startBurn: startBurn(X)
 </code></pre>
 				</div>
 
-				<li>Come fa l'inceneritore a notificare alla GUI il cambio di stato?
-					(dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??)
-				</li>
-				<li>L'opRobot come collega i luoghi fisici a quelli virtuali???
+				<!-- <li>Come fa l'inceneritore a notificare alla GUI il cambio di stato? -->
+				<!-- (dobbiamo ignorare questa domanda in quanto la GUI non e' ambito di questo sprint??) -->
+				<!-- </li> -->
+				<li>L'opRobot come collega i luoghi fisici a quelli virtuali?
 				</li>
 				<img src="./img/griglia.png" width="35%" height="35%"> <br>
-				Adottiamo il concetto di posizione introdotto da basicRobot, per cui è necessarioa la traduzione delle
+				Adottiamo il concetto di posizione introdotto da basicRobot, per cui è necessaria la traduzione delle
 				coordinate
 				fisiche ai relativi punti nella sua mappa interna. Per disaccoppiare la relazione dal codice può essere
 				opportuno introdurre
 				un file di configurazione leggibile dall'opRobot. Nel suddetto file vengono specificati i valori (in
 				scala del basicRobot) delle
-				variabili utilizzate nella mappa già formalizzata nello sprint0. <br>
+				variabili utilizzate nella mappa già formalizzata nello sprint0. In questo sprint adottiamo una soluzione semplificata usando delle variabili codificate staticamente.<br>
 				<!-- 						<br><b>CONTINUA DA QUA </b>: definisci mappa con coordinate dei punti di interesse.
 							Oprobot traducie luoghi logici in coordinate e manda comando moverobot(X,Y).
 							Per la mappa è sufficiente utilizzare quella già vista nel corso. <br>
@@ -419,6 +418,7 @@ Dispatch startBurn: startBurn(X)
 			&#x274C;Il Test fallisce se non viene lanciato l'evento <code style="padding: 0%;">EndBurn</code> entro
 			<code style="padding: 0%;">BTIME</code>.
 		</ul>
+		<a href="../src/main/java/test/TestIncinerator.java">Test JUnit Incinerator</a>
 		<h3>Test Plan OpRobot</h3>
 		<h4>Test 1</h4>
 		Nel test inviamo segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot. <br>
@@ -434,6 +434,8 @@ Dispatch startBurn: startBurn(X)
 					style="padding: 0%;">TOBSMAX</code> dall'invio del segnale.
 			</li>
 		</ul>
+		<a href="../src/main/java/test/TestOpRobot.java">Test JUnit OpRobot</a>
+
 		<h3>Test Plan WIS</h3>
 		<h4>Test 1</h4>
 		Verifichiamo che WIS invii il segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot quando le
@@ -442,13 +444,12 @@ Dispatch startBurn: startBurn(X)
 		entro <code style="padding: 0%;">TOBSMAX</code>.<br>
 		&#x274C; Il test fallisce se WIS non invia il segnale di <code style="padding: 0%;">RobotStart</code>
 		all'opRobot entro <code style="padding: 0%;">TOBSMAX</code>.
-
-		<br><br>		
-		<a href="../src/main/java/test/TestWis.java">Test Code</a>
+		<br> 
+		<a href="../src/main/java/test/TestWis.java">Test JUnit WIS</a>		
 	</div>
 
 
-	<h2>Dove siamo arrivati</h2>
+	<!-- <h2>Dove siamo arrivati</h2> -->
 	<!-- Capire come verificare il corretto funzionamento del test wis: i prerequisiti del test 
 	sono che le condizione di invio di Robotstart siano corrette. Lato java come mandiamo la request e come controlliamo la response? -->
 

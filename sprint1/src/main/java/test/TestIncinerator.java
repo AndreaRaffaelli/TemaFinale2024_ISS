@@ -1,31 +1,21 @@
 package main.java.test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
-
-import org.apache.http.impl.ConnSupport;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import it.unibo.is.interfaces.platforms.IAcquireManyReply;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
-import unibo.basicomm23.msg.ApplMessage;
 import unibo.basicomm23.msg.ProtocolType;
 import unibo.basicomm23.utils.ColorsOut;
 import unibo.basicomm23.utils.CommUtils;
-
-//import it.unibo.ctxprodcons.MainCtxprodconsKt; //Solo in IntelliJ
-//import it.unibo.ctxreferee.MainCtxrefereeKt;
 import unibo.basicomm23.utils.ConnectionFactory;
 
 public class TestIncinerator {
@@ -35,6 +25,7 @@ public class TestIncinerator {
 	private static final String PORT = "6969"; // Porta (modificare secondo necessità)
 	private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
 	private static final int DLIMIT = 3;
+	private static final long BTIME = 5000;
 	private static String pid_context = "";
 
 	@Test
@@ -50,17 +41,20 @@ public class TestIncinerator {
 			}
 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
 			Thread.sleep(5000);
-
+			var startTime = System.currentTimeMillis();
 			IApplMessage eventStart= CommUtils.buildEvent("testIncinerator", "startIncinerator" , "startIncinerator(X)");
 			connSupport.forward(eventStart);
 			
 			Thread.sleep(2000);
 			IApplMessage reply =connSupport.request(requestStart);
+			var endTime = System.currentTimeMillis();
 			CommUtils.outcyan("test_observer reply=" + reply);
 			String answer = reply.msgContent();
 			String s = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
 
 			assertEquals("burnEnd", s);
+			var timeConstraint = (endTime - startTime) < BTIME;
+            assertTrue(timeConstraint); // Usa assertTrue per verificare il valore booleano
 			CommUtils.outcyan("Test eseguito con successo");
 
 		} catch (Exception e) {
