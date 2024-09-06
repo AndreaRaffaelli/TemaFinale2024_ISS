@@ -327,14 +327,14 @@ Event burnEnd: burnEnd(X)
 						<!-- <li> I nodi possono fallire? (OpRobot, incinerator, WIS, ...) Bisogna pensare a problemi di -->
 							<!-- comunicazione/computazionali/fisici?</li> -->
 					<!-- </ul> -->
-				L'opRobot come notifica la sua disponibilità al WIS?</li>
+				<!-- L'opRobot come notifica la sua disponibilità al WIS?</li> -->
 				<li>Dissertazione: <br>
-					Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti,
+					<!-- Se risponde alla ricezione allora WIS riprende il polling verso la bilancia e sonar, altrimenti,
 					nella seconda casistica il WIS rimarrebbe immobilizzato. Se non riceve un messaggio entro un
 					intervallo di tempo (assumendo > BTIME) allora il comando non e' stato recepito correttamente.<br>
 					Con l'assunzione dell'impossibilità del <b>fallimento dei componenti</b> la semantica del messaggio
 					è di tipo dispatch (fire and forget) in quanto non vi è bisogno di risposta. Altrimenti si potrebbe
-					prediligere una invitation o una request per garantire la ricezione del messaggio (reply/ack). <br>
+					prediligere una invitation o una request per garantire la ricezione del messaggio (reply/ack). <br> -->
 					In questa prima fase del progetto <b>non consideriamo il caso in cui i nodi falliscano</b>. Tale
 					requisito potrebbe venir analizzato in una futura revisione
 					del progetto. <br>
@@ -438,13 +438,13 @@ Dispatch startBurn: startBurn(X)
 
 		<h3>Test Plan WIS</h3>
 		<h4>Test 1</h4>
-		Verifichiamo che WIS invii il segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot quando le
+		<ul>
+		<li>Verifichiamo che WIS invii il segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot quando le
 		condizioni sono corrette<br>
 		&#x2705; Il test e' superato se WIS invia il segnale di <code style="padding: 0%;">RobotStart</code> all'opRobot
 		entro <code style="padding: 0%;">TOBSMAX</code>.<br>
 		&#x274C; Il test fallisce se WIS non invia il segnale di <code style="padding: 0%;">RobotStart</code>
-		all'opRobot entro <code style="padding: 0%;">TOBSMAX</code>.
-		<br> 
+		all'opRobot entro <code style="padding: 0%;">TOBSMAX</code>. </li></ul>
 		<a href="../src/main/java/test/TestWis.java">Test JUnit WIS</a>		
 	</div>
 
