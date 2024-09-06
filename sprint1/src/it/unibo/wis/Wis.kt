@@ -25,7 +25,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				var Ws_status = 0;
 		        var As_status = 0;
 		
-				var RobotFree = true;
+				var RobotFree = false;
 				var DLIMIT = 3;		// zero non corretto
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State

@@ -37,7 +37,7 @@ QActor wis context ctxtest{
 		var Ws_status = 0;
         var As_status = 0;
 
-		var RobotFree = true;
+		var RobotFree = false;
 		var DLIMIT = 3;		// zero non corretto
 	#]
 	State s0 initial{
@@ -155,7 +155,7 @@ QActor oprobot context ctxtest{
  		printCurrentMessage color yellow
 		[# MentalState="HOME"#]
 		println("($name): $MentalState") color magenta 
-		forward test_observer -m info : info(ciao)
+//		forward test_observer -m info : info(ciao)
 		updateResource [#  "info($name,MentalState,$MentalState)" #]
 		onMsg( engagedone : engagedone(X) ){		
 			println("($name): $RobotState") color magenta

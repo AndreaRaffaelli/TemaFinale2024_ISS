@@ -56,7 +56,6 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						 	   
 						 MentalState="HOME" 
 						CommUtils.outmagenta("($name): $MentalState")
-						forward("info", "info(ciao)" ,"test_observer" ) 
 						updateResourceRep(  "info($name,MentalState,$MentalState)"  
 						)
 						if( checkMsgContent( Term.createTerm("engagedone(ARG)"), Term.createTerm("engagedone(X)"), 
