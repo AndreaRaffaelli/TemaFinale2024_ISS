@@ -22,7 +22,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		
-		        val CICLO_FINITO= false;
+		        var CICLO_FINITO= false;
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -51,7 +51,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 								 val VAL = payloadArg(2) 
 								
 											if(N.equals("oprobot") && VAR.equals("MentalState")){
-												val MentalState = VAL;
+												var MentalState = VAL;
 												if(MentalState.equals("ASHOUT")){
 													CICLO_FINITO=true;
 												}

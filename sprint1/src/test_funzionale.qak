@@ -283,7 +283,7 @@ QActor incinerator context ctxtest{
 QActor test_observer context ctxtest{
 	 
 	[#
-        val CICLO_FINITO= false;
+        var CICLO_FINITO= false;
 	#]
 	State s0 initial{
 		printCurrentMessage color yellow
@@ -305,7 +305,7 @@ QActor test_observer context ctxtest{
 //			println("$name views $N $VAR $VAL") color magenta
 			[#
 			if(N.equals("oprobot") && VAR.equals("MentalState")){
-				val MentalState = VAL;
+				var MentalState = VAL;
 				if(MentalState.equals("ASHOUT")){
 					CICLO_FINITO=true;
 				}
