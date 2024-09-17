@@ -9,6 +9,7 @@ request( engage, engage(CALLER) ).
 request( doplan, doplan(PATH,STEPTIME) ).
 event( burnEnd, burnEnd(ARG) ).
 event( startIncinerator, startIncinerator(X) ).
+request( testRequest, testRequest(X) ).
 request( moverobot, moverobot(TARGETX,TARGETY) ).
 reply( moverobotdone, moverobotok(ARG) ).  %%for moverobot
 reply( moverobotfailed, moverobotfailed(PLANDONE,PLANTODO) ).  %%for moverobot
@@ -24,3 +25,5 @@ context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
  static(oprobot).
   qactor( incinerator, ctxtest, "it.unibo.incinerator.Incinerator").
  static(incinerator).
+  qactor( test_observer, ctxtest, "it.unibo.test_observer.Test_observer").
+ static(test_observer).
