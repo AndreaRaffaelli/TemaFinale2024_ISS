@@ -261,14 +261,20 @@
 		<h1>LABORATORIO DI INGEGNERIA DEI SISTEMI SOFTWARE <font size="5"></font>
 		</h1>
 	</div>
+<!-- 
+	
 
+
+-->
 	<div class="body">
 		<h2>Introduction</h2>
 		<a href="./TemaFinale24.html">Richiesta del committente</a>
 		<h2>
 			Analisi dei Requisiti
 		</h2>
-		<a href="./Doc_Sprint02.html">Requisiti</a>
+		<a href="./Doc_Sprint02.html">Requisiti</a><br>
+		Architettura logica prodotta all'interno dello sprint02:<br>
+		<center><img src="./img/sprintzeroarch.png" style="height: 450px"></center>
 		<h2> Goal Dello Sprint 1</h2>
 		Affrontare l'analisi dei problemi introdotti dai requisiti R2,R3,R4, generare un'architettura logica, un modello
 		eseguibile e dei test automatizzati.
@@ -404,6 +410,20 @@ Dispatch startBurn: startBurn(X)
 		<h2>Architettura Logica</h2>
 		<img src="./img/archLogica.png" alt="imgAL" width="75%" height="75%">
 
+		<h2>Progettazione</h2>
+		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint1.qak">sprint1-model</a>
+		<br>
+		<h3>Deploy</h3>
+		<pre>
+			<code>
+docker run -ti -p 8090:8090 -p 8091:8091 --rm  docker.io/natbodocker/virtualrobotdisi23:1.0
+
+cd ./basicrobot24-1.0/bin/
+
+./basicrobot24			
+			</code>
+		</pre>
+		<br>
 		<h2>Test Plans</h2>
 		<h3>Test Plan Inceneritore</h3>
 		<h4>Test 1</h4>
