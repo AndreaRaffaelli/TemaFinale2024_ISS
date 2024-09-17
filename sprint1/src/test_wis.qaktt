@@ -8,7 +8,7 @@ Event burnEnd : burnEnd( ARG )
 Dispatch info : info(N,VAR,VAL)
 
 Request testRequest : testRequest(X)
-Reply testReply : testReply(X,Y,Z)
+Reply testReply : testReply(X)
 
 Context ctxtest ip [host="localhost" port=6969]
 //Context ctxoprobot ip [host="localhost" port=8080]

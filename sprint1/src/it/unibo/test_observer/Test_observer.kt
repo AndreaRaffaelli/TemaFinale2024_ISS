@@ -21,6 +21,8 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		
+		        val CICLO_FINITO= false;
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -36,17 +38,41 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t021",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t022",targetState="handleRequest",cond=whenRequest("testRequest"))
 				}	 
 				state("monitor") { //this:State
 					action { //it:State
 						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(N,VAL,VAR)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val N = payloadArg(0)   
+								 val VAR = payloadArg(1) 
+								 val VAL = payloadArg(2) 
+								
+											if(N.equals("oprobot") && VAR.equals("MentalState")){
+												val MentalState = VAL;
+												if(MentalState.equals("ASHOUT")){
+													CICLO_FINITO=true;
+												}
+											}
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t122",targetState="monitor",cond=whenDispatch("info"))
+					 transition(edgeName="t123",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t124",targetState="handleRequest",cond=whenRequest("testRequest"))
+				}	 
+				state("handleRequest") { //this:State
+					action { //it:State
+						answer("testRequest", "testReply", "testReply($CICLO_FINITO)"   )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
 				}	 
 			}
 		}

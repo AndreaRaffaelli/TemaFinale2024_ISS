@@ -57,7 +57,7 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						CommUtils.outmagenta("($name): Inizio bruciatura")
-						delay(5000) 
+						delay(2000) 
 						CommUtils.outmagenta("($name): Fine bruciatura")
 						emit("burnEnd", "burnEnd(stop)" ) 
 						//genTimer( actor, state )
