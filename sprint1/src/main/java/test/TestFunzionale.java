@@ -26,11 +26,11 @@ public class TestFunzionale {
     private static final String PORT = "6969"; // Porta (modificare secondo necessità)
     private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
     private static final String DOCKER_NAME = "container_docker";
+    private static final int MAX_T = 40000;
     private static String pidContext = "";
     private static String pidDocker = "";
     private static String pidBr = "";
     private static Process docker = null;
-
 
     @BeforeClass
     public static void activateSystemUsingDeploy() {
@@ -41,11 +41,7 @@ public class TestFunzionale {
             try {
                 String osName = System.getProperty("os.name");
                                 
-                docker = Runtime.getRuntime().exec("docker run -d -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0");
-                
-                //                docker = new ProcessBuilder("docker", "run", "--name", DOCKER_NAME, "-ti", "-p", "8090:8090", "-p", "8091:8091", "--rm", "docker.io/natbodocker/virtualrobotdisi23:1.0").start();
-                
-                System.out.println("Docker is alive?"+docker.descendants().count());
+                docker = Runtime.getRuntime().exec("docker run -d -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0");                                 
                 if (osName.startsWith("Linux")) {
                     cleanOldDeployment();
                     processPath = "./build/distributions/testfunzionale-1.0/bin/testfunzionale";
@@ -60,11 +56,8 @@ public class TestFunzionale {
                 prodBr.directory(new java.io.File("../basicrobot24-1.0/bin"));
                 prodBr.command("./basicrobot24");
                 
-                br = prodBr.start();
-                
-                showOutput(br, "Red");
+                br = prodBr.start();                
                 pidBr = Long.toString(br.pid());
-                System.out.println("Docker e' morto "+docker.waitFor());
                 Thread.sleep(2000);
                 p = startProcess(processPath);
                 pidContext = Long.toString(p.pid());
@@ -92,7 +85,6 @@ public class TestFunzionale {
 
     @Test
     public void test() {
-//    	System.out.println("Docker is alive?"+docker.isAlive());
         IApplMessage testRequest = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 
         try {
@@ -103,7 +95,7 @@ public class TestFunzionale {
                 Thread.sleep(1000);
             }
             CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
-            Thread.sleep(15000);
+            Thread.sleep(this.MAX_T);
 
             IApplMessage reply = connSupport.request(testRequest);
             CommUtils.outcyan("test_observer reply=" + reply);

@@ -1,0 +1,14 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open Doc_Sprint1.html",
+            "file": "/home/davide.moricoli/Documents/ISS/TemaFinale2024_ISS/sprint1/userDocs/Doc_Sprint1.html"
+        }
+    ]
+}

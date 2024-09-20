@@ -411,7 +411,7 @@ Dispatch startBurn: startBurn(X)
 		<img src="./img/archLogica.png" alt="imgAL" width="75%" height="75%">
 
 		<h2>Progettazione</h2>
-		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint1.qak">sprint1-model</a>
+		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint1.qaktt">sprint1-model</a>
 		<br>
 		<h3>Deploy</h3>		
 		<pre>
@@ -480,9 +480,9 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint1/build/distributions/sprintuno-
 			<li>
 				Verifichiamo che il sistema abbia scaricato almeno un RP nel AshStorage.<br>
 				&#x2705; Il test e' superato se la variabile <code style="padding: 0%;">CICLO_FINITO</code> risulta
-				essere <code style="padding: 0%;">TRUE</code> dopo 20 secondi.<br>
+				essere <code style="padding: 0%;">TRUE</code> dopo <code style="padding: 0%">MAX_T</code> secondi<br>
 				&#x274C; Il test fallisce se la variabile <code style="padding: 0%;">CICLO_FINITO</code> risulta
-				essere <code style="padding: 0%;">FALSE</code> dopo 20 secondi. 
+				essere <code style="padding: 0%;">FALSE</code> dopo <code style="padding: 0%">MAX_T</code> secondi. 
 			</li>
 		</ul>
 		<a href="../src/main/java/test/TestFunzionale.java">Test JUnit Funzionale</a>		
