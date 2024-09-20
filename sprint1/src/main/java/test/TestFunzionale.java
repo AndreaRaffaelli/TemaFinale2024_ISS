@@ -1,16 +1,17 @@
 package main.java.test;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import it.unibo.kactor.sysUtil;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.msg.ProtocolType;
@@ -28,16 +29,23 @@ public class TestFunzionale {
     private static String pidContext = "";
     private static String pidDocker = "";
     private static String pidBr = "";
+    private static Process docker = null;
+
 
     @BeforeClass
     public static void activateSystemUsingDeploy() {
         Thread th = new Thread(() -> {
-            Process docker = null;
-            Process br = null;
+                        Process br = null;
             Process p = null;
             String processPath = "";
             try {
                 String osName = System.getProperty("os.name");
+                                
+                docker = Runtime.getRuntime().exec("docker run -d -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0");
+                
+                //                docker = new ProcessBuilder("docker", "run", "--name", DOCKER_NAME, "-ti", "-p", "8090:8090", "-p", "8091:8091", "--rm", "docker.io/natbodocker/virtualrobotdisi23:1.0").start();
+                
+                System.out.println("Docker is alive?"+docker.descendants().count());
                 if (osName.startsWith("Linux")) {
                     cleanOldDeployment();
                     processPath = "./build/distributions/testfunzionale-1.0/bin/testfunzionale";
@@ -47,19 +55,24 @@ public class TestFunzionale {
                     CommUtils.outred("Unsupported operating system: " + osName);
                     return;
                 }
-
-                extractTarball();
-                docker = startProcess("docker run --name " + DOCKER_NAME + " -ti -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0");
-                br = startProcess("../basicrobot24-1.0/bin/basicrobot24");
+                extractTarball();                
+                var prodBr = new ProcessBuilder();
+                prodBr.directory(new java.io.File("../basicrobot24-1.0/bin"));
+                prodBr.command("./basicrobot24");
+                
+                br = prodBr.start();
+                
+                showOutput(br, "Red");
                 pidBr = Long.toString(br.pid());
-
+                System.out.println("Docker e' morto "+docker.waitFor());
                 Thread.sleep(2000);
                 p = startProcess(processPath);
                 pidContext = Long.toString(p.pid());
-
+                
                 showOutput(p, ColorsOut.BLACK);
                 int exitCode = p.waitFor();
                 CommUtils.outmagenta("Process exited with code: " + exitCode);
+                
             } catch (Exception e) {
                 CommUtils.outred("Error during deployment: " + e.getMessage());
             } finally {
@@ -79,6 +92,7 @@ public class TestFunzionale {
 
     @Test
     public void test() {
+//    	System.out.println("Docker is alive?"+docker.isAlive());
         IApplMessage testRequest = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 
         try {
@@ -120,8 +134,16 @@ public class TestFunzionale {
         }
 
         try {
-            pbContext.start().waitFor();
+            
+        	pbContext.start().waitFor();
             pbBr.start().waitFor();
+         // Recupera l'ID del container avviato
+            Process getDockerIdProcess= startProcess("docker ps -q --filter ancestor=docker.io/natbodocker/virtualrobotdisi23:1.0");
+            BufferedReader reader=new BufferedReader(new InputStreamReader(getDockerIdProcess.getInputStream()));
+            pidDocker = reader.readLine();  // Legge l'ID del container
+
+            CommUtils.outmagenta("Docker container ID: " + pidDocker);
+            
             startProcess("docker stop " + DOCKER_NAME).waitFor();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
