@@ -1,0 +1,680 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+
+<head>
+	<!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/css/foundation.min.css"
+		crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/js/foundation.min.js"
+		crossorigin="anonymous"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/templateISS.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/main.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/navbar.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/table.css">
+	<link rel="stylesheet" type="text/css" href="./commons/resources/styles/code.css">
+	<!-- <script type="text/javascript" src="./commons/resources/scripts/myScripts.js"></script> -->
+	<style type="text/css">
+		body {
+			margin-left: 30px;
+			margin-right: 30px;
+			font-size: 18px;
+		}
+
+		;
+
+		P {
+			font-family: Tahoma;
+			font-size: 10pt;
+		}
+
+		;
+
+		a,
+		a:visited,
+		a:active,
+		a:link,
+		a:hover {
+			text-decoration: underline;
+			color: #545454;
+			background-color: transparent;
+			font-size: 93%;
+		}
+
+		a:hover {
+			background-color: #cccccc;
+		}
+
+
+		hr {
+			clear: both;
+			height: 1px;
+			color: #242424;
+			background-color: transparent;
+		}
+
+		h1,
+		h2,
+		h3 {
+			color: #242424;
+			clear: left;
+			font: 100% Tahoma, Helvetica, Arial, sans-serif;
+			margin-bottom: 0.5em;
+			padding-top: 0.5em;
+			border-radius: 10px;
+			padding: 5px;
+		}
+
+		top {
+			width: 100%;
+		}
+
+
+		#i {
+			color: #ff1010;
+		}
+
+		tt {
+			font-family: "Arial";
+			font-size: 90%;
+			color: #006600;
+		}
+
+		em {
+			font-family: "Arial";
+			font-size: 80%;
+			font-weight: bold;
+			border-style: solid;
+			border-color: #abe876;
+			color: #1632cc;
+		}
+
+		bc {
+			font-family: "Arial";
+			font-size: 90%;
+			font-weight: bold;
+			color: #990000;
+			background-color: #fcf8c7;
+		}
+
+		ks {
+			font-family: "Arial";
+			font-weight: bold;
+			color: #0000CD;
+			font-size: 90%;
+		}
+
+		kc {
+			font-family: "Arial";
+			font-weight: bold;
+			color: #008000;
+			font-size: 90%;
+		}
+
+		pre {
+			font-family: "Consolas";
+			font-size: 85%;
+			background-color: #f5f5f5;
+			border: 1.5px solid silver;
+			padding: 5px;
+		}
+
+		m {
+			font-family: "Helvetica";
+			line-height: 100%;
+			font-size: 75%;
+		}
+
+		div.body {
+
+			font-size: 18px;
+		}
+
+		k {
+			color: #990000;
+			font-weight: bold;
+			font-size: 90%;
+		}
+
+		h1 {
+			font-size: 150%;
+			background-color: #b2c0ff;
+			padding: 10px;
+		}
+
+		h2 {
+			background-color: #9ed8ff;
+			font-size: 130%;
+		}
+
+		h3 {
+			background-color: #e6ccff;
+			font-size: 100%;
+		}
+
+		h4 {
+			background-color: #ccffcc;
+			font-size: 100%;
+			width: 95%;
+			border-radius: 5px;
+			padding: 2px;
+		}
+
+		h5 {
+			background-color: #d5ffb0;
+			font-size: 100%;
+
+		}
+
+		div.req {
+			background-color: #d9ffb3;
+			font-size: 18px;
+			width: 700px;
+			border: 3px solid green;
+			padding: 15px;
+			margin: 10px;
+		}
+
+		div.remark {
+			background-color: #E3F2FD;
+			border: 1.5px solid #d5f2ed;
+			padding: 15px;
+			margin: 10px;
+			border-radius: 25px;
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		ol,
+		ul,
+		li {
+			margin: 0;
+			margin-left: 10px;
+			padding: 0;
+			padding-bottom: 5px;
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+		}
+
+		img {
+			border: 1.5px solid #d5f2ed
+		}
+
+		a,
+		a:visited,
+		a:active,
+		a:link,
+		a:hover {
+			text-decoration: underline;
+			color: #545454;
+			background-color: transparent;
+		}
+
+		div.wrapdesc {
+			width: 90%;
+			margin: auto;
+		}
+
+		div.imagedesc {
+			width: 85%;
+			margin: auto;
+		}
+	</style>
+
+
+
+</head>
+
+
+
+
+
+
+<title>Sprint 0.2</title>
+</head>
+
+<!--
+	<body onload="loadNav();">
+		<div id="openButton" class="openButton" onclick="openNav(true)">&#9776; Menu</div>
+		<div id="sidenav" class="sidenav">
+			<a class="closeButton" href="javascript:void(0)" onclick="closeNav(true)">&times;</a>
+			<a href=".README.html">ReadMe</a>
+			<a class="sprint" href="../../../Sprint0/Codice/userDocs/Cold%20Storage%20Service%20-%20Natali%20V3.html">Sprint0</a>
+			<a class="sprint" href="../../../Sprint1.0/Codice/userDocs/Sprint%201.0%20-%20V3.html">Sprint1.0</a>
+			<a class="sprint" href="../../../Sprint1.1/Codice/userDocs/Sprint%201.1%20-%20V3.html">Sprint1.1</a>
+			<a id="currentSprint" class="sprint" href="#">&#8211;&#8212; Sprint2 &#8212;&#8211;</a>
+			<div class="sidenavSection">
+				<a href="#Goal Sprint 2">Goal Sprint 2</a>
+				<a href="#Requisiti">Requisiti</a>
+				<a href="#Analisi dei Requisiti">Analisi dei Requisiti</a>
+				<a href="#Analisi del Problema">Analisi del Problema</a>
+				<a href="#Test Plan">Test Plan</a>
+				<a href="#Progettazione">Progettazione</a>
+				<a href="#Deployment">Deployment</a>
+			</div>
+			<p class="separator">&mdash;&mdash;&mdash;&ndash;&ndash;&mdash;&mdash;&mdash;</p>
+			<a class="sprint" href="../../../Sprint3/Codice/userDoc/Sprint%203.html">Sprint3</a>
+			<bottom-spacer/>
+		</div>
+-->
+
+<body>
+	<div id="top">
+		<h1>LABORATORIO DI INGEGNERIA DEI SISTEMI SOFTWARE <font size="5"></font>
+		</h1>
+	</div>
+
+	<div class="body">
+		<h2>Introduction</h2>
+		<a href="./TemaFinale24.html">Richiesta del committente</a>
+		<h2>Requisiti del Sistema</h2>
+		<div>
+			<ol>
+				<li><b>Monitoring Device</b>
+					<ul>
+						<li>R1.1: Segnalare lo stato dell'inceneritore e del AshStorage tramite un LED.
+							<ul>
+								<li>R1.1.1: Il LED deve essere acceso quando l'inceneritore è in fase di bruciatura.
+								</li>
+								<li>R1.1.2: Il LED deve essere spento quando l'inceneritore non è in funzione.</li>
+								<li>R1.1.3: Il LED deve lampeggiare quando l'AshStorage è pieno o vuoto.</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><b>Incinerator</b>
+					<ul>
+						<li>R2.1: Ricevere comando di attivazione per l'accensione</li>
+						<li>R2.2: Inizia processo di bruciatura quando viene inserito un RP</li>
+						<li>R2.3: Bruciare un RP alla volta in un tempo predefinito (BTIME).</li>
+						<li>R2.4: Emanare un segnale (acustico o altro) alla fine del processo di incenerimento.</li>
+					</ul>
+				</li>
+				<li><b>OpRobot</b>
+					<ul>
+						<li>R3.1: Raggiunge la posizione delle porte: WASTEIN, BURNIN, BURNOUT, ASHOUT e della HOME</li>
+						<li>R3.2: Caricare RP dal WASTEIN e scaricare in BURNIN.</li>
+						<li>R3.3: Tornare a HOME durante la fase di bruciatura dell'inceneritore e quando non c’è lavoro
+							da fare.</li>
+						<li>R3.4: Caricare ceneri da BURNOUT e scaricare in ASHOUT.</li>
+					</ul>
+				</li>
+				<li><b>WIS (Waste Incineration System)</b>
+					<ul>
+						<li>R4.1: Inviare comandi di inizio lavoro al OpRobot, secondo queste condizioni:
+							<ul>
+								<li>R4.1.1: WasteStorage non e’ vuoto</li>
+								<li>R4.1.2: AshStorage non e’ pieno</li>
+								<li>R4.1.3: L'inceneritore non e’ pieno</li>
+							</ul>
+						</li>
+						<li>R4.2: WIS riceverà come input i valori della scale e del sonar.</li>
+					</ul>
+				</li>
+				<li><b>ServiceStatusGUI (SSGUI)</b>
+					<ul>
+						<li>R5.1: Visualizzare lo stato del WasteStorage. </li>
+						<li>R5.2: Visualizzare lo stato dell'AshStorage. </li>
+						<li>R5.3: Visualizzare lo stato dell'inceneritore. </li>
+						<li>R5.4: Visualizzare lo stato del OpRobot. </li>
+					</ul>
+				</li>
+			</ol>
+		</div>
+		<h2>Analisi dei Requisiti</h2>
+		<div>
+			<h3>Modellazione della Mappa:</h3>
+			Rappresentiamo la mappa attraverso un sistema di coordinate cartesiane interpretabile dalla macchina.
+			<ul>
+				<li>
+					Service Area: Area rettangolare delimitato da bordi con vertici in (0, 0) (LW, 0) (0, LH) (LW,LH)
+					<ul>
+						<li> Dove A, B, C, D, OA, OB, OC, OD sono dei punti da definire con il committente </li>
+						<li> LH, LW, AX, HX, HY sono quote da definire con il committente </li>
+					</ul>
+				</li>
+				<li> WasteIn: segmento in (0, LH), (WX, LH) </li>
+				<li> AshOut: segmento in (AX, LH), (LW, LH)</li>
+				<li> Home: struttura rettangolare percorribile (0,0) (HX,0) (0, HY) (HX, HY) </li>
+				<li> BurnIn: segmento con vertici in A,B </li>
+				<li> BurnOut: segmento con vertici in B,C </li>
+				<li> Ostacolo: area non percorribile in OA, OB, OC, OD </li>
+			</ul>
+			<img src="./img/mappaISS.png" alt="Map"><br>
+			<p></p>
+			<h3>Modello Strutturale e Comportamentale:</h3>
+			<ul>
+				<li>
+					<b>DDR Robot:</b> <br>
+					<ul>
+						<li>Il committente ha specificato che il software di controllo e' BasicRobot24</li>
+					</ul>
+				</li>
+				<li>
+					<b>BasicRobot24:</b> <br>
+					<ul>
+						<li>Riceve messaggi con coordinate</li>
+						<li>Muove il robot fisico o virtuale: ha un file di configurazione</li>
+						<li>Il software di controllo risponde ai seguenti messaggi: <a
+								href="./BasicRobot24.html#br24-messaggi">basicRobot24</a><br></li>
+					</ul>
+				</li>
+				<b>OpRobot</b>
+				<ul>
+					<li>DDR robot che agisce come attuatore fisico.</li>
+					<li>Può spostarsi tra diverse posizioni (HOME, WASTEIN, BURNIN, BURNOUT, ASHOUT).</li>
+					<li>Carica da WASTEIN gli RP e Scarica in BURNIN </li>
+					<li>Torna in HOME quando inceneritore è in fase di burn</li>
+					<li>Carica da BURNout e scarica in ASHOUT</li>
+					<li>Controllato da WIS</li>
+					<li>Controlla il DDR Robot --> Invia istruzioni al BasicRobot24</li>
+					<li>Riceve messaggi</li>
+				</ul>
+				</li>
+				<li>
+					<b>Inceneritore:</b> <br>
+					<ul>
+						<li>Riceve Comandi wireless.</li>
+						<li>Riceve gli RP attraverso il BURNIN port.</li>
+						<li>Brucia un RP alla volta in BTIME secondi.</li>
+						<li>Invia un segnale acustico alla fine del processo di incenerimento.</li>
+						<li>Le ceneri sono estratte attraverso il BURNOUT port. </li>
+					</ul>
+				</li>
+				<li>
+					<b>WIS:</b>
+					<ul>
+						<li>Direttore del sistema
+						</li>
+						<!-- 						<li> Legge gli input:
+							<ul>
+								<li> Riceve il segnale inceneritore</li>
+								<li>Riceve Segnali da waste in</li>
+								<li>Riceve Segnali da AshStorage
+								</li>
+							</ul>
+						</li> -->
+						<li>Interagisce mediante polling con WasteStorage e AshStorage al fine di gestire stato della
+							bilanicia e del sonar.</li>
+						<li>
+							Ha una GUI al suo interno per visualizzare lo stato del sistema.
+						</li>
+						<li>
+							Indirizza il robot.
+						</li>
+					</ul>
+
+				<li>
+					<b>Scale/Bilancia</b>
+					<ul>
+						<li>Misura il peso totale dei rifiuti presenti nel Waste Storage.</li>
+						<li>Fornisce informazione sul peso degli RP attualmente contenuti in Waste Storage.</li>
+						<!-- <li>E' un entita' passiva, Interfaccia che espone i seguenti metodi:
+							<ul>
+								<li> GetValue(): restituisce il peso attuale.</li>
+								<li> GetRpNumber(): restituisce il numero di RP.</li>
+							</ul>
+						</li>
+						<code> public interface Scale { int GetValue(); int GetRpNumber(); } </code> -->
+					</ul>
+				</li>
+				<li>
+					<b>Sonar</b>
+					<ul>
+						<li>Misura il livello delle ceneri nel AshStorage.</li>
+						<!-- <li>E' un entita' passiva, Interfaccia che espone i seguenti metodi:
+							<ul>
+								<li> GetDistance(): restituisce la distanza misurata.</li>
+							</ul>
+						</li>
+						<code> public interface Sonar { GetDistance(); } </code> -->
+					</ul>
+				</li>
+				<li>
+					<b>Service Status GUI</b>
+					<ul>
+						<li>Interfaccia grafica per visualizzare lo stato del sistema.</li>
+						<ul>
+							<li>Numero RP in WasteStorage</li>
+							<li>Quantita' cenere in AshStorage</li>
+							<li>Stato dell'inceneritore</li>
+							<li>Posizione dell OpRobot</li>
+							<li>Lavoro dell'OpRobot</li>
+						</ul>
+					</ul>
+					Non specificato se entita' passiva/attiva. Da trattare in analisi del problema.
+				</li>
+				<li>
+					<b>MonitoringDevice:</b>
+					<ul>
+						<li>Controlla il Led
+							<!-- Il Led puo' essere modellato dalla seguente interfaccia: <br>
+							<code> public interface Led { void TurnOn(); void TurnOff(); void Blink(); } </code> -->
+						</li>
+						<li>Controlla il Sonar</li>
+						<li>E' implementato nel Raspberry</li>
+					</ul>
+				</li>
+			</ul>
+			<p>Da requisiti non si evince la semantica dei messaggi inviati/ricevuti dall'incinerator, per il momento
+				utilizziamo degli Eventi, nell'analisi del problema verra' affrontato propriamente</p>
+			<div>
+				<img src="./img/ddrRobot.png" alt="ContestoRobot" width="30%" height="30%">
+				<img src="./img/serviceArea.png" alt="ContestoSistema" width="30%" height="30%">
+				<img src="./img/raspberry.png" alt="ContestoRaspberry" width="30%" height="30%">
+			</div>
+			<div>
+				Modello del contesto DDR robot: <a href="../src/basicRobot.qaktt">basicRobot.qak</a> <br>
+				Modello del contesto serviceArea: <a href="../src/serviceArea.qaktt">serviceArea.qak</a> <br>
+				Modello del contesto raspberry: <a href="../src/monitoringDevice.qak">monitoringDevice.qak</a> <br>
+				<p></p>
+			</div>
+			<!-- <h3>Modello Architettura dai Requisiti</h3>
+			<div style="text-align:center;">
+				<img src="./img/ModelloRequisiti.png" alt="ModelloRequisiti" width="60%" height="60%">
+			</div> -->
+			<!-- <h3>Esempio Diagramma di Sequenza:</h3>
+			<ol>
+				<li><strong>WIS</strong> legge il peso totale dei RP nel <strong>Scale WasteStorage</strong>.</li>
+				<li><strong>Sonar</strong> invia la distanza misurata nel <strong>AshStorage</strong> a
+					<strong>WIS</strong>.</li>
+				<li>WIS verifica lo stato del <strong>WasteStorage</strong> e dell'<strong>AshStorage</strong> tramite
+					<strong>WIS</strong>.</li>
+				<li><strong>WIS</strong> invia un comando di inizio lavoro a <strong>OpRobot</strong>.</li>
+				<li><strong>OpRobot</strong> si sposta al <strong>WasteStorage</strong> e raccoglie un RP.</li>
+				<li><strong>OpRobot</strong> si sposta al <strong>BURNIN port</strong> e deposita il RP
+					nell'<strong>Incinerator</strong>.</li>
+				<li>OP Robot aggiorna suo stato</li>
+				<li><strong>WIS</strong> invia un comando di attivazione all'<strong>Incinerator</strong>.</li>
+				<li><strong>Incinerator</strong> brucia il RP e alla fine invia un segnale al sistema.</li>
+				<li><strong>OpRobot</strong> va a raccogliere le ceneri dall'<strong>Incinerator</strong>.</li>
+				<li><strong>OpRobot</strong> raccoglie le ceneri dal <strong>BURNOUT port</strong> e le deposita
+					nell'<strong>AshStorage</strong>.</li>
+				<li><strong>WIS</strong> aggiorna lo stato del sistema sulla <strong>SSGUI</strong>.</li>
+			</ol> -->
+			<!-- <h3>Architettura del modello simulato:</h3>
+			 Immagine messa al centro-->
+			<!-- <div style="text-align:center;">
+				<img src="./img/ModelloSimulato.png" alt="ModelloSimulato" width="60%" height="60%">
+			</div> -->
+		</div>
+	</div>
+	<!-- <h2>Problem analysis</h2> -->
+	<h2>Test plans</h2>
+	<!-- <ol>
+		<li>
+			<strong>Monitoring Device</strong>
+			<ul>
+				<li>
+					<strong>Test Case 1.1: Misurazione del livello delle ceneri.</strong><br>
+					Verificare che il Monitoring Device misuri correttamente il livello delle ceneri e invii i dati a
+					WIS.<br>
+					<strong>Aspettativa:</strong> Il livello delle ceneri misurato è corretto e i dati sono ricevuti da
+					WIS.
+				</li>
+			</ul>
+		</li>
+		<li>
+			<strong>Incinerator</strong>
+			<ul>
+				<li>
+					<strong>Test Case 2.1: Ricezione dei comandi di attivazione</strong><br>
+					Verificare che l'inceneritore riceva e risponda correttamente ai comandi di attivazione inviati da
+					WIS.<br>
+					<strong>Aspettativa:</strong> L'inceneritore inizia il processo di bruciatura alla ricezione del
+					comando.
+				</li>
+				<li>
+					<strong>Test Case 2.2: Processo di bruciatura</strong><br>
+					Verificare che l'inceneritore bruci un RP alla volta nel tempo predefinito (BTIME).<br>
+					<strong>Aspettativa:</strong> L'inceneritore completa la bruciatura in BTIME secondi.
+				</li>
+				<li>
+					<strong>Test Case 2.3: Emissione del segnale di fine incenerimento</strong><br>
+					Verificare che l'inceneritore emetta correttamente un segnale alla fine del processo di
+					incenerimento.<br>
+					<strong>Aspettativa:</strong> Il segnale di fine incenerimento è emesso correttamente.
+				</li>
+			</ul>
+		</li>
+		<li>
+			<strong>OpRobot</strong>
+			<ul>
+				<li>
+					<strong>Test Case 3.1: Movimenti verso le posizioni</strong><br>
+					Verificare che OpRobot si sposti correttamente verso le posizioni WASTEIN, BURNIN, BURNOUT,
+					ASHOUT.<br>
+					<strong>Aspettativa:</strong> OpRobot raggiunge correttamente ogni posizione.
+				</li>
+			</ul>
+		</li>
+		<li>
+			<strong>WIS (Waste Incineration System)</strong>
+			<ul>
+				<li>
+					<strong>Test Case 4.1:</strong> Verificare che WIS invii comandi di inizio lavoro al OpRobot quando:
+					<ul>
+						<li>WasteStorage non è vuoto.</li>
+						<li>AshStorage non è pieno (< DLIMIT).</li>
+						<li>L'inceneritore non è pieno.</li>
+					</ul>
+					<strong>Aspettativa:</strong> WIS invia correttamente i comandi al OpRobot.
+				</li>
+			</ul>
+		</li>
+	</ol> -->
+	Test Funzionali:
+	</br>
+	</br>
+	<ul>
+		<li>
+			<strong>Precondizioni:</strong><br>
+			<ul>
+				<li>Contenitori Scarichi</li>
+				<li>Incenirator si accende</li>
+				<li>Viene caricato RP in WasteStorage</li>
+				<li>Fine Esecuzione AshStorage non e' vuoto</li>
+			</ul>
+			<strong>Aspettativa:</strong> WasteStorage e' vuoto, Ash Storage e' stato riempito, il robot ha effettuato
+			il
+			percorso.
+		</li>
+		</br>
+		<li>
+			<strong>Precondizioni:</strong><br>
+			<ul>
+				<li>AshStorage e' pieno</li>
+			</ul>
+			<strong>Aspettativa:</strong> Il robot non si muove, il sistema si blocca.
+		</li>
+		</br>
+	</ul>
+	<h2>Pianficazione del lavoro</h2>
+	<ul>
+		<li><b>Sprint 1</b>
+			<ul>
+				<li>
+					Analisi del problema relativo ai requisiti R2, R3, R4
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<ul>
+		<li><b>Sprint 2</b>
+			<ul>
+				<li>
+					Analisi del problema relativo ai requisiti R1
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<ul>
+		<li><b>Sprint 3</b>
+			<ul>
+				<li>
+					Analisi del problema relativo ai requisiti R5
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<h2>Domande per il committente</h2>
+	<ul>
+		<li>
+			L’inceneritore emana un segnale percepibile da OpRobot e WIS. A che serve farlo ricevere ad OpRobot se e`
+			controllato da WIS? (specifica iniziale: requires a software system service (WIS) that controls a robot
+			(called
+			OpRobot))
+		</li>
+	</ul>
+	<!-- <h2>Project</h2>
+
+
+	<h2>Testing</h2>
+
+
+	<h2>Deployment</h2>
+
+
+	<h2>Maintenance</h2> -->
+
+	<!-- USEFUL
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+-->
+
+	<br /><br />
+	</div>
+
+	<div style="background-color:rgba(86, 56, 253, 0.9);text-align:left;color:white">
+		<div>By Andrea Raffaelli email: andrea.raffaelli2@studio.unibo.it
+			<img src="./img/araffaelli.jpg" alt="cyberandrea" width="15%" height="15%">
+		</div> <br>
+		<div>By Edoardo De Divitiis email: edoardo.dedivitiis@studio.unibo.it
+			<img src="./img/edoardoFoto.jpg" alt="mbot" width="15%" height="15%">
+		</div> <br>
+		<div>By Davide Moricoli email: davide.moricoli@studio.unibo.it
+			<img src="./img/davideFoto.jpeg" alt="mbot" width="15%" height="15%">
+		</div> <br>
+		GIT repo: https://github.com/AndreaRaffaelli/TemaFinale2024_ISS <br>
+	</div>
+</body>
+
+</html>
