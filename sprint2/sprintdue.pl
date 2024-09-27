@@ -1,5 +1,5 @@
 %====================================================================================
-% sprintuno description   
+% sprintdue description   
 %====================================================================================
 dispatch( robotStart, robotStart(X) ).
 dispatch( robotUpdate, robotUpdate(X) ).
@@ -15,12 +15,11 @@ reply( moverobotfailed, moverobotfailed(PLANDONE,PLANTODO) ).  %%for moverobot
 request( testStart, testStart(X) ).
 request( testRequest, testRequest(X) ).
 %====================================================================================
-context(ctxtest, "localhost",  "TCP", "6969").
+context(ctxservicearea, "127.0.0.1",  "TCP", "6969").
 context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
- qactor( basicrobot, ctxbasicrobot, "external").
-  qactor( wis, ctxtest, "it.unibo.wis.Wis").
- static(wis).
-  qactor( oprobot, ctxtest, "it.unibo.oprobot.Oprobot").
- static(oprobot).
-  qactor( incinerator, ctxtest, "it.unibo.incinerator.Incinerator").
- static(incinerator).
+context(ctxashstorage, "localhost",  "TCP", "8021").
+ qactor( wis, ctxservicearea, "external").
+  qactor( oprobot, ctxservicearea, "external").
+  qactor( incinerator, ctxservicearea, "external").
+  qactor( monitoring_device, ctxashstorage, "it.unibo.monitoring_device.Monitoring_device").
+ static(monitoring_device).

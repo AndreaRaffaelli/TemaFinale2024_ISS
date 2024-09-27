@@ -17,6 +17,7 @@ request( testRequest, testRequest(X) ).
 %====================================================================================
 context(ctxtest, "localhost",  "TCP", "6969").
 context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
+context(ctxwastestorage, "127.0.0.1",  "TCP", "8021").
  qactor( basicrobot, ctxbasicrobot, "external").
   qactor( wis, ctxtest, "it.unibo.wis.Wis").
  static(wis).

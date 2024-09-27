@@ -1,0 +1,78 @@
+System sprintdue
+ 
+ 
+Dispatch robotStart: robotStart(X)
+
+Dispatch robotUpdate: robotUpdate(X)
+Dispatch startBurn : startBurn(X)
+Dispatch info : info(X, Y, Z)
+Request engage        : engage(CALLER)
+Reply   engagedone    : engagedone(ARG)
+Reply   engagerefused : engagerefused(ARG)
+Request  doplan   : doplan( PATH, STEPTIME )
+Reply doplandone  : doplandone( ARG )
+Reply doplanfailed  : doplanfailed( ARG )
+Event burnEnd : burnEnd( ARG )
+
+Event startIncinerator: startIncinerator(X)
+
+
+//Inglobamento endosimbitico di robotpos
+Request moverobot    :  moverobot(TARGETX, TARGETY)  
+Reply moverobotdone  :  moverobotok(ARG)                    for moverobot
+Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
+
+Request testStart : testStart(X)
+Request testRequest : testRequest(X)
+Reply testReply : testReply(X ,Y)
+
+Context ctxservicearea ip [host="127.0.0.1" port=6969]
+Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
+Context ctxashstorage ip [host="localhost"  port=8021]								
+
+ExternalQActor wis context ctxservicearea
+ExternalQActor oprobot context ctxservicearea
+ExternalQActor incinerator context ctxservicearea
+
+
+
+QActor monitoring_device context ctxashstorage withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
+	State s0 initial{
+		printCurrentMessage color yellow
+	}
+		Transition t0
+		whenMsg info -> new_value
+		
+	State new_value{
+		printCurrentMessage color red
+	}
+}
+
+
+
+
+//QActor test_observer context ctxtest{
+//	State s0 initial{
+//		printCurrentMessage color yellow
+//		delay 500
+//		observeResource wis msgid info
+//		observeResource oprobot msgid info
+//		observeResource incinerator msgid info
+//	}
+//	Transition t0
+//		whenMsg info -> monitor
+//	
+//	State monitor{
+//		printCurrentMessage color red
+//	}
+//	Transition t1
+//		whenMsg info -> monitor
+//}
+
+
+
+
+
+
+
+

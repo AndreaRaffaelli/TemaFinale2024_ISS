@@ -293,7 +293,7 @@
             Inoltre deve essere in grado di percepire quando l'AshStorage è pieno o vuoto. <br>
             Attraverso un'interfaccia il Monitoring Device controlla il LED fisico:
             <pre><code>
-interface IVirtualLED{
+public interface IVirtualLED{
     void turnOn();
     void turnOff();
     void blink();
@@ -331,7 +331,7 @@ updateResource [# "info($name,start,$start)" #]
                     <il>Dissertazione: il Sonar è un elemento che controlla constantemente il livello della polvere.<br>
                     Il Sonar fisico viene gestito attraverso l'interfaccia IVirtualSonar, da l'attore SonarDevice che si renderà sempre osservabile dalla Monitoring Device. 
                     <pre><code>
-interface IVirtualSonar{
+public interface IVirtualSonar{
         int read();
 }           
                                             </code></pre>
