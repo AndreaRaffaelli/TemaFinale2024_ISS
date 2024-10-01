@@ -1,35 +1,38 @@
 package main.resources;
 
 import it.unibo.kactor.ActorBasic;
+import unibo.basicomm23.utils.CommUtils;
 
-public class VirtualLED extends AbstarctLED implements IVirtualLED {
-
+public class VirtualLED extends AbstractLED implements IVirtualLED {
+	private String vitualRobotIp;
+	private ActorBasic owner;
+	
 	public VirtualLED(String vitualRobotIp, ActorBasic owner) {
-		// TODO Auto-generated constructor stub
+		this.owner = owner;
+		this.vitualRobotIp = vitualRobotIp;
 	}
 
 	@Override
 	public boolean turnOn() {
-		// TODO Auto-generated method stub
-		return false;
+		// Codice python per accendere led
+		CommUtils.outblue("LED | Acceso");
+		return true;
 	}
 
 	@Override
 	public boolean turnOff() {
-		// TODO Auto-generated method stub
+		CommUtils.outblue("LED | Spento");
 		return false;
 	}
 
 	@Override
 	public boolean blink() {
-		// TODO Auto-generated method stub
+		CommUtils.outblue("LED | Blink");
 		return false;
 	}
 
 	@Override
 	public void update(String value) {
-		// TODO Auto-generated method stub
-		
+		CommUtils.outred("LED | Chiamato metodo update, Check carefully");		
 	}
-
 }

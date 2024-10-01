@@ -2,5 +2,3 @@
 {"actor":"oprobot", "msgType":"dispatch", "curstate":"home", "nextstate":"goToWasteIn", "msgId":"robotStart"}
 {"actor":"incinerator", "msgType":"dispatch", "curstate":"start", "nextstate":"handleBurnStart", "msgId":"startBurn"}
 {"actor":"incinerator", "msgType":"dispatch", "curstate":"handleBurnStart", "nextstate":"handleBurnStart", "msgId":"startBurn"}
-{"actor":"test_observer", "msgType":"dispatch", "curstate":"s0", "nextstate":"monitor", "msgId":"info"}
-{"actor":"test_observer", "msgType":"dispatch", "curstate":"monitor", "nextstate":"monitor", "msgId":"info"}
