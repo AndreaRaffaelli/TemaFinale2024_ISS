@@ -3,7 +3,7 @@ package main.resources;
 import it.unibo.kactor.ActorBasic;
 import unibo.basicomm23.utils.CommUtils;
 
-public class VirtualLED extends AbstractLED implements IVirtualLED {
+public class VirtualLED implements IVirtualLED {
 	private String vitualRobotIp;
 	private ActorBasic owner;
 	
@@ -31,8 +31,4 @@ public class VirtualLED extends AbstractLED implements IVirtualLED {
 		return false;
 	}
 
-	@Override
-	public void update(String value) {
-		CommUtils.outred("LED | Chiamato metodo update, Check carefully");		
-	}
 }

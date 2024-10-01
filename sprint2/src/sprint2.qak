@@ -1,26 +1,8 @@
 System sprintdue
- 
- 
-Dispatch robotStart: robotStart(X)
 
-Dispatch robotUpdate: robotUpdate(X)
-Dispatch startBurn : startBurn(X)
 Dispatch info : info(X, Y, Z)
-Request engage        : engage(CALLER)
-Reply   engagedone    : engagedone(ARG)
-Reply   engagerefused : engagerefused(ARG)
-Request  doplan   : doplan( PATH, STEPTIME )
-Reply doplandone  : doplandone( ARG )
-Reply doplanfailed  : doplanfailed( ARG )
-Event burnEnd : burnEnd( ARG )
 
 Event startIncinerator: startIncinerator(X)
-
-
-//Inglobamento endosimbitico di robotpos
-Request moverobot    :  moverobot(TARGETX, TARGETY)  
-Reply moverobotdone  :  moverobotok(ARG)                    for moverobot
-Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
 
 Request testStart : testStart(X)
 Request testRequest : testRequest(X)
@@ -30,15 +12,15 @@ Context ctxservicearea ip [host="127.0.0.1" port=6969]
 Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
 Context ctxashstorage ip [host="localhost"  port=8021]								
 
-ExternalQActor wis context ctxservicearea
-ExternalQActor oprobot context ctxservicearea
-ExternalQActor incinerator context ctxservicearea
+//ExternalQActor wis context ctxservicearea
+//ExternalQActor oprobot context ctxservicearea
+//ExternalQActor incinerator context ctxservicearea
 
-
-
-QActor monitoring_device context ctxashstorage withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
+QActor monitoring_device context ctxashstorage withobj vr using "AbstractLED.create(\"localhost\",myself)"{
+	import "main.resources.AbstractLED"
 	State s0 initial{
 		printCurrentMessage color yellow
+		[# vr.turnOn();	#]
 	}
 		Transition t0
 		whenMsg info -> new_value

@@ -25,10 +25,6 @@ with Diagram('sprintdueArch', show=False, outformat='png', graph_attr=graphattr)
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
-     with Cluster('ctxservicearea', graph_attr=nodeattr):
-          wis=Custom('wis(ext)','./qakicons/externalQActor.png')
-          oprobot=Custom('oprobot(ext)','./qakicons/externalQActor.png')
-          incinerator=Custom('incinerator(ext)','./qakicons/externalQActor.png')
      with Cluster('ctxashstorage', graph_attr=nodeattr):
           monitoring_device=Custom('monitoring_device','./qakicons/symActorWithobjSmall.png')
 diag

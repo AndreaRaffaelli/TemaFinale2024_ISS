@@ -13,17 +13,11 @@ import unibo.basicomm23.utils.ConnectionFactory;
 import unibo.basicomm23.ws.WsConnection;
 
 
-public abstract class AbstractLED extends ApplAbstractObserver {
+public abstract class AbstractLED { //extends ApplAbstractObserver {
 
 //    Factory method
     public static IVirtualLED create( String vitualRobotIp, ActorBasic owner ) {
     	return new VirtualLED( vitualRobotIp, owner );
     }
-
-    public abstract boolean turnOn();
-
-	public abstract boolean turnOff();
-
-	public abstract boolean blink();
 
 }
