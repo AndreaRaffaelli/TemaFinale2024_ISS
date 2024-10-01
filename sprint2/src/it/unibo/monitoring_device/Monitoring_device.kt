@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import it.unibo.kactor.sysUtil.createActor   //Sept2023
 
 //User imports JAN2024
-import main.resources.AbstractLED
+import main.resources.LedFactory
 
 class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
@@ -22,29 +22,64 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val vr = AbstractLED.create("localhost",myself)
+		 val vr = LedFactory.create("localhost",myself)
+		var statusInc = "off"
+			  var statusAsh = "empty" 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						 vr.turnOn();	 
+						observeResource("localhost","8021","ctxashstorage","incinerator","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="new_value",cond=whenDispatch("info"))
+					 transition(edgeName="t00",targetState="update",cond=whenDispatch("info"))
 				}	 
-				state("new_value") { //this:State
+				state("update") { //this:State
 					action { //it:State
 						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(X,Y,Z)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val N = payloadArg(0)   
+								 val VAR = payloadArg(1) 
+								 val VAL = payloadArg(2) 
+								 if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("on")){
+												if(statusAsh.equals("half")
+													vr.turnOn();
+												statusInc = "on"
+											} 
+								 if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("off")){
+												if(statusAsh.equals("half")
+													vr.turnOff();
+												statusInc = "off"
+											} 
+								 if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("full")){
+												statusAsh = "full"
+												vr.turnBlink();
+												
+											} 
+								 if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("empty")){
+												statusAsh = "empty"	
+												vr.turnBlink();
+											} 
+								 if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("half")){
+												statusAsh= "half";
+												if(statusInc.equals("on"))
+													vr.turnOn();
+												else
+													vr.turnOff();
+											} 
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t11",targetState="update",cond=whenDispatch("info"))
 				}	 
 			}
 		}

@@ -1,1 +1,4 @@
-{"actor":"monitoring_device", "msgType":"dispatch", "curstate":"s0", "nextstate":"new_value", "msgId":"info"}
+{"actor":"monitoring_device", "msgType":"dispatch", "curstate":"s0", "nextstate":"update", "msgId":"info"}
+{"actor":"monitoring_device", "msgType":"dispatch", "curstate":"update", "nextstate":"update", "msgId":"info"}
+{"actor":"test_observer", "msgType":"dispatch", "curstate":"s0", "nextstate":"monitor", "msgId":"info"}
+{"actor":"test_observer", "msgType":"dispatch", "curstate":"monitor", "nextstate":"monitor", "msgId":"info"}

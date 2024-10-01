@@ -7,49 +7,100 @@ Event startIncinerator: startIncinerator(X)
 Request testStart : testStart(X)
 Request testRequest : testRequest(X)
 Reply testReply : testReply(X ,Y)
-
-Context ctxservicearea ip [host="127.0.0.1" port=6969]
-Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
+//
+//Context ctxservicearea ip [host="127.0.0.1" port=6969]
+//Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
 Context ctxashstorage ip [host="localhost"  port=8021]								
 
 //ExternalQActor wis context ctxservicearea
 //ExternalQActor oprobot context ctxservicearea
 //ExternalQActor incinerator context ctxservicearea
 
-QActor monitoring_device context ctxashstorage withobj vr using "AbstractLED.create(\"localhost\",myself)"{
-	import "main.resources.AbstractLED"
+QActor monitoring_device context ctxashstorage withobj vr using "LedFactory.create(\"localhost\",myself)"{
+	import "main.resources.LedFactory"
+	[#var statusInc = "off"
+	  var statusAsh = "empty"#]
+	// Scrivere POJO LED FISICO (con supporto a Raspberry)
 	State s0 initial{
 		printCurrentMessage color yellow
-		[# vr.turnOn();	#]
+		observeResource incinerator msgid info    
 	}
 		Transition t0
-		whenMsg info -> new_value
+		whenMsg info -> update
 		
-	State new_value{
+	State update{
 		printCurrentMessage color red
+		onMsg(info : info(X,Y,Z)){
+			[# val N = payloadArg(0)  #]
+			[# val VAR = payloadArg(1)#]
+		    [# val VAL = payloadArg(2)#]
+		    
+		    [# if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("on")){
+				if(statusAsh.equals("half")
+					vr.turnOn();
+				statusInc = "on"
+			}#]
+			
+			[# if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("off")){
+				if(statusAsh.equals("half")
+					vr.turnOff();
+				statusInc = "off"
+			}#]
+			
+			[# if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("full")){
+				statusAsh = "full"
+				vr.turnBlink();
+				
+			}#]
+			
+			[# if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("empty")){
+				statusAsh = "empty"	
+				vr.turnBlink();
+			}#]
+			
+			[# if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("half")){
+				statusAsh= "half";
+				if(statusInc.equals("on"))
+					vr.turnOn();
+				else
+					vr.turnOff();
+			}#]
+			
+		}
+	}		
+		Transition t1
+		whenMsg info -> update
+		
+}
+
+
+QActor incinerator context ctxashstorage{
+	State s0 initial{
+		delay 1000
+		println("($name): Inizio inceneritore") color magenta
+		[# var start ="on"; #]
+		updateResource [# "info($name,start,$start)" #]     	
 	}
 }
 
 
-
-
-//QActor test_observer context ctxtest{
-//	State s0 initial{
-//		printCurrentMessage color yellow
-//		delay 500
+QActor test_observer context ctxashstorage{
+	State s0 initial{
+		printCurrentMessage color yellow
+		delay 500
 //		observeResource wis msgid info
 //		observeResource oprobot msgid info
 //		observeResource incinerator msgid info
-//	}
-//	Transition t0
-//		whenMsg info -> monitor
-//	
-//	State monitor{
-//		printCurrentMessage color red
-//	}
-//	Transition t1
-//		whenMsg info -> monitor
-//}
+	}
+	Transition t0
+		whenMsg info -> monitor
+	
+	State monitor{
+		printCurrentMessage color red
+	}
+	Transition t1
+		whenMsg info -> monitor
+}
 
 
 
