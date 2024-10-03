@@ -59,6 +59,9 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						CommUtils.outmagenta("($name): Inizio bruciatura")
 						delay(2000) 
 						CommUtils.outmagenta("($name): Fine bruciatura")
+						 start ="off";  
+						updateResourceRep( "info($name,start,$start)"  
+						)
 						emit("burnEnd", "burnEnd(stop)" ) 
 						//genTimer( actor, state )
 					}

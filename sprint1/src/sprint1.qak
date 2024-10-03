@@ -269,6 +269,8 @@ QActor incinerator context ctxtest{
 		println("($name): Inizio bruciatura") color magenta
 		delay 2000
 		println("($name): Fine bruciatura") color magenta
+		[# start ="off"; #]
+		updateResource [# "info($name,start,$start)" #]
 		emit burnEnd : burnEnd( stop )
 		//replyTo startBurn with testReply : testReply(burnEnd)			Reply a soli fini di test
 	}
