@@ -13,11 +13,11 @@ import unibo.basicomm23.utils.ConnectionFactory;
 import unibo.basicomm23.ws.WsConnection;
 
 
-public class LedFactory  { //extends ApplAbstractObserver {
+public class SonarFactory  { //extends ApplAbstractObserver {
 
 //    Factory method
-    public static IVirtualLED create( String address, String port ) {
-    	return new VirtualLED( address, port );
+    public static IVirtualSonar create( String vitualRobotIp, ActorBasic owner ) {
+    	return new VirtualSonar( vitualRobotIp, owner );
     }
 
 }

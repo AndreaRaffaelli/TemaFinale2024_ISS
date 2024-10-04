@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/unibonoawtsupports.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/uniboInterfaces.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/unibo.qakactor23-5.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/unibo.planner23-1.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/unibo.basicomm23-1.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/servicefacade24-1.0-plain.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/servicefacade24-1.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/radarPojo.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/qakdisplaygui24-1.0-plain.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/qakdisplaygui24-1.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/it.unibo.Qactork_1.5.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/it.unibo.Qactork.ui_1.5.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/it.unibo.Qactork.ide_1.5.0.jar"/>
-	<classpathentry kind="lib" path="/home/andrea/unibo/iss/IssWorkspace/unibolibs/2p301.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

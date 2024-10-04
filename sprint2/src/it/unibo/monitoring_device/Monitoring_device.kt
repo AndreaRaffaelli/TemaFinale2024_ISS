@@ -22,7 +22,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val vr = LedFactory.create("localhost",myself)
+		 val led = LedFactory.create("localhost","8021")
 		var statusInc = "off"
 			  var statusAsh = "empty" 
 		return { //this:ActionBasciFsm
@@ -47,32 +47,30 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 								 val N = payloadArg(0)   
 								 val VAR = payloadArg(1) 
 								 val VAL = payloadArg(2) 
-								 if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("on")){
-												if(statusAsh.equals("half")
-													vr.turnOn();
-												statusInc = "on"
-											} 
-								 if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("off")){
-												if(statusAsh.equals("half")
-													vr.turnOff();
-												statusInc = "off"
-											} 
-								 if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("full")){
-												statusAsh = "full"
-												vr.turnBlink();
-												
-											} 
-								 if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("empty")){
-												statusAsh = "empty"	
-												vr.turnBlink();
-											} 
-								 if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("half")){
-												statusAsh= "half";
-												if(statusInc.equals("on"))
-													vr.turnOn();
-												else
-													vr.turnOff();
-											} 
+								
+										    	if(N.equals("incinerator")){
+										    		if(VAR.equals("start")&&VAL.equals("on")){
+										    			led.turnOn();
+										    			statusInc = "on"
+										    		}
+										    		
+										    		if(VAR.equals("start")&&VAL.equals("off")){
+										    			led.turnOn();
+										    			statusInc = "off"
+										    		}
+										    	}else if(N.equals("sonar")){
+										    		if(VAR.equals("ashLevel")&&VAL.equals("full")){
+														statusAsh = "full"
+														led.turnBlink();
+													}
+													if(VAR.equals("ashLevel")&&VAL.equals("empty")){
+														statusAsh = "empty"	
+														led.turnBlink();
+													}
+													if(VAR.equals("ashLevel")&&VAL.equals("half")){
+														statusAsh= "half";
+													}
+										    	}
 						}
 						//genTimer( actor, state )
 					}
