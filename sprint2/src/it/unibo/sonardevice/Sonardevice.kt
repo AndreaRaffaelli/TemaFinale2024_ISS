@@ -30,7 +30,8 @@ class Sonardevice ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					action { //it:State
 						CommUtils.outblack("$name | sonarstart")
 						
-									p       = Runtime.getRuntime().exec("python3 sonar.py")
+									p       = Runtime.getRuntime().exec("python src/main/resources/sonar.py")
+									// p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
 									reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
 									System.out.println(reader);
 									System.out.println(p);			
@@ -44,14 +45,6 @@ class Sonardevice ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				state("readSonarData") { //this:State
 					action { //it:State
 						 
-								if (p.isAlive()) {
-								    System.out.println("Il processo è attivo.")
-								} else {
-									System.out.println("Il processo è terminato.")
-						delay(100) 
-						
-									System.exit(-1)
-								}
 								var data = reader.readLine()
 								if( data != null ){
 									try{ 

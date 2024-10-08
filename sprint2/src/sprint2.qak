@@ -79,7 +79,8 @@ QActor sonardevice context ctxashstorage{
 	State s0 initial{
 		println("$name | sonarstart") 
 	 	[#
-			p       = Runtime.getRuntime().exec("python3 sonar.py")
+			p       = Runtime.getRuntime().exec("python src/main/resources/sonar.py")
+			// p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
 			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
 			System.out.println(reader);
 			System.out.println(p);			
@@ -89,15 +90,6 @@ QActor sonardevice context ctxashstorage{
 	
 	State readSonarData{
 	[# 
-		if (p.isAlive()) {
-		    System.out.println("Il processo è attivo.")
-		} else {
-			System.out.println("Il processo è terminato.")
-			#]
-			delay 100
-			[#
-			System.exit(-1)
-		}
 		var data = reader.readLine()
 		if( data != null ){
 			try{ 

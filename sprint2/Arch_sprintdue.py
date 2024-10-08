@@ -27,7 +27,11 @@ with Diagram('sprintdueArch', show=False, outformat='png', graph_attr=graphattr)
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxashstorage', graph_attr=nodeattr):
           monitoring_device=Custom('monitoring_device','./qakicons/symActorWithobjSmall.png')
+          sonardevice=Custom('sonardevice','./qakicons/symActorSmall.png')
+          datacleaner=Custom('datacleaner','./qakicons/symActorSmall.png')
           incinerator=Custom('incinerator','./qakicons/symActorSmall.png')
           test_observer=Custom('test_observer','./qakicons/symActorSmall.png')
+     sonardevice >> Edge( label='sonardata', **eventedgeattr, decorate='true', fontcolor='red') >> datacleaner
      incinerator >> Edge(color='blue', style='solid',  decorate='true', label='<info &nbsp; >',  fontcolor='blue') >> monitoring_device
+     datacleaner >> Edge(color='blue', style='solid',  decorate='true', label='<info &nbsp; >',  fontcolor='blue') >> monitoring_device
 diag
