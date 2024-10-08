@@ -25,6 +25,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 	// Scrivere POJO LED FISICO (con supporto a Raspberry)
 	State s0 initial{
 		printCurrentMessage color yellow
+		delay 150
 		observeResource incinerator msgid info    
 		observeResource datacleaner msgid info    
 	}
@@ -78,31 +79,41 @@ QActor sonardevice context ctxashstorage{
 	State s0 initial{
 		println("$name | sonarstart") 
 	 	[#
-			p       = Runtime.getRuntime().exec("python sonar.py")
+			p       = Runtime.getRuntime().exec("python3 sonar.py")
 			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
+			System.out.println(reader);
+			System.out.println(p);			
 		#]		
 	}
 	Goto readSonarData
 	
 	State readSonarData{
 	[# 
-		var data = reader.readLine()
-		CommUtils.outyellow("$name with python: data = $data"   ) 
-		if( data != null ){
-		try{ 
-			val vd = data.toFloat()
-			val v  = vd.toInt()
-			if( v <= 100 ){	// Controlla questo valore
-				Distance = v				
-			}else Distance = 0
-		}catch(e: Exception){
-				CommUtils.outred("$name readSonarDataERROR: $e "   )
+		if (p.isAlive()) {
+		    System.out.println("Il processo è attivo.")
+		} else {
+			System.out.println("Il processo è terminato.")
+			#]
+			delay 100
+			[#
+			System.exit(-1)
 		}
-		}//if
-		
+		var data = reader.readLine()
+		if( data != null ){
+			try{ 
+				CommUtils.outyellow("$name with python: data = $data"   ) 
+				val vd = data.toFloat()
+				val v  = vd.toInt()
+				if( v <= 100 ){	// Controlla questo valore
+					Distance = v				
+				}else Distance = 0
+			}catch(e: Exception){
+					CommUtils.outred("$name readSonarDataERROR: $e "   )
+			}
+		}//if		
 	#]	
 		if [# Distance > 0 #] { 
-		    println("$name with python: data = $data"   ) color yellow
+		    println("$name with python: data = $data"   ) color red
 			emitlocalstream sonardata : distance($Distance)			 
 		}
 		//autodispatch doread : doread(1)
@@ -113,7 +124,7 @@ QActor sonardevice context ctxashstorage{
 QActor datacleaner context ctxashstorage {
 	[# var D = 0; #]
 	State s0 initial {
-		delay 1000
+		delay 100
 		subscribeTo sonardevice for sonardata		
 		println("$name subscribed to sonardevice") color blue
 	}

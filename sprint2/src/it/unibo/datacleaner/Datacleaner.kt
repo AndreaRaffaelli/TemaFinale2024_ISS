@@ -25,7 +25,7 @@ class Datacleaner ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						delay(1000) 
+						delay(100) 
 						subscribeToLocalActor("sonardevice") 
 						CommUtils.outblue("$name subscribed to sonardevice")
 						//genTimer( actor, state )

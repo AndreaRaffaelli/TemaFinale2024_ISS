@@ -30,8 +30,10 @@ class Sonardevice ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					action { //it:State
 						CommUtils.outblack("$name | sonarstart")
 						
-									p       = Runtime.getRuntime().exec("python sonar.py")
+									p       = Runtime.getRuntime().exec("python3 sonar.py")
 									reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
+									System.out.println(reader);
+									System.out.println(p);			
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -42,22 +44,29 @@ class Sonardevice ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				state("readSonarData") { //this:State
 					action { //it:State
 						 
-								var data = reader.readLine()
-								CommUtils.outyellow("$name with python: data = $data"   ) 
-								if( data != null ){
-								try{ 
-									val vd = data.toFloat()
-									val v  = vd.toInt()
-									if( v <= 100 ){	// Controlla questo valore
-										Distance = v				
-									}else Distance = 0
-								}catch(e: Exception){
-										CommUtils.outred("$name readSonarDataERROR: $e "   )
+								if (p.isAlive()) {
+								    System.out.println("Il processo è attivo.")
+								} else {
+									System.out.println("Il processo è terminato.")
+						delay(100) 
+						
+									System.exit(-1)
 								}
-								}//if
-								
+								var data = reader.readLine()
+								if( data != null ){
+									try{ 
+										CommUtils.outyellow("$name with python: data = $data"   ) 
+										val vd = data.toFloat()
+										val v  = vd.toInt()
+										if( v <= 100 ){	// Controlla questo valore
+											Distance = v				
+										}else Distance = 0
+									}catch(e: Exception){
+											CommUtils.outred("$name readSonarDataERROR: $e "   )
+									}
+								}//if		
 						if(  Distance > 0  
-						 ){CommUtils.outyellow("$name with python: data = $data")
+						 ){CommUtils.outred("$name with python: data = $data")
 						emitLocalStreamEvent("sonardata", "distance($Distance)" ) 
 						}
 						//genTimer( actor, state )
