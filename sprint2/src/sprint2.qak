@@ -7,6 +7,8 @@ Event startIncinerator: startIncinerator(X)
 Request testStart : testStart(X)
 Request testRequest : testRequest(X)
 Reply testReply : testReply(X ,Y)
+Event sonardata : distance(D)   // Valori grezzi letti dal sonar 
+
 //
 //Context ctxservicearea ip [host="127.0.0.1" port=6969]
 //Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
@@ -24,6 +26,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 	State s0 initial{
 		printCurrentMessage color yellow
 		observeResource incinerator msgid info    
+		observeResource datacleaner msgid info    
 	}
 		Transition t0
 		whenMsg info -> update
@@ -46,7 +49,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		    			led.turnOn();
 		    			statusInc = "off"
 		    		}
-		    	}else if(N.equals("sonar")){
+		    	}else if(N.equals("datacleaner")){
 		    		if(VAR.equals("ashLevel")&&VAL.equals("full")){
 						statusAsh = "full"
 						led.turnBlink();
@@ -60,46 +63,86 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 					}
 		    	}
 		    #]
-		    
-//		    [# if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("on")){
-//				if(statusAsh.equals("half"))
-//					led.turnOn();
-//				statusInc = "on"
-//			}#]
-//
-//			[# if(N.equals("incinerator")&&VAR.equals("start")&&VAL.equals("off")){
-//				if(statusAsh.equals("half"))
-//					led.turnOff();
-//				statusInc = "off"
-//			}#]
-//			
-//			[# if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("full")){
-//				statusAsh = "full"
-//				led.turnBlink();
-//				
-//			}#]
-//			
-//			[# if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("empty")){
-//				statusAsh = "empty"	
-//				led.turnBlink();
-//			}#]
-//			
-//			[# if(N.equals("sonar")&&VAR.equals("ashLevel")&&VAL.equals("half")){
-//				statusAsh= "half";
-//				if(statusInc.equals("on"))
-//					led.turnOn();
-//				else
-//					led.turnOff();
-//			}#]
-//			
 		}
 	}		
 		Transition t1
 		whenMsg info -> update
+}
+
+QActor sonardevice context ctxashstorage{
+	[# 
+	lateinit var reader : java.io.BufferedReader
+    lateinit var p : Process	
+    var Distance = 0
+	#]	
+	State s0 initial{
+		println("$name | sonarstart") 
+	 	[#
+			p       = Runtime.getRuntime().exec("python sonar.py")
+			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
+		#]		
+	}
+	Goto readSonarData
+	
+	State readSonarData{
+	[# 
+		var data = reader.readLine()
+		CommUtils.outyellow("$name with python: data = $data"   ) 
+		if( data != null ){
+		try{ 
+			val vd = data.toFloat()
+			val v  = vd.toInt()
+			if( v <= 100 ){	// Controlla questo valore
+				Distance = v				
+			}else Distance = 0
+		}catch(e: Exception){
+				CommUtils.outred("$name readSonarDataERROR: $e "   )
+		}
+		}//if
 		
+	#]	
+		if [# Distance > 0 #] { 
+		    println("$name with python: data = $data"   ) color yellow
+			emitlocalstream sonardata : distance($Distance)			 
+		}
+		//autodispatch doread : doread(1)
+	}
+	Goto readSonarData
+}
+
+QActor datacleaner context ctxashstorage {
+	[# var D = 0; #]
+	State s0 initial {
+		delay 1000
+		subscribeTo sonardevice for sonardata		
+		println("$name subscribed to sonardevice") color blue
+	}
+	Transition t0 whenEvent sonardata -> filter
+	
+	State filter {
+		 println("$name D=$D") color black	
+		onMsg(sonardata : distance(D)) {
+	      	[#  D = payloadArg(0).toInt() #]	      	
+	      	println("$name D=$D") color black	
+	      	if [# D < 12 #] {
+	      		println("$name ash full ") color magenta	
+	 			updateResource  [# "info($name,ashLevel,full)" #] 
+	     	}
+	     	if [# D > 90#] {
+	      		println("$name ash empty ") color magenta	
+	 			updateResource  [# "info($name,ashLevel,empty)" #] 
+	     	}
+	     	if [# D > 90 && D < 12 #] {
+	      		println("$name ash half") color magenta	
+	 			updateResource  [# "info($name,ashLevel,half)" #] 
+	     	}
+     	}
+	}	
+	Transition t0 whenEvent sonardata -> filter
 }
 
 
+/*Mock actor*/
 QActor incinerator context ctxashstorage{
 	State s0 initial{
 		delay 1000

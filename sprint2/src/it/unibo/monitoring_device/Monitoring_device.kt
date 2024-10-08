@@ -31,6 +31,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						observeResource("localhost","8021","ctxashstorage","incinerator","info")
+						observeResource("localhost","8021","ctxashstorage","datacleaner","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -58,7 +59,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 										    			led.turnOn();
 										    			statusInc = "off"
 										    		}
-										    	}else if(N.equals("sonar")){
+										    	}else if(N.equals("datacleaner")){
 										    		if(VAR.equals("ashLevel")&&VAL.equals("full")){
 														statusAsh = "full"
 														led.turnBlink();

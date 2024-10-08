@@ -32,7 +32,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="monitor",cond=whenDispatch("info"))
+					 transition(edgeName="t04",targetState="monitor",cond=whenDispatch("info"))
 				}	 
 				state("monitor") { //this:State
 					action { //it:State
@@ -43,7 +43,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t13",targetState="monitor",cond=whenDispatch("info"))
+					 transition(edgeName="t15",targetState="monitor",cond=whenDispatch("info"))
 				}	 
 			}
 		}
