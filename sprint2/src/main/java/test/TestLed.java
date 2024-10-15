@@ -33,7 +33,7 @@ public class TestLed {
 	public void testON() {
 		
 //		Inviare un info(incinerator, start, on) al monitoring device e verificare se LED si accende
-		IApplMessage dis = CommUtils.buildDispatch("incinerator", "info", "info(incinerator,start,on)", "monitoring_device");
+		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,on)", "monitoring_device");
 		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 		try {
 			CommUtils.outmagenta("test_observer ======================================= ");

@@ -146,6 +146,7 @@ QActor datacleaner context ctxashstorage {
 /*Mock actor*/
 QActor incinerator context ctxashstorage{
 	State s0 initial{
+		printCurrentMessage
 //		delay 1000
 //		println("($name): Inizio inceneritore") color magenta
 //		[# var start ="on"; #]
@@ -198,6 +199,7 @@ QActor test_observer context ctxashstorage{
 		
 	State handleTest {
 		println("Richiesta Ricevuta") color green
+		[#System.exit(-1); #]
 		[# var Res = "$LED_ON, $LED_OFF, $LED_BLINK"#]
   		replyTo testRequest with testReply : testReply($Res) 
 	}

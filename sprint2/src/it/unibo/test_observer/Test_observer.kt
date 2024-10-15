@@ -71,6 +71,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 				state("handleTest") { //this:State
 					action { //it:State
 						CommUtils.outgreen("Richiesta Ricevuta")
+						System.exit(-1);  
 						 var Res = "$LED_ON, $LED_OFF, $LED_BLINK" 
 						answer("testRequest", "testReply", "testReply($Res)"   )  
 						//genTimer( actor, state )
