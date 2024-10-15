@@ -8,7 +8,7 @@ Request testStart : testStart(X)
 Request testRequest : testRequest(X)
 Reply testReply : testReply(X ,Y)
 Event sonardata : distance(D)   // Valori grezzi letti dal sonar 
-
+//
 //
 //Context ctxservicearea ip [host="127.0.0.1" port=6969]
 //Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
@@ -47,7 +47,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		    		}
 		    		
 		    		if(VAR.equals("start")&&VAL.equals("off")){
-		    			led.turnOn();
+		    			led.turnOff();
 		    			statusInc = "off"
 		    		}
 		    	}else if(N.equals("datacleaner")){
@@ -79,29 +79,19 @@ QActor sonardevice context ctxashstorage{
 	State s0 initial{
 		println("$name | sonarstart") 
 	 	[#
-			p       = Runtime.getRuntime().exec("python3 -u sonar.py")
+//			p       = Runtime.getRuntime().exec("python src/main/resources/sonar.py")
+			p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
 			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
-			System.out.println(reader);
-			System.out.println(p);			
+
 		#]		
 	}
 	Goto readSonarData
 	
 	State readSonarData{
 	[# 
-		if (p.isAlive()) {
-		    System.out.println("Il processo è attivo.")
-		} else {
-			System.out.println("Il processo è terminato.")
-			#]
-			delay 100
-			[#
-			System.exit(-1)
-		}
 		var data = reader.readLine()
 		if( data != null ){
 			try{ 
-				CommUtils.outyellow("$name with python: data = $data"   ) 
 				val vd = data.toFloat()
 				val v  = vd.toInt()
 				if( v <= 100 ){	// Controlla questo valore
@@ -110,7 +100,7 @@ QActor sonardevice context ctxashstorage{
 			}catch(e: Exception){
 					CommUtils.outred("$name readSonarDataERROR: $e "   )
 			}
-		}//if		
+		}	
 	#]	
 		if [# Distance > 0 #] { 
 		    println("$name with python: data = $data"   ) color red
@@ -118,7 +108,7 @@ QActor sonardevice context ctxashstorage{
 		}
 		//autodispatch doread : doread(1)
 	}
-	Goto readSonarData
+	Goto readSonarData 
 }
 
 QActor datacleaner context ctxashstorage {
@@ -159,10 +149,13 @@ QActor incinerator context ctxashstorage{
 //		delay 1000
 //		println("($name): Inizio inceneritore") color magenta
 //		[# var start ="on"; #]
-//		updateResource [# "info($name,start,$start)" #]     	
+//		updateResource [# "info($name,start,$start)" #]    
+//		delay 5000		
+//		println("($name): Fine inceneritore") color magenta
+//		[# start ="off"; #]
+//		updateResource [# "info($name,start,$start)" #]     			 	
 	}
 }
-
 
 QActor test_observer context ctxashstorage{
 	[# 	
@@ -204,6 +197,7 @@ QActor test_observer context ctxashstorage{
 		whenMsg info -> monitor
 		
 	State handleTest {
+		println("Richiesta Ricevuta") color green
 		[# var Res = "$LED_ON, $LED_OFF, $LED_BLINK"#]
   		replyTo testRequest with testReply : testReply($Res) 
 	}

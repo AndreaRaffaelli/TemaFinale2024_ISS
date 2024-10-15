@@ -21,6 +21,10 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 	
+				var LED_ON = false 
+				var LED_OFF = false
+				var LED_BLINK = false
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -33,17 +37,48 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t04",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t05",targetState="handleTest",cond=whenRequest("testRequest"))
 				}	 
 				state("monitor") { //this:State
 					action { //it:State
 						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(X,Y,Z)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val N 	= payloadArg(0) 
+								 val VAR 	= payloadArg(1) 
+								 val VAL 	= payloadArg(2) 
+								 LED_ON = false  
+								 LED_OFF = false 
+								 LED_BLINK = false 
+								if(  N.equals("LED") && VAR.equals("led") && VAL.equals("on") 
+								 ){ LED_ON = true  
+								}
+								if(  N.equals("LED") && VAR.equals("led") && VAL.equals("off") 
+								 ){ LED_OFF = true  
+								}
+								if(  N.equals("LED") && VAR.equals("led") && VAL.equals("blink") 
+								 ){ LED_BLINK = true 
+								}
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t15",targetState="monitor",cond=whenDispatch("info"))
+					 transition(edgeName="t16",targetState="monitor",cond=whenDispatch("info"))
+				}	 
+				state("handleTest") { //this:State
+					action { //it:State
+						CommUtils.outgreen("Richiesta Ricevuta")
+						 var Res = "$LED_ON, $LED_OFF, $LED_BLINK" 
+						answer("testRequest", "testReply", "testReply($Res)"   )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t27",targetState="monitor",cond=whenDispatch("info"))
 				}	 
 			}
 		}

@@ -31,7 +31,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(150) 
-						observeResource("127.0.0.1","6969","ctxservicearea","incinerator","info")
+						observeResource("localhost","8021","ctxashstorage","incinerator","info")
 						observeResource("localhost","8021","ctxashstorage","datacleaner","info")
 						//genTimer( actor, state )
 					}
