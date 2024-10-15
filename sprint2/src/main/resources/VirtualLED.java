@@ -44,7 +44,7 @@ public class VirtualLED implements IVirtualLED {
 
 	@Override
 	public boolean turnBlink() {
-		CommUtils.outblue("LED | Spento");
+		CommUtils.outblue("LED | Blink");
 		var msg = CommUtils.buildDispatch("LED", "info", "info(ledBlink)", "test_observer");
 		try {
 			connSupport.forward(msg);

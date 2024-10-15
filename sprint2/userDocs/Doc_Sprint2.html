@@ -323,31 +323,28 @@ updateResource [# "info($name,start,$start)" #]
                                                                         
 </ul>
                 <li><b>Aggiornamento Sprint1:</b></li>
-				<ul>Il nuovo modello aggiornato è stato inserito nello sprnt1 con il nome di: <a href="../../sprint1/src/sprint1.2.qak">spritn1.2</a>.</ul>
+				<ul>Il nuovo modello aggiornato è stato inserito nello sprint1 con il nome di: <a href="../../sprint1/src/sprint1.2.qak">sprint1.2</a>.</ul>
             </ul>
             <li><b>R1.3</b></li>
             <ul>
-                <li>Come fa l'AshStorage a percipire il livello della polvere?</li>
-                <ul>    
-                    <il>Dissertazione: il Sonar è un elemento che misura constantemente il livello della polvere.<br>
-                    Il Sonar fisico viene gestito attraverso l'attore SonarDevice che si renderà sempre osservabile dal Monitoring Device. 
-                    <pre><code>
-public interface IVirtualSonar{
-        int read();
-}           
-                                            </code></pre>
-                                        
-                                        </il>
-                </ul>
+				<li>Come fa l'AshStorage a percepire il livello della polvere?</li>
+				<ul>
+					<li>Dissertazione: il Sonar è un elemento che misura costantemente il livello della polvere. Il Monitoring Device attende i dati delle misurazioni, per questo si introducono la pipe di attori:</li>
+					<ul>
+						<li>Il <strong>SonarDevice</strong>, un nuovo attore che si interfaccierà con il sonar SONAR HC-SR04.</li>
+						<li>Il <strong>DataCleaner</strong> filtrerà i dati raw inviati dal SonarDevice in modo da ottenere una corrispondenza tra valori fisici e logici (<code>empty, half, full</code>).<br>
+						Questa relazione è stata introdotta per creare un livello di separazione tra le misurazioni del Sonar e le dimensioni effettive dell'AshStorage.</li>
+					</ul>
+					Attraverso questa separazione dei compiti si evita un accorpamento delle responsabilità, garantendo che ogni attore abbia un ruolo ben definito nel processo.
+					Al Monitoring Device viene delegato il compito di gestire i valori logici inviati dal DataCleaner: quest'ultimo sarà anche <b>osservabile</b> in prospettiva dell'implementazione della GUI.
             </ul>
         </ul>
         <h2>Architettura Logica</h2>
-        <b>Aggiungi</b>
+        <center><img src="./img/sprintduearch.png" alt="imgAL" width="50%" height="50%"></center>
 		<h2>Progettazione</h2>
-		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint1.qaktt">AGGIORNA LINK</a>
+		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint2.qak">sprint2.qak</a>
 		<br>
 		<h3>Deploy</h3>		
-        <b>Aggiorna deploy</b>
 		<pre>
 			<code>
 docker run -ti -p 8090:8090 -p 8091:8091 --rm  docker.io/natbodocker/virtualrobotdisi23:1.0
@@ -357,6 +354,7 @@ cd ./basicrobot24-1.0/bin/
 ./basicrobot24			
 			</code>
 		</pre>	
+		<b>Per la distribuzione della Service Area:</b>
 		<pre>
 			<code>
 tar -xvf /your/path/to/TemaFinale2024_ISS/sprint1/build/distributions/sprintuno-1.0.tar											
@@ -365,6 +363,15 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint1/build/distributions/sprintuno-
 			</code>
 		</pre>		
 		<br>
+
+		<b>Per la distribuzione dell'ambiente del Monitoring Device sul Raspberry:</b>
+		<pre>
+			<code>
+tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-1.0.tar											
+
+./sprintdue-1.0/bin/sprintdue.bat
+			</code>
+		</pre>	
 
 		<h2>Test Unit</h2>
 		<h3>Test Unit Monitoring Device</h3>

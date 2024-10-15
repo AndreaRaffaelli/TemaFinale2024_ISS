@@ -29,6 +29,11 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						 var start ="on";  
 						updateResourceRep( "info($name,start,$start)"  
 						)
+						delay(5000) 
+						CommUtils.outmagenta("($name): Fine inceneritore")
+						 start ="off";  
+						updateResourceRep( "info($name,start,$start)"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
