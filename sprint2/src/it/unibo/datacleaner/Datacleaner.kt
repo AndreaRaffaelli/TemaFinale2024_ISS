@@ -26,8 +26,9 @@ class Datacleaner ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				state("s0") { //this:State
 					action { //it:State
 						delay(100) 
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
 						subscribeToLocalActor("sonardevice") 
-						CommUtils.outblue("$name subscribed to sonardevice")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -37,23 +38,23 @@ class Datacleaner ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("filter") { //this:State
 					action { //it:State
-						CommUtils.outblack("$name D=$D")
+						CommUtils.outyellow("$name D=$D")
 						if( checkMsgContent( Term.createTerm("distance(D)"), Term.createTerm("distance(D)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								  D = payloadArg(0).toInt()  
-								CommUtils.outblack("$name D=$D")
+								CommUtils.outyellow("$name D=$D")
 								if(  D < 12  
-								 ){CommUtils.outmagenta("$name ash full ")
+								 ){CommUtils.outyellow("$name ash full ")
 								updateResourceRep( "info($name,ashLevel,full)"  
 								)
 								}
 								if(  D > 90 
-								 ){CommUtils.outmagenta("$name ash empty ")
+								 ){CommUtils.outyellow("$name ash empty ")
 								updateResourceRep( "info($name,ashLevel,empty)"  
 								)
 								}
 								if(  D > 90 && D < 12  
-								 ){CommUtils.outmagenta("$name ash half")
+								 ){CommUtils.outyellow("$name ash half")
 								updateResourceRep( "info($name,ashLevel,half)"  
 								)
 								}

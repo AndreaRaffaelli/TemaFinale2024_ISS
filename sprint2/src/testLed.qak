@@ -6,7 +6,7 @@ Event startIncinerator: startIncinerator(X)
 
 Request testStart : testStart(X)
 Request testRequest : testRequest(X)
-Reply testReply : testReply(X ,Y)
+Reply testReply : testReply(X)
 Event sonardata : distance(D)   // Valori grezzi letti dal sonar 
 //
 //
@@ -24,7 +24,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 	  var statusAsh = "empty"#]
 	// Scrivere POJO LED FISICO (con supporto a Raspberry)
 	State s0 initial{
-		printCurrentMessage color yellow
+		printCurrentMessage color magenta
 		delay 150
 		observeResource incinerator msgid info    
 		observeResource datacleaner msgid info    
@@ -33,7 +33,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		whenMsg info -> update
 		
 	State update{
-		printCurrentMessage color red
+		printCurrentMessage color magenta
 		onMsg(info : info(X,Y,Z)){
 			[# val N = payloadArg(0)  #]
 			[# val VAR = payloadArg(1)#]
@@ -77,10 +77,10 @@ QActor sonardevice context ctxashstorage{
     var Distance = 0
 	#]	
 	State s0 initial{
-		println("$name | sonarstart") 
+		printCurrentMessage color magenta
 	 	[#
-//			p       = Runtime.getRuntime().exec("python src/main/resources/sonar.py")
-			p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
+			p       = Runtime.getRuntime().exec("python src/main/resources/sonar.py")
+//			p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
 			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
 
 		#]		
@@ -115,26 +115,26 @@ QActor datacleaner context ctxashstorage {
 	[# var D = 0; #]
 	State s0 initial {
 		delay 100
+		printCurrentMessage color magenta
 		subscribeTo sonardevice for sonardata		
-		println("$name subscribed to sonardevice") color blue
 	}
 	Transition t0 whenEvent sonardata -> filter
 	
 	State filter {
-		 println("$name D=$D") color black	
+		 println("$name D=$D") color yellow	
 		onMsg(sonardata : distance(D)) {
 	      	[#  D = payloadArg(0).toInt() #]	      	
-	      	println("$name D=$D") color black	
+	      	println("$name D=$D") color yellow	
 	      	if [# D < 12 #] {
-	      		println("$name ash full ") color magenta	
+	      		println("$name ash full ") color yellow	
 	 			updateResource  [# "info($name,ashLevel,full)" #] 
 	     	}
 	     	if [# D > 90#] {
-	      		println("$name ash empty ") color magenta	
+	      		println("$name ash empty ") color yellow	
 	 			updateResource  [# "info($name,ashLevel,empty)" #] 
 	     	}
 	     	if [# D > 90 && D < 12 #] {
-	      		println("$name ash half") color magenta	
+	      		println("$name ash half") color yellow	
 	 			updateResource  [# "info($name,ashLevel,half)" #] 
 	     	}
      	}
@@ -146,15 +146,16 @@ QActor datacleaner context ctxashstorage {
 /*Mock actor*/
 QActor incinerator context ctxashstorage{
 	State s0 initial{
-		printCurrentMessage
-//		delay 1000
-//		println("($name): Inizio inceneritore") color magenta
-//		[# var start ="on"; #]
-//		updateResource [# "info($name,start,$start)" #]    
-//		delay 5000		
-//		println("($name): Fine inceneritore") color magenta
-//		[# start ="off"; #]
-//		updateResource [# "info($name,start,$start)" #]     			 	
+		printCurrentMessage color magenta
+				
+		delay 3000
+		println("($name): Inizio inceneritore") color yellow
+		[# var start ="on"; #]
+		updateResource [# "info($name,start,$start)" #]    
+		delay 5000		
+		println("($name): Fine inceneritore") color yellow
+		[# start ="off"; #]
+		updateResource [# "info($name,start,$start)" #]     			 	
 	}
 }
 
@@ -166,7 +167,7 @@ QActor test_observer context ctxashstorage{
 	#]
 	
 	State s0 initial{
-		printCurrentMessage color yellow
+		printCurrentMessage color magenta
 		delay 500
 	}
 	Transition t0
@@ -174,37 +175,38 @@ QActor test_observer context ctxashstorage{
 		whenRequest testRequest -> handleTest
 		
 	State monitor{
-		printCurrentMessage color red
+		printCurrentMessage color magenta
 		onMsg(info : info(X,Y,Z)){
 			[# val N 	= payloadArg(0)#]
 			[# val VAR 	= payloadArg(1)#]
 		    [# val VAL 	= payloadArg(2)#]
-		    [# LED_ON = false #]
-		    [# LED_OFF = false#]
-		    [# LED_BLINK = false#]
+
 		    		    
-		    if [# N.equals("LED") && VAR.equals("led") && VAL.equals("on")#]{
+		    if [# N.equals("virtualLED") && VAR.equals("led") && VAL.equals("on")#]{
 		    	[# LED_ON = true #]
+		    	
 		    }
-		    if [# N.equals("LED") && VAR.equals("led") && VAL.equals("off")#]{
+		    if [# N.equals("virtualLED") && VAR.equals("led") && VAL.equals("off")#]{
 		    	[# LED_OFF = true #]	
+		    	
 		    }
-		    if [# N.equals("LED") && VAR.equals("led") && VAL.equals("blink")#]{
+		    if [# N.equals("virtualLED") && VAR.equals("led") && VAL.equals("blink")#]{
 				[# LED_BLINK = true#]
 		    }
 		}
 	}
 	Transition t1
 		whenMsg info -> monitor
+		whenRequest testRequest -> handleTest
 		
 	State handleTest {
-		println("Richiesta Ricevuta") color green
-		[#System.exit(-1); #]
-		[# var Res = "$LED_ON, $LED_OFF, $LED_BLINK"#]
-  		replyTo testRequest with testReply : testReply($Res) 
+		printCurrentMessage color magenta
+		[# var RES = "$LED_ON, $LED_OFF, $LED_BLINK"#]
+  		replyTo testRequest with testReply : testReply($RES) 
 	}
 	Transition t2
 		whenMsg info -> monitor
+		
 }
 
 

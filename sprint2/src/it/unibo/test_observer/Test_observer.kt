@@ -28,7 +28,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(500) 
 						//genTimer( actor, state )
@@ -41,23 +41,20 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 				}	 
 				state("monitor") { //this:State
 					action { //it:State
-						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(X,Y,Z)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val N 	= payloadArg(0) 
 								 val VAR 	= payloadArg(1) 
 								 val VAL 	= payloadArg(2) 
-								 LED_ON = false  
-								 LED_OFF = false 
-								 LED_BLINK = false 
-								if(  N.equals("LED") && VAR.equals("led") && VAL.equals("on") 
+								if(  N.equals("virtualLED") && VAR.equals("led") && VAL.equals("on") 
 								 ){ LED_ON = true  
 								}
-								if(  N.equals("LED") && VAR.equals("led") && VAL.equals("off") 
+								if(  N.equals("virtualLED") && VAR.equals("led") && VAL.equals("off") 
 								 ){ LED_OFF = true  
 								}
-								if(  N.equals("LED") && VAR.equals("led") && VAL.equals("blink") 
+								if(  N.equals("virtualLED") && VAR.equals("led") && VAL.equals("blink") 
 								 ){ LED_BLINK = true 
 								}
 						}
@@ -67,19 +64,20 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t16",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t17",targetState="handleTest",cond=whenRequest("testRequest"))
 				}	 
 				state("handleTest") { //this:State
 					action { //it:State
-						CommUtils.outgreen("Richiesta Ricevuta")
-						System.exit(-1);  
-						 var Res = "$LED_ON, $LED_OFF, $LED_BLINK" 
-						answer("testRequest", "testReply", "testReply($Res)"   )  
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						 var RES = "$LED_ON, $LED_OFF, $LED_BLINK" 
+						answer("testRequest", "testReply", "testReply($RES)"   )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t27",targetState="monitor",cond=whenDispatch("info"))
+					 transition(edgeName="t28",targetState="monitor",cond=whenDispatch("info"))
 				}	 
 			}
 		}

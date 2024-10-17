@@ -18,8 +18,9 @@ public class VirtualLED implements IVirtualLED {
 
 	@Override
 	public boolean turnOn()  {
-		CommUtils.outblue("LED | Acceso");
-		var msg = CommUtils.buildDispatch("LED", "info", "info(ledAcceso)", "test_observer");
+		CommUtils.outcyan("LED | Acceso");
+		var msg = CommUtils.buildDispatch("LED", "info", "info(virtualLED,led,on)", "test_observer");
+
 		try {
 			connSupport.forward(msg);
 		} catch (Exception e) {
@@ -31,8 +32,9 @@ public class VirtualLED implements IVirtualLED {
 
 	@Override
 	public boolean turnOff() {
-		CommUtils.outblue("LED | Spento");
-		var msg = CommUtils.buildDispatch("LED", "info", "info(ledSpento)", "test_observer");
+		CommUtils.outcyan("LED | Spento");
+		var msg = CommUtils.buildDispatch("LED", "info", "info(virtualLED,led,off)", "test_observer");
+
 		try {
 			connSupport.forward(msg);
 		} catch (Exception e) {
@@ -44,8 +46,8 @@ public class VirtualLED implements IVirtualLED {
 
 	@Override
 	public boolean turnBlink() {
-		CommUtils.outblue("LED | Blink");
-		var msg = CommUtils.buildDispatch("LED", "info", "info(ledBlink)", "test_observer");
+		CommUtils.outcyan("LED | Blink");
+		var msg = CommUtils.buildDispatch("LED", "info", "info(virtualLED,led,blink)", "test_observer");
 		try {
 			connSupport.forward(msg);
 		} catch (Exception e) {

@@ -28,7 +28,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(150) 
 						observeResource("localhost","8021","ctxashstorage","incinerator","info")
@@ -42,7 +42,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 				}	 
 				state("update") { //this:State
 					action { //it:State
-						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(X,Y,Z)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList

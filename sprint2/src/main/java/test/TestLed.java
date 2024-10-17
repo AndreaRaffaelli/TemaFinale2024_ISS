@@ -32,8 +32,7 @@ public class TestLed {
 	@Test
 	public void testON() {
 		
-//		Inviare un info(incinerator, start, on) al monitoring device e verificare se LED si accende
-		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,on)", "monitoring_device");
+//		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,on)", "monitoring_device");
 		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 		try {
 			CommUtils.outmagenta("test_observer ======================================= ");
@@ -43,21 +42,19 @@ public class TestLed {
 				Thread.sleep(1000);
 			}
 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
-			Thread.sleep(5000);
-			
-			connSupport.forward(dis);
-			Thread.sleep(500);
+			Thread.sleep(10000);	//attesa avanzamento modello
+
+
 			IApplMessage reply = connSupport.request(req);
-			CommUtils.outcyan("test_observer reply=" + reply);
-//			String answer = reply.msgContent();
-//			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
-//			String[] s = parameters.split(",");
-//
-//			assertEquals("false", s[0]);
-//			assertTrue(Integer.valueOf(s[1]) < DLIMIT); // Minore del limite massimo
-//			assertTrue(Integer.valueOf(s[2]) > 0);
-//			CommUtils.outcyan("Test eseguiti con successo");
-			assertTrue(true);
+			CommUtils.outgreen("test_observer reply=" + reply);
+			String answer = reply.msgContent();
+			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+			String[] s = parameters.split(",");
+
+			assertEquals("true", s[0]);
+			assertEquals("true", s[1]);
+			assertEquals("true", s[2]);
+
 		} catch (Exception e) {
 			CommUtils.outred("test_observer ERROR " + e.getMessage());
 			fail("testRequest " + e.getMessage());
