@@ -26,16 +26,6 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					action { //it:State
 						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						delay(3000) 
-						CommUtils.outyellow("($name): Inizio inceneritore")
-						 var start ="on";  
-						updateResourceRep( "info($name,start,$start)"  
-						)
-						delay(5000) 
-						CommUtils.outyellow("($name): Fine inceneritore")
-						 start ="off";  
-						updateResourceRep( "info($name,start,$start)"  
-						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

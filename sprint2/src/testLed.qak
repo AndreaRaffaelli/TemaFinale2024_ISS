@@ -22,12 +22,11 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 	import "main.resources.LedFactory"
 	[#var statusInc = "off"
 	  var statusAsh = "empty"#]
-	// Scrivere POJO LED FISICO (con supporto a Raspberry)
 	State s0 initial{
 		printCurrentMessage color magenta
 		delay 150
 		observeResource incinerator msgid info    
-		observeResource datacleaner msgid info    
+		// observeResource datacleaner msgid info    // emulazione Sonar Mock
 	}
 		Transition t0
 		whenMsg info -> update
@@ -146,16 +145,7 @@ QActor datacleaner context ctxashstorage {
 /*Mock actor*/
 QActor incinerator context ctxashstorage{
 	State s0 initial{
-		printCurrentMessage color magenta
-				
-		delay 3000
-		println("($name): Inizio inceneritore") color yellow
-		[# var start ="on"; #]
-		updateResource [# "info($name,start,$start)" #]    
-		delay 5000		
-		println("($name): Fine inceneritore") color yellow
-		[# start ="off"; #]
-		updateResource [# "info($name,start,$start)" #]     			 	
+		printCurrentMessage color magenta		 	
 	}
 }
 
@@ -181,7 +171,13 @@ QActor test_observer context ctxashstorage{
 			[# val VAR 	= payloadArg(1)#]
 		    [# val VAL 	= payloadArg(2)#]
 
-		    		    
+		    if [# N.equals("virtualLED") && VAR.equals("led") #]{
+		    		[# 	
+						var LED_ON = false 
+						var LED_OFF = false
+						var LED_BLINK = false
+					#]
+		    }    
 		    if [# N.equals("virtualLED") && VAR.equals("led") && VAL.equals("on")#]{
 		    	[# LED_ON = true #]
 		    	
@@ -203,9 +199,11 @@ QActor test_observer context ctxashstorage{
 		printCurrentMessage color magenta
 		[# var RES = "$LED_ON, $LED_OFF, $LED_BLINK"#]
   		replyTo testRequest with testReply : testReply($RES) 
+
 	}
 	Transition t2
 		whenMsg info -> monitor
+		whenRequest testRequest -> handleTest
 		
 }
 

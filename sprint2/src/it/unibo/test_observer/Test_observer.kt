@@ -48,6 +48,12 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 								 val N 	= payloadArg(0) 
 								 val VAR 	= payloadArg(1) 
 								 val VAL 	= payloadArg(2) 
+								if(  N.equals("virtualLED") && VAR.equals("led")  
+								 ){ 	
+														var LED_ON = false 
+														var LED_OFF = false
+														var LED_BLINK = false
+								}
 								if(  N.equals("virtualLED") && VAR.equals("led") && VAL.equals("on") 
 								 ){ LED_ON = true  
 								}
@@ -78,6 +84,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t28",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t29",targetState="handleTest",cond=whenRequest("testRequest"))
 				}	 
 			}
 		}

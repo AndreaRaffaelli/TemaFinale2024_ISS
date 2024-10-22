@@ -28,11 +28,10 @@ public class TestLed {
 	private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
 	private static final int DLIMIT = 3;
 	private static String pid_context = "";
-
 	@Test
-	public void testON() {
+	public void testOn() {
 		
-//		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,on)", "monitoring_device");
+		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,on)", "monitoring_device");
 		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 		try {
 			CommUtils.outmagenta("test_observer ======================================= ");
@@ -42,7 +41,10 @@ public class TestLed {
 				Thread.sleep(1000);
 			}
 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
-			Thread.sleep(10000);	//attesa avanzamento modello
+			Thread.sleep(2000);	
+
+			connSupport.forward(dis);
+			Thread.sleep(5000);	//attesa avanzamento modello
 
 
 			IApplMessage reply = connSupport.request(req);
@@ -52,7 +54,70 @@ public class TestLed {
 			String[] s = parameters.split(",");
 
 			assertEquals("true", s[0]);
+
+
+		} catch (Exception e) {
+			CommUtils.outred("test_observer ERROR " + e.getMessage());
+			fail("testRequest " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testOff() {
+		
+		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,off)", "monitoring_device");
+		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
+		try {
+			CommUtils.outmagenta("test_observer ======================================= ");
+			while (connSupport == null) {
+				connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
+				CommUtils.outcyan("testwis another connect attempt ");
+				Thread.sleep(1000);
+			}
+			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+
+			connSupport.forward(dis);
+			Thread.sleep(2000);	//attesa avanzamento modello
+
+
+			IApplMessage reply = connSupport.request(req);
+			CommUtils.outgreen("test_observer reply=" + reply);
+			String answer = reply.msgContent();
+			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+			String[] s = parameters.split(",");
+
 			assertEquals("true", s[1]);
+
+		} catch (Exception e) {
+			CommUtils.outred("test_observer ERROR " + e.getMessage());
+			fail("testRequest " + e.getMessage());
+		}
+	}
+	
+	
+	
+	@Test
+	public void testBlink() {
+		IApplMessage dis = CommUtils.buildRequest("tester", "info", "info(datacleaner,ashLevel,empty)", "monitoring_device");
+		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
+		try {
+			CommUtils.outmagenta("test_observer ======================================= ");
+			while (connSupport == null) {
+				connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
+				CommUtils.outcyan("testwis another connect attempt ");
+				Thread.sleep(1000);
+			}
+			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+
+			Thread.sleep(5000);	//attesa avanzamento modello
+
+
+			IApplMessage reply = connSupport.request(req);
+			CommUtils.outgreen("test_observer reply=" + reply);
+			String answer = reply.msgContent();
+			String parameters = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+			String[] s = parameters.split(",");
+
 			assertEquals("true", s[2]);
 
 		} catch (Exception e) {
@@ -60,7 +125,6 @@ public class TestLed {
 			fail("testRequest " + e.getMessage());
 		}
 	}
-
 	public static void showOutput(Process proc, String color) {
 		new Thread() {
 			public void run() {
