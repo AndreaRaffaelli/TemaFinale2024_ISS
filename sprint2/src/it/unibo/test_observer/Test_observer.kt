@@ -50,9 +50,9 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 								 val VAL 	= payloadArg(2) 
 								if(  N.equals("virtualLED") && VAR.equals("led")  
 								 ){ 	
-														var LED_ON = false 
-														var LED_OFF = false
-														var LED_BLINK = false
+														LED_ON = false 
+														LED_OFF = false
+														LED_BLINK = false
 								}
 								if(  N.equals("virtualLED") && VAR.equals("led") && VAL.equals("on") 
 								 ){ LED_ON = true  

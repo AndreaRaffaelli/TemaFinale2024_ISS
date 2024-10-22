@@ -26,7 +26,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		printCurrentMessage color magenta
 		delay 150
 		observeResource incinerator msgid info    
-		// observeResource datacleaner msgid info    // emulazione Sonar Mock
+		observeResource datacleaner msgid info    
 	}
 		Transition t0
 		whenMsg info -> update
@@ -173,9 +173,9 @@ QActor test_observer context ctxashstorage{
 
 		    if [# N.equals("virtualLED") && VAR.equals("led") #]{
 		    		[# 	
-						var LED_ON = false 
-						var LED_OFF = false
-						var LED_BLINK = false
+						LED_ON = false 
+						LED_OFF = false
+						LED_BLINK = false
 					#]
 		    }    
 		    if [# N.equals("virtualLED") && VAR.equals("led") && VAL.equals("on")#]{

@@ -32,6 +32,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 						 	   
 						delay(150) 
 						observeResource("localhost","8021","ctxashstorage","incinerator","info")
+						observeResource("localhost","8021","ctxashstorage","datacleaner","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

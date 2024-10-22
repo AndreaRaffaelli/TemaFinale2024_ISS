@@ -75,6 +75,7 @@ public class TestLed {
 				Thread.sleep(1000);
 			}
 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+			Thread.sleep(4000);	
 
 			connSupport.forward(dis);
 			Thread.sleep(2000);	//attesa avanzamento modello
@@ -108,8 +109,10 @@ public class TestLed {
 				Thread.sleep(1000);
 			}
 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+			Thread.sleep(6000);	
 
-			Thread.sleep(5000);	//attesa avanzamento modello
+			connSupport.forward(dis);
+			//Thread.sleep(2000);	//attesa avanzamento modello
 
 
 			IApplMessage reply = connSupport.request(req);
