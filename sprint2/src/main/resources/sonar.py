@@ -14,7 +14,7 @@ def sonar():
 	print(50)
 	sys.stdout.flush()
 	time.sleep(5)
-	print(8)
+	print(0)
 	sys.stdout.flush()
 	exit(-1)
 
