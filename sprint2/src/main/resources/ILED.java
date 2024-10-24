@@ -1,6 +1,6 @@
 package main.resources;
 
-public interface IVirtualLED{
+public interface ILED{
 	boolean turnOn();
     boolean turnOff();
     boolean turnBlink();

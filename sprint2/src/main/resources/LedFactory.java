@@ -16,8 +16,14 @@ import unibo.basicomm23.ws.WsConnection;
 public class LedFactory  { //extends ApplAbstractObserver {
 
 //    Factory method
-    public static IVirtualLED create( String address, String port ) {
-    	return new VirtualLED( address, port );
+    public static ILED create( String tipo, String address, String port ) {
+        if ("virtuale".equalsIgnoreCase(tipo)) {
+            return new VirtualLED(address, port);  
+        } else if ("fisico".equalsIgnoreCase(tipo)) {
+            return new LEDFisico();   
+        } else {
+            throw new IllegalArgumentException("Tipo sconosciuto: " + tipo);  
+        }
     }
 
 }

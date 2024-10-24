@@ -28,11 +28,10 @@ class Sonardevice ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
+						CommUtils.outblack("$name | sonarstart")
 						
 									p       = Runtime.getRuntime().exec("python src/main/resources/sonar.py")
-						//			p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
+									// p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
 									reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
 						
 						//genTimer( actor, state )

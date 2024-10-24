@@ -22,16 +22,16 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val led = LedFactory.create("localhost","8021")
+		 val led = LedFactory.create("isico","localhost","8021")
 		var statusInc = "off"
 			  var statusAsh = "empty" 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(150) 
-						observeResource("localhost","8021","ctxashstorage","incinerator","info")
+						observeResource("127.0.0.1","6969","ctxservicearea","incinerator","info")
 						observeResource("localhost","8021","ctxashstorage","datacleaner","info")
 						//genTimer( actor, state )
 					}
@@ -42,7 +42,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 				}	 
 				state("update") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(X,Y,Z)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList

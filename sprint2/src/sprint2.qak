@@ -18,7 +18,7 @@ ExternalQActor wis context ctxservicearea
 ExternalQActor oprobot context ctxservicearea
 ExternalQActor incinerator context ctxservicearea
 
-QActor monitoring_device context ctxashstorage withobj led using "LedFactory.create(\"localhost\",\"8021\")"{
+QActor monitoring_device context ctxashstorage withobj led using "LedFactory.create(\"\fisico\",\"localhost\",\"8021\")"{
 	import "main.resources.LedFactory"
 	[#var statusInc = "off"
 	  var statusAsh = "empty"#]

@@ -6,7 +6,7 @@ import unibo.basicomm23.msg.ProtocolType;
 import unibo.basicomm23.utils.CommUtils;
 import unibo.basicomm23.utils.ConnectionFactory;
 
-public class VirtualLED implements IVirtualLED {
+public class VirtualLED implements ILED {
 	
 
 	private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
