@@ -115,30 +115,30 @@ QActor datacleaner context ctxashstorage {
 	State s0 initial {
 		delay 100
 		printCurrentMessage color magenta
-		subscribeTo sonardevice for sonardata		
+//		subscribeTo sonardevice for sonardata		
 	}
-	Transition t0 whenEvent sonardata -> filter
+	//Transition t0 whenEvent sonardata -> filter
 	
-	State filter {
-		 println("$name D=$D") color yellow	
-		onMsg(sonardata : distance(D)) {
-	      	[#  D = payloadArg(0).toInt() #]	      	
-	      	println("$name D=$D") color yellow	
-	      	if [# D < 12 #] {
-	      		println("$name ash full ") color yellow	
-	 			updateResource  [# "info($name,ashLevel,full)" #] 
-	     	}
-	     	if [# D > 90#] {
-	      		println("$name ash empty ") color yellow	
-	 			updateResource  [# "info($name,ashLevel,empty)" #] 
-	     	}
-	     	if [# D > 90 && D < 12 #] {
-	      		println("$name ash half") color yellow	
-	 			updateResource  [# "info($name,ashLevel,half)" #] 
-	     	}
-     	}
-	}	
-	Transition t0 whenEvent sonardata -> filter
+//	State filter {
+//		 println("$name D=$D") color yellow	
+//		onMsg(sonardata : distance(D)) {
+//	      	[#  D = payloadArg(0).toInt() #]	      	
+//	      	println("$name D=$D") color yellow	
+//	      	if [# D < 12 #] {
+//	      		println("$name ash full ") color yellow	
+//	 			updateResource  [# "info($name,ashLevel,full)" #] 
+//	     	}
+//	     	if [# D > 90#] {
+//	      		println("$name ash empty ") color yellow	
+//	 			updateResource  [# "info($name,ashLevel,empty)" #] 
+//	     	}
+//	     	if [# D > 90 && D < 12 #] {
+//	      		println("$name ash half") color yellow	
+//	 			updateResource  [# "info($name,ashLevel,half)" #] 
+//	     	}
+//     	}
+//	}	
+//	Transition t0 whenEvent sonardata -> filter
 }
 
 

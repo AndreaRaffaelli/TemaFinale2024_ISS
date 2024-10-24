@@ -31,7 +31,6 @@ with Diagram('sprintdueArch', show=False, outformat='png', graph_attr=graphattr)
           datacleaner=Custom('datacleaner','./qakicons/symActorSmall.png')
           incinerator=Custom('incinerator','./qakicons/symActorSmall.png')
           test_observer=Custom('test_observer','./qakicons/symActorSmall.png')
-     sonardevice >> Edge( label='sonardata', **eventedgeattr, decorate='true', fontcolor='red') >> datacleaner
      incinerator >> Edge(color='blue', style='solid',  decorate='true', label='<info &nbsp; >',  fontcolor='blue') >> monitoring_device
      datacleaner >> Edge(color='blue', style='solid',  decorate='true', label='<info &nbsp; >',  fontcolor='blue') >> monitoring_device
 diag

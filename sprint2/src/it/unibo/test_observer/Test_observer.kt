@@ -36,8 +36,8 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t04",targetState="monitor",cond=whenDispatch("info"))
-					transition(edgeName="t05",targetState="handleTest",cond=whenRequest("testRequest"))
+					 transition(edgeName="t02",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t03",targetState="handleTest",cond=whenRequest("testRequest"))
 				}	 
 				state("monitor") { //this:State
 					action { //it:State
@@ -69,8 +69,8 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t16",targetState="monitor",cond=whenDispatch("info"))
-					transition(edgeName="t17",targetState="handleTest",cond=whenRequest("testRequest"))
+					 transition(edgeName="t14",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t15",targetState="handleTest",cond=whenRequest("testRequest"))
 				}	 
 				state("handleTest") { //this:State
 					action { //it:State
@@ -83,8 +83,8 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t28",targetState="monitor",cond=whenDispatch("info"))
-					transition(edgeName="t29",targetState="handleTest",cond=whenRequest("testRequest"))
+					 transition(edgeName="t26",targetState="monitor",cond=whenDispatch("info"))
+					transition(edgeName="t27",targetState="handleTest",cond=whenRequest("testRequest"))
 				}	 
 			}
 		}

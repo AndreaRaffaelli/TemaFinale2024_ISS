@@ -28,9 +28,9 @@ public class TestLed {
 	private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
 	private static final int DLIMIT = 3;
 	private static String pid_context = "";
+	
 	@Test
 	public void testOn() {
-		
 		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,on)", "monitoring_device");
 		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 		try {
@@ -64,7 +64,6 @@ public class TestLed {
 	
 	@Test
 	public void testOff() {
-		
 		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(incinerator,start,off)", "monitoring_device");
 		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 		try {
@@ -75,7 +74,7 @@ public class TestLed {
 				Thread.sleep(1000);
 			}
 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
-			Thread.sleep(4000);	
+			Thread.sleep(2000);	
 
 			connSupport.forward(dis);
 			Thread.sleep(2000);	//attesa avanzamento modello
@@ -99,7 +98,7 @@ public class TestLed {
 	
 	@Test
 	public void testBlink() {
-		IApplMessage dis = CommUtils.buildRequest("tester", "info", "info(datacleaner,ashLevel,empty)", "monitoring_device");
+		IApplMessage dis = CommUtils.buildDispatch("tester", "info", "info(datacleaner,ashLevel,empty)", "monitoring_device");
 		IApplMessage req = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 		try {
 			CommUtils.outmagenta("test_observer ======================================= ");
@@ -109,10 +108,10 @@ public class TestLed {
 				Thread.sleep(1000);
 			}
 			CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
-			Thread.sleep(6000);	
+			Thread.sleep(2000);	
 
 			connSupport.forward(dis);
-			//Thread.sleep(2000);	//attesa avanzamento modello
+			Thread.sleep(2000);	//attesa avanzamento modello
 
 
 			IApplMessage reply = connSupport.request(req);
