@@ -253,7 +253,7 @@
 
 
 
-<title>Sprint 1</title>
+<title>Sprint 2</title>
 </head>
 
 <body>
@@ -272,8 +272,8 @@
 		<h2>
 			Analisi dei Requisiti
 		</h2>
-		<a href="./Doc_Sprint02.html">Requisiti</a><br>
-		Architettura logica prodotta all'interno dello sprint1:<br>
+		<a href="./Doc_Sprint03.html">Requisiti</a><br>
+		Architettura logica prodotta all'interno dello <a href="../../sprint1/userDocs/Doc_Sprint1.html">sprint1</a>:<br>
 		<center><img src="./img/archLogica.png" alt="imgAL" width="75%" height="75%"></center>
 		<h2> Goal Dello Sprint 2</h2>
 		Affrontare l'analisi dei problemi introdotti dai requisiti R1, generare un'architettura logica, un modello
@@ -283,30 +283,32 @@
 		<ul>
 			<li>R1.1: Segnalare lo stato dell'inceneritore e del AshStorage tramite un LED.
                 <ul>
-                    <li>R1.1: Il LED deve essere acceso quando l'inceneritore è in fase di bruciatura.</li>
-                    
+                    <li>R1.1: Il LED deve essere acceso quando l'inceneritore è in fase di bruciatura.</li>                    
                     <li>R1.2: Il LED deve essere spento quando l'inceneritore non è in funzione.</li>
                     <li>R1.3: Il LED deve lampeggiare quando l'AshStorage è pieno o vuoto.</li>
                 </ul>
             </li>
             Dissertazione: Il monitoring device deve essere in grado di percepire i segnali di stato dell'inceneritore.<br> 
-            Inoltre deve essere in grado di percepire quando l'AshStorage è pieno o vuoto. <br>
-            Attraverso un'interfaccia il Monitoring Device controlla il LED fisico:
-            <pre><code>
-public interface IVirtualLED{
-    void turnOn();
-    void turnOff();
-    void blink();
-}           
-
-</code></pre>
-             
+            Inoltre deve essere in grado di percepire quando l'AshStorage è pieno o vuoto. <br>                        
 		</ul>
 
 		<h2>Problematiche</h2>
 		<ul>
             <li><b>R1</b></li>
             <ul>
+				<li>Come avviene la gestione del LED?
+					<ul>
+						<li>Attraverso un'interfaccia il Monitoring Device controlla il LED fisico:
+							<pre><code>
+public interface ILED{
+	void turnOn();
+	void turnOff();
+	void blink();
+}           
+				</code></pre>
+						</li>
+					</ul>
+				</li>
                 <li>Come fa il Monitoring Device ad accorgersi che l'inceneritore è in fase di bruciatura?</li>
                 <ul>
                     <li>Dissertazione: Il Monitoring Device dovrebbe percepire i cambiamenti di stato dell'Inicinerator al fine di gestire lo stato del LED in base alla fase di bruciatura.<br> 
@@ -332,7 +334,7 @@ updateResource [# "info($name,start,$start)" #]
 					<li>Dissertazione: il Sonar è un elemento che misura costantemente il livello della polvere. Il Monitoring Device attende i dati delle misurazioni, per questo si introducono la pipe di attori:</li>
 					<ul>
 						<li>Il <strong>SonarDevice</strong>, un nuovo attore che si interfaccierà con il sonar SONAR HC-SR04.</li>
-						<li>Il <strong>DataCleaner</strong> filtrerà i dati raw inviati dal SonarDevice in modo da ottenere una corrispondenza tra valori fisici e logici (<code>empty, half, full</code>).<br>
+						<li>Il <strong>DataCleaner</strong> filtrerà i dati grezzi inviati dal SonarDevice in modo da ottenere una corrispondenza tra valori fisici e logici (<code>empty, half, full</code>).<br>
 						Questa relazione è stata introdotta per creare un livello di separazione tra le misurazioni del Sonar e le dimensioni effettive dell'AshStorage.</li>
 					</ul>
 					Attraverso questa separazione dei compiti si evita un accorpamento delle responsabilità, garantendo che ogni attore abbia un ruolo ben definito nel processo.
@@ -342,7 +344,11 @@ updateResource [# "info($name,start,$start)" #]
         <h2>Architettura Logica</h2>
         <center><img src="./img/sprintduearch.png" alt="imgAL" width="50%" height="50%"></center>
 		<h2>Progettazione</h2>
-		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint2.qak">sprint2.qak</a>
+		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint2.qak">sprint2.qak</a>.<br>
+		Ai fini di test si e' introdotto un <a href="../src/main/resources/VirtualLED.java">LED virtuale</a> 
+		il quale, quando viene effettuato un <code style="padding-left: 0;">ILED.turnOn()</code>, invia un messaggio testimoniando la sua accensione.		
+		Per questo e' stata introdotta una <a href="../src/main/resources/LedFactory.java">classe factory</a> (<code style="padding-left: 0;">LedFactory</code>)
+		alla quale il Monitoring Device puo' richiedere una creazione dell'istanza del LED, <a href="../src/main/resources/VirtualLED.java">virtuale</a> o <a href="../src/main/resources/LEDFisico.java">fisico</a>. <br>
 		<br>
 		<h3>Deploy</h3>		
 		<pre>
@@ -374,7 +380,7 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 		</pre>	
 
 		<h2>Test Unit</h2>
-		<h3>Test Unit Monitoring Device</h3>
+		<h3>Test Funzionale Monitoring Device</h3>
 		<h4>Test 1</h4>
 		Nel test l'Inceneritor modifica il suo stato, iniziando la fase di combustione. <br>
 		<ul>
@@ -382,8 +388,7 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 				&#x2705; Il test e' superato se la variabile booleana <code style="padding: 0%;">LEDON</code> viene resa <code style="padding: 0%;">true</code>.</br>
 			</li>
 		</ul>
-		<a href="../src/main/java/test/TestOpRobot.java">AGGIORNA LINK</a>
-
+		
 		<h4>Test 2</h4>
         Nel test l'Inceneritor modifica il suo stato, terminando la fase di combustione. <br>
 		<ul>
@@ -391,8 +396,7 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 				&#x2705; Il test e' superato se la variabile booleana <code style="padding: 0%;">LEDOFF</code> viene resa <code style="padding: 0%;">true</code>.</br>
 			</li>
 		</ul>
-		<a href="../src/main/java/test/TestOpRobot.java">AGGIORNA LINK</a>
-
+		
 		<h4>Test 3</h4>
         Il test simula che l'AshStorage sia pieno inoltrando al Monitoring Device un messaggio in cui venga superato il valore soglia di polvere. <br>
 		<ul>
@@ -400,25 +404,16 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 				&#x2705; Il test e' superato se la variabile booleana <code style="padding: 0%;">LEDBLINK</code> viene resa <code style="padding: 0%;">true</code>.</br>
 			</li>
 		</ul>
-		<a href="../src/main/java/test/TestOpRobot.java">AGGIORNA LINK</a>
-
-
-
-
-	
+		<a href="../src/main/java/test/TestLed.java">Test JUnit Funzionale</a>	
 		
 		<h2>Pianificazione del lavoro</h2>
 		<ul>
 			<li><b>Sprint 3</b></li>
 			<ul>
-				<li></li>
+				<li>Analisi del problema relativo al requisito R5</li>
 			</ul>
 		</ul>
 	</div>
-
-	<!-- <h2>Dove siamo arrivati</h2> -->
-	<!-- Capire come verificare il corretto funzionamento del test wis: i prerequisiti del test 
-	sono che le condizione di invio di Robotstart siano corrette. Lato java come mandiamo la request e come controlliamo la response? -->
 
 	<div style="background-color:rgba(86, 56, 253, 0.9);text-align:left;color:white">
 		<div>By Andrea Raffaelli email: andrea.raffaelli2@studio.unibo.it
