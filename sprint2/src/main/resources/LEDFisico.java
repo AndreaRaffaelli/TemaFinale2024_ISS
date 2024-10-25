@@ -1,58 +1,73 @@
 package main.resources;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 public class LEDFisico implements ILED {
     private Process p;
-    private BufferedWriter writer;
+    private String ledOnPath = "src/main/resources/LedOn.py";
+    private String ledOffPath = "src/main/resources/LedOff.py";
+    private String ledBlinkPath = "src/main/resources/LedBlink.py";
 
-    public LEDFisico() {
-        try {
-            // Avvia il processo Python che esegue LedDevice.py
-            this.p = Runtime.getRuntime().exec("python3 src/main/resources/Led.py");
-            this.writer = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public LEDFisico() throws IOException {
+
+        // Creazione di un oggetto File
+        File file1 = new File(ledOnPath);
+        File file2 = new File(ledOffPath);
+        File file3 = new File(ledBlinkPath);
+        
+    	file1.exists();
+		file2.exists(); 
+		file3.exists();
+ 
+		if (!file1.exists() || !file2.exists() || !file3.exists()) {
+			throw new IOException();
+		}
     }
 
     @Override
     public boolean turnOn() {
-        return sendCommand("on");
+    	if(p!= null) {
+    		p.destroy();
+    	}
+    	try {
+			this.p = Runtime.getRuntime().exec("python3 src/main/resources/LedOn.py");
+		} catch (IOException e) {
+			return false;
+		}
+        return true;
     }
 
     @Override
     public boolean turnOff() {
-        return sendCommand("off");
+    	if(p!= null) {
+    		p.destroy();
+    	}
+    	try {
+			this.p = Runtime.getRuntime().exec("python3 src/main/resources/LedOff.py");
+		} catch (IOException e) {
+			return false;
+		}
+        return true;    
+        
     }
 
     @Override
     public boolean turnBlink() {
-        return sendCommand("blink");
+    	if(p!= null) {
+    		p.destroy();
+    	}
+    	try {
+			this.p = Runtime.getRuntime().exec("python3 src/main/resources/LedBlink.py");
+		} catch (IOException e) {
+			return false;
+		}
+        return true;       
+        
     }
 
-    private boolean sendCommand(String command) {
-        try {
-            // Invia il comando al processo Python tramite stdin
-            writer.write(command);
-            writer.newLine();  // Aggiunge una nuova riga per inviare il comando correttamente
-            writer.flush();    // Assicura che il comando venga inviato subito
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
-    // Metodo per chiudere correttamente il processo Python e liberare risorse
-    public void close() {
-        try {
-            writer.close();
-            p.destroy();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

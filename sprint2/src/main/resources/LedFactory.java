@@ -1,5 +1,7 @@
 package main.resources;
 
+import java.io.IOException;
+
 import org.json.simple.JSONObject;
 
 import it.unibo.kactor.ActorBasic;
@@ -20,7 +22,11 @@ public class LedFactory  { //extends ApplAbstractObserver {
         if ("virtuale".equalsIgnoreCase(tipo)) {
             return new VirtualLED(address, port);  
         } else if ("fisico".equalsIgnoreCase(tipo)) {
-            return new LEDFisico();   
+            try {
+				return new LEDFisico();
+			} catch (IOException e) {
+				return new VirtualLED(address, port);  
+			}   
         } else {
             throw new IllegalArgumentException("Tipo sconosciuto: " + tipo);  
         }

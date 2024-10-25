@@ -18,7 +18,7 @@ Context ctxashstorage ip [host="localhost"  port=8021]
 //ExternalQActor oprobot context ctxservicearea
 //ExternalQActor incinerator context ctxservicearea
 
-QActor monitoring_device context ctxashstorage withobj led using "LedFactory.create(\"\virtuale\",\"localhost\",\"8021\")"{
+QActor monitoring_device context ctxashstorage withobj led using "LedFactory.create(\"virtuale\",\"localhost\",\"8021\")"{
 	import "main.resources.LedFactory"
 	[#var statusInc = "off"
 	  var statusAsh = "empty"#]
