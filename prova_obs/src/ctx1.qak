@@ -1,0 +1,22 @@
+System ctx1
+
+Dispatch info : info(X)
+
+Context ctx1 ip [host="localhost" port=6000]
+Context ctx2 ip [host="192.168.137.129" port=6001]
+
+ExternalQActor prova2 context ctx2
+
+QActor prova1 context ctx1 {
+	State s0 initial{
+		printCurrentMessage
+		observeResource prova2 msgid info
+	}
+	Transition t0
+	whenMsg info -> s1
+	//
+	State s1 {
+		printCurrentMessage
+		println("RICEVUTO MESSAGGIO")
+	}
+}
