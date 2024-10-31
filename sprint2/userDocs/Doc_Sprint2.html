@@ -290,11 +290,14 @@
             </li>
             Dissertazione: Il monitoring device deve essere in grado di percepire i segnali di stato dell'inceneritore.<br> 
             Inoltre deve essere in grado di percepire quando l'AshStorage è pieno o vuoto. <br>           
-			<li>R4.2: WIS riceverà come input i valori della scale e del sonar.
-                <ul>
-                    <li>Come avverrà la comunicazione tra WIS e Monitoring Device? </li>                   
-                </ul>
-            </li>             
+			<li>R4.2: WIS riceverà in input i valori della bilancia e del sonar.
+				<ul>
+					<li>Quando l'OpRobot si trova in modalità Home e ci sono RP da caricare, WIS deve verificare se è possibile scaricare la cenere nell'AshStorage prima di avviare un ciclo di bruciatura. 
+						Questa informazione può essere ottenuta a intervalli regolari con una interazione <code>reply-response</code>, ma ciò comporterebbe un'occupazione del sistema in cicli di attesa attiva. Per evitare questa situazione, si preferisce adottare un modello inverso in cui il Monitoring Device trasmette le informazioni rilevanti sullo stato della polvere, mantenendo il Sonar Device e le sue implementazioni in secondo piano.
+					</li>                   
+				</ul>
+			</li>
+				  
 		</ul>
 
 		<h2>Problematiche</h2>
@@ -345,6 +348,18 @@ updateResource [# "info($name,start,$start)" #]
 					Attraverso questa separazione dei compiti si evita un accorpamento delle responsabilità, garantendo che ogni attore abbia un ruolo ben definito nel processo.
 					Al Monitoring Device viene delegato il compito di gestire i valori logici inviati dal DataCleaner: quest'ultimo sarà anche <b>osservabile</b> in prospettiva dell'implementazione della GUI.
             </ul>
+			<li>R4.2: Come fa Montioring Device ad inviare informazioni al WIS?
+				<ul>
+					<li>
+						L'invio di informazioni dal <b>Monitoring Device</b> e' interessante per due entita': <b>Wis</b> e <b>Gui</b>, che verra' trattata successivamente. La soluzione ottimale sarebbe un'inversione di controllo utilizzando il <b>pattern Observer</b>. 
+						Purtroppo il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, per cui si tenta di emulare questo comportamento attraverso <b>l'invio di eventi</b> che contengono l'informazione logica sullo stato dell'AshStorage.
+						<br>
+<pre><code>
+Event sonarUpdate : sonarUpdate(X) 
+			</code></pre>
+					</li>                   
+				</ul>
+			</li>
         </ul>
         <h2>Architettura Logica</h2>
         <center><img src="./img/sprintduearch.png" alt="imgAL" width="50%" height="50%"></center>
