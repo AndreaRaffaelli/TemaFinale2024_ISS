@@ -289,7 +289,12 @@
                 </ul>
             </li>
             Dissertazione: Il monitoring device deve essere in grado di percepire i segnali di stato dell'inceneritore.<br> 
-            Inoltre deve essere in grado di percepire quando l'AshStorage è pieno o vuoto. <br>                        
+            Inoltre deve essere in grado di percepire quando l'AshStorage è pieno o vuoto. <br>           
+			<li>R4.2: WIS riceverà come input i valori della scale e del sonar.
+                <ul>
+                    <li>Come avverrà la comunicazione tra WIS e Monitoring Device? </li>                   
+                </ul>
+            </li>             
 		</ul>
 
 		<h2>Problematiche</h2>
@@ -329,7 +334,7 @@ updateResource [# "info($name,start,$start)" #]
             </ul>
             <li><b>R1.3</b></li>
             <ul>
-				<li>Come fa l'AshStorage a percepire il livello della polvere?</li>
+				<li>Come fa il Monitoring Device a percepire il livello della polvere?</li>
 				<ul>
 					<li>Dissertazione: il Sonar è un elemento che misura costantemente il livello della polvere. Il Monitoring Device attende i dati delle misurazioni, per questo si introducono la pipe di attori:</li>
 					<ul>

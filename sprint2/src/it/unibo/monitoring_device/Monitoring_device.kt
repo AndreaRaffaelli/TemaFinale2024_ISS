@@ -31,8 +31,8 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(150) 
-						observeResource("127.0.0.1","6969","ctxservicearea","incinerator","info")
-						observeResource("localhost","8021","ctxashstorage","datacleaner","info")
+						observeResource("192.168.137.1","8021","ctxservicearea","incinerator","info")
+						observeResource("localhost","8022","ctxashstorage","datacleaner","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -44,13 +44,13 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 					action { //it:State
 						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(X,Y,Z)"), 
+						if( checkMsgContent( Term.createTerm("info(SOURCE,VAL,VAR)"), Term.createTerm("info(SOURCE,VAL,VAR)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val N = payloadArg(0)   
+								 val SOURCE = payloadArg(0)   
 								 val VAR = payloadArg(1) 
 								 val VAL = payloadArg(2) 
 								
-										    	if(N.equals("incinerator")){
+										    	if(SOURCE.equals("incinerator")){
 										    		if(VAR.equals("start")&&VAL.equals("on")){
 										    			led.turnOn();
 										    			statusInc = "on"
@@ -60,7 +60,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 										    			led.turnOff();
 										    			statusInc = "off"
 										    		}
-										    	}else if(N.equals("datacleaner")){
+										    	}else if(SOURCE.equals("datacleaner")){
 										    		if(VAR.equals("ashLevel")&&VAL.equals("full")){
 														statusAsh = "full"
 														led.turnBlink();
