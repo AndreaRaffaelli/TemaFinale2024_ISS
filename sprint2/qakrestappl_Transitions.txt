@@ -1,2 +1,4 @@
 {"actor":"monitoring_device", "msgType":"dispatch", "curstate":"s0", "nextstate":"update", "msgId":"info"}
 {"actor":"monitoring_device", "msgType":"dispatch", "curstate":"update", "nextstate":"update", "msgId":"info"}
+{"actor":"monitoring_device", "msgType":"dispatch", "curstate":"handleStartBurn", "nextstate":"update", "msgId":"info"}
+{"actor":"monitoring_device", "msgType":"dispatch", "curstate":"handleEndBurn", "nextstate":"update", "msgId":"info"}

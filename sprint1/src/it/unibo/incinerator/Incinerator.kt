@@ -24,6 +24,7 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 		
 		        val BTIME = 3000L;
 		        var start = "off";
+		        var active = "off";
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -35,40 +36,41 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t019",targetState="start",cond=whenEvent("startIncinerator"))
+					 transition(edgeName="t020",targetState="start",cond=whenEvent("startIncinerator"))
 				}	 
 				state("start") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						CommUtils.outmagenta("($name): Inizio inceneritore")
-						 start ="on";  
-						updateResourceRep( "info($name,start,$start)"  
+						 active ="on";  
+						updateResourceRep( "info($name,active,$active)"  
 						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t120",targetState="handleBurnStart",cond=whenDispatch("startBurn"))
+					 transition(edgeName="t121",targetState="handleStartBurn",cond=whenEvent("startBurn"))
 				}	 
-				state("handleBurnStart") { //this:State
+				state("handleStartBurn") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						 start ="on";  
 						CommUtils.outmagenta("($name): Inizio bruciatura")
 						delay(2000) 
 						CommUtils.outmagenta("($name): Fine bruciatura")
 						 start ="off";  
 						updateResourceRep( "info($name,start,$start)"  
 						)
-						emit("burnEnd", "burnEnd(stop)" ) 
+						emit("endBurn", "endBurn(stop)" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t221",targetState="handleBurnStart",cond=whenDispatch("startBurn"))
+					 transition(edgeName="t222",targetState="handleStartBurn",cond=whenEvent("startBurn"))
 				}	 
 			}
 		}

@@ -4,7 +4,6 @@ System sprintuno
 Dispatch robotStart: robotStart(X)
 
 Dispatch robotUpdate: robotUpdate(X)
-Dispatch startBurn : startBurn(X)
 Dispatch info : info(X, Y, Z)
 Request engage        : engage(CALLER)
 Reply   engagedone    : engagedone(ARG)
@@ -12,9 +11,10 @@ Reply   engagerefused : engagerefused(ARG)
 Request  doplan   : doplan( PATH, STEPTIME )
 Reply doplandone  : doplandone( ARG )
 Reply doplanfailed  : doplanfailed( ARG )
-Event burnEnd : burnEnd( ARG )
+Event endBurn : endBurn( ARG )
 Event sonarUpdate : sonarUpdate(QTY)
 Event startIncinerator: startIncinerator(X)
+Event startBurn : startBurn(X)
 
 
 //Inglobamento endosimbitico di robotpos
@@ -26,13 +26,13 @@ Request testStart : testStart(X)
 Request testRequest : testRequest(X)
 Reply testReply : testReply(X ,Y)
 
-Context ctxtest ip [host="localhost" port=6969]
+Context ctxservicearea ip [host="localhost" port=8022]
 Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
 Context ctxashstorage ip [host="192.168.137.129" port=8021]
 
 ExternalQActor basicrobot context ctxbasicrobot
 
-QActor wis context ctxtest{ 
+QActor wis context ctxservicearea{ 
 	[#//
 		var Ws_status = 0;
         var As_status = "free";
@@ -54,23 +54,22 @@ QActor wis context ctxtest{
 		printCurrentMessage color yellow
 		updateResource [# "info($name,RobotFree,$RobotFree)" #]
 		updateResource [# "info($name,Ws_status,$Ws_status)" #]
-		updateResource [# "info($name,As_status,$As_status)" #]
 	}
 	Transition t0			
 		whenMsg info -> controllo		
 		whenEvent sonarUpdate -> sonarUpdate
-		//whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
+		//whenEvent endBurn -> endBurnHandler		// inc segnala fine combustione (inutile)
 	
 	State controllo {
        	printCurrentMessage color yellow
-		onMsg( info :  info(N,VAL, VAR) ){
-			[# val N = payloadArg(0)  #]
+		onMsg( info :  info(SRC,VAL, VAR) ){
+			[# val SRC = payloadArg(0)  #]
 			[# val VAR = payloadArg(1)#]
 		    [# val VAL = payloadArg(2)#]
 			[# var RobotState = ""   #]
-			println("$name views $N $VAR $VAL") color magenta
+			println("$name views $SRC $VAR $VAL") color magenta
 			[#
-			if(N.equals("oprobot") && VAR.equals("RobotState")){
+			if(SRC.equals("oprobot") && VAR.equals("RobotState")){
 				RobotState = VAL;
 				if(RobotState.equals("IDLE")){
 					RobotFree = true;
@@ -99,14 +98,14 @@ QActor wis context ctxtest{
         	#]
 			updateResource [# "info($name,RobotFree,$RobotFree)" #]
             updateResource [# "info($name,Ws_status,$Ws_status)" #]
-            updateResource [# "info($name,As_status,$As_status)" #]
         [#
         }
         #]
         
         
 	}   
-    Goto idle if [# RobotFree === false#] else polling
+    Transition t0			
+		whenMsg info -> controllo
 	
 	State sonarUpdate{
 		printCurrentMessage color yellow
@@ -121,9 +120,9 @@ QActor wis context ctxtest{
     Transition t1 
         whenTime 2000 -> controllo
         
-        //whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
+        //whenEvent endBurn -> endBurnHandler		// inc segnala fine combustione (inutile)
 	
-	//State burnEndHandler{
+	//State endBurnHandler{
 	//	println("($name): ricevuto segnale di fine combustione dall'inc") color blue 
 	//}
 	//Goto idle
@@ -131,7 +130,7 @@ QActor wis context ctxtest{
 }
 
 //
-QActor oprobot context ctxtest{   
+QActor oprobot context ctxservicearea{   
 [# 	
 	var RobotState = "IDLE";
 	var MentalState = "";
@@ -169,7 +168,7 @@ QActor oprobot context ctxtest{
 	}   
  	Transition t0
 		whenMsg robotStart -> goToWasteIn
-		whenEvent burnEnd -> home_go
+		whenEvent endBurn -> home_go_burnOut
  	
 	State goToWasteIn{
 		printCurrentMessage color yellow
@@ -199,14 +198,14 @@ QActor oprobot context ctxtest{
 		//println("($name): $MentalState") color magenta 
 		updateResource [#  "info($name,MentalState,$MentalState)" #]
 		delay 5000
-		forward incinerator -m startBurn: startBurn(1)
+		emit startBurn: startBurn(1)
 		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione BurnIn
 	}
 	Transition t3 
 			whenReply moverobotdone -> home
 			whenReply moverobotfailed -> end //errore grave?? mossa fallita
 	
-	State home_go {
+	State home_go_burnOut {
 		printCurrentMessage color yellow
 		request basicrobot -m moverobot : moverobot($Bo_x,$Bo_y) //posizione BurnOut	
 	}
@@ -247,10 +246,11 @@ QActor oprobot context ctxtest{
 	}
 }
 
-QActor incinerator context ctxtest{ 
+QActor incinerator context ctxservicearea{ 
 	[#
         val BTIME = 3000L;
         var start = "off";
+        var active = "off";
 	#]
 	State s0 initial{
 		printCurrentMessage color yellow
@@ -262,29 +262,30 @@ QActor incinerator context ctxtest{
 	State start{
 		printCurrentMessage color yellow
 		println("($name): Inizio inceneritore") color magenta
-		[# start ="on"; #]
-		updateResource [# "info($name,start,$start)" #]
+		[# active ="on"; #]
+		updateResource [# "info($name,active,$active)" #]
 	}
 	Transition t1
-		whenMsg startBurn -> handleBurnStart
+		whenEvent startBurn -> handleStartBurn
 		
-	State handleBurnStart{
+	State handleStartBurn{
 		printCurrentMessage color yellow
+		[# start ="on"; #]
 		println("($name): Inizio bruciatura") color magenta
 		delay 2000
 		println("($name): Fine bruciatura") color magenta
 		[# start ="off"; #]
 		updateResource [# "info($name,start,$start)" #]
-		emit burnEnd : burnEnd( stop )
-		//replyTo startBurn with testReply : testReply(burnEnd)			Reply a soli fini di test
+		emit endBurn : endBurn( stop )
+		//replyTo startBurn with testReply : testReply(endBurn)			Reply a soli fini di test
 	}
 	Transition t2
-		whenMsg startBurn -> handleBurnStart	
+		whenEvent startBurn -> handleStartBurn	
 }
 
 
 
-//QActor test_observer context ctxtest{
+//QActor test_observer context ctxservicearea{
 //	State s0 initial{
 //		printCurrentMessage color yellow
 //		delay 500

@@ -34,7 +34,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						 	   
 						delay(1000) 
 						emit("startIncinerator", "startIncinerator(stop)" ) 
-						observeResource("localhost","6969","ctxtest","oprobot","info")
+						observeResource("localhost","8022","ctxservicearea","oprobot","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -50,8 +50,6 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						)
 						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
 						)
-						updateResourceRep( "info($name,As_status,$As_status)"  
-						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -64,15 +62,15 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(N,VAL,VAR)"), 
+						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(SRC,VAL,VAR)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val N = payloadArg(0)   
+								 val SRC = payloadArg(0)   
 								 val VAR = payloadArg(1) 
 								 val VAL = payloadArg(2) 
 								 var RobotState = ""    
-								CommUtils.outmagenta("$name views $N $VAR $VAL")
+								CommUtils.outmagenta("$name views $SRC $VAR $VAL")
 								
-											if(N.equals("oprobot") && VAR.equals("RobotState")){
+											if(SRC.equals("oprobot") && VAR.equals("RobotState")){
 												RobotState = VAL;
 												if(RobotState.equals("IDLE")){
 													RobotFree = true;
@@ -99,8 +97,6 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						)
 						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
 						)
-						updateResourceRep( "info($name,As_status,$As_status)"  
-						)
 						
 						        }
 						//genTimer( actor, state )
@@ -108,10 +104,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="idle", cond=doswitchGuarded({ RobotFree === false 
-					}) )
-					transition( edgeName="goto",targetState="polling", cond=doswitchGuarded({! ( RobotFree === false 
-					) }) )
+					 transition(edgeName="t02",targetState="controllo",cond=whenDispatch("info"))
 				}	 
 				state("sonarUpdate") { //this:State
 					action { //it:State
@@ -142,7 +135,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				 	 		stateTimer = TimerActor("timer_polling", 
 				 	 					  scope, context!!, "local_tout_"+name+"_polling", 2000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t12",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_polling"))   
+					 transition(edgeName="t13",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_polling"))   
 				}	 
 			}
 		}

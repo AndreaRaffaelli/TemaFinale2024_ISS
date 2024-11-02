@@ -4,7 +4,7 @@ bin/default
 .classpath
 .project
 .idea
-sprint1/build
+build
 logs 
 
 log4jInfo.log

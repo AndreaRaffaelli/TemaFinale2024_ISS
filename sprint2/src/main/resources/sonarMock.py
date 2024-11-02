@@ -16,9 +16,11 @@ def sonar():
 	time.sleep(5)
 	print(0)
 	sys.stdout.flush()
-	exit(-1)
+	#exit(-1)
+
 
 if __name__ == "__main__":
-    sonar()
+    while True:
+        sonar()
 
     

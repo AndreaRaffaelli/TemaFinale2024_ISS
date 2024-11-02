@@ -9,9 +9,11 @@ Request testRequest : testRequest(X)
 Reply testReply : testReply(X ,Y)
 Event sonardata : distance(D)   // Valori grezzi letti dal sonar 
 Event sonarUpdate: sonarUpdate(QTY)   // Valori grezzi letti dal sonar 
+Event startBurn : startBurn(X)
+Event endBurn : endBurn(X)
 
-Context ctxservicearea ip [host="192.168.137.1" port=8021]
-Context ctxashstorage ip [host="localhost"  port=8022]								
+Context ctxservicearea ip [host="192.168.137.1" port=8022]
+Context ctxashstorage ip [host="localhost"  port=8021]								
 
 ExternalQActor wis context ctxservicearea
 ExternalQActor incinerator context ctxservicearea
@@ -24,11 +26,12 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 	State s0 initial{
 		printCurrentMessage color yellow
 		delay 150
-		observeResource incinerator msgid info    
 		observeResource datacleaner msgid info    
 	}
-		Transition t0
+	Transition t0
 		whenMsg info -> update
+		whenEvent startBurn -> handleStartBurn	
+		whenEvent endBurn -> handleEndBurn	
 		
 	State update{
 		printCurrentMessage color red
@@ -38,18 +41,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		    [# val VAL = payloadArg(2)#]
 		    
 		    [#
-		    	if(SOURCE.equals("incinerator")){
-		    		if(VAR.equals("start")&&VAL.equals("on")){
-		    			led.turnOn();
-		    			statusInc = "on"
-		    		}
-		    		
-		    		if(VAR.equals("start")&&VAL.equals("off")){
-		    			led.turnOff();
-		    			statusInc = "off"
-		    		}
-		    	}else if(SOURCE.equals("datacleaner")){
-		    		if(VAR.equals("ashLevel")&&VAL.equals("full")){
+					if(VAR.equals("ashLevel")&&VAL.equals("full")){
 						statusAsh = "full"
 						led.turnBlink();
 					}
@@ -63,12 +55,31 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 					#]
 					emit sonarUpdate : sonarUpdate($VAR)
 					[#
-		    	}
 		    #]
 		}
 	}		
-		Transition t1
+	Transition t1
 		whenMsg info -> update
+		
+	State handleStartBurn{
+		[#
+			led.turnOn();
+			statusInc = "on"
+		#]
+	}
+	Transition t1
+		whenMsg info -> update
+		whenEvent endBurn -> handleEndBurn	
+		
+	State handleEndBurn{
+		[#
+			led.turnOff();
+			statusInc = "off"
+		#]
+	}
+	Transition t1
+		whenMsg info -> update
+		whenEvent startBurn -> handleStartBurn	
 }
 
 QActor sonardevice context ctxashstorage{
@@ -80,7 +91,7 @@ QActor sonardevice context ctxashstorage{
 	State s0 initial{
 		println("$name | sonarstart") 
 	 	[#
-			p       = Runtime.getRuntime().exec("python src/main/resources/sonar.py")
+			p       = Runtime.getRuntime().exec("python src/main/resources/sonarMock.py")
 			// p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
 			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
 

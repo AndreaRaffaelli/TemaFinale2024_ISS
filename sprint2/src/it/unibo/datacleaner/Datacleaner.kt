@@ -33,7 +33,7 @@ class Datacleaner ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="filter",cond=whenEvent("sonardata"))
+					 transition(edgeName="t08",targetState="filter",cond=whenEvent("sonardata"))
 				}	 
 				state("filter") { //this:State
 					action { //it:State
@@ -63,7 +63,7 @@ class Datacleaner ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t03",targetState="filter",cond=whenEvent("sonardata"))
+					 transition(edgeName="t09",targetState="filter",cond=whenEvent("sonardata"))
 				}	 
 			}
 		}

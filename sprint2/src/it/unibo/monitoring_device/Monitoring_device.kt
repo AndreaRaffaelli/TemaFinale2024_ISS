@@ -31,14 +31,15 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(150) 
-						observeResource("192.168.137.1","8021","ctxservicearea","incinerator","info")
-						observeResource("localhost","8022","ctxashstorage","datacleaner","info")
+						observeResource("localhost","8021","ctxashstorage","datacleaner","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t00",targetState="update",cond=whenDispatch("info"))
+					transition(edgeName="t01",targetState="handleStartBurn",cond=whenEvent("startBurn"))
+					transition(edgeName="t02",targetState="handleEndBurn",cond=whenEvent("endBurn"))
 				}	 
 				state("update") { //this:State
 					action { //it:State
@@ -50,18 +51,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 								 val VAR = payloadArg(1) 
 								 val VAL = payloadArg(2) 
 								
-										    	if(SOURCE.equals("incinerator")){
-										    		if(VAR.equals("start")&&VAL.equals("on")){
-										    			led.turnOn();
-										    			statusInc = "on"
-										    		}
-										    		
-										    		if(VAR.equals("start")&&VAL.equals("off")){
-										    			led.turnOff();
-										    			statusInc = "off"
-										    		}
-										    	}else if(SOURCE.equals("datacleaner")){
-										    		if(VAR.equals("ashLevel")&&VAL.equals("full")){
+													if(VAR.equals("ashLevel")&&VAL.equals("full")){
 														statusAsh = "full"
 														led.turnBlink();
 													}
@@ -74,14 +64,39 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 													}
 								emit("sonarUpdate", "sonarUpdate($VAR)" ) 
 								
-										    	}
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t11",targetState="update",cond=whenDispatch("info"))
+					 transition(edgeName="t13",targetState="update",cond=whenDispatch("info"))
+				}	 
+				state("handleStartBurn") { //this:State
+					action { //it:State
+						
+									led.turnOn();
+									statusInc = "on"
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t14",targetState="update",cond=whenDispatch("info"))
+					transition(edgeName="t15",targetState="handleEndBurn",cond=whenEvent("endBurn"))
+				}	 
+				state("handleEndBurn") { //this:State
+					action { //it:State
+						
+									led.turnOff();
+									statusInc = "off"
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t16",targetState="update",cond=whenDispatch("info"))
+					transition(edgeName="t17",targetState="handleStartBurn",cond=whenEvent("startBurn"))
 				}	 
 			}
 		}
