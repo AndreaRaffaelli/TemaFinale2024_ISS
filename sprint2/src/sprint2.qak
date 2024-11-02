@@ -8,7 +8,7 @@ Request testStart : testStart(X)
 Request testRequest : testRequest(X)
 Reply testReply : testReply(X ,Y)
 Event sonardata : distance(D)   // Valori grezzi letti dal sonar 
-
+Event sonarUpdate: sonarUpdate(QTY)   // Valori grezzi letti dal sonar 
 
 Context ctxservicearea ip [host="192.168.137.1" port=8021]
 Context ctxashstorage ip [host="localhost"  port=8022]								
@@ -60,6 +60,9 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 					if(VAR.equals("ashLevel")&&VAL.equals("half")){
 						statusAsh= "half";
 					}
+					#]
+					emit sonarUpdate : sonarUpdate($VAR)
+					[#
 		    	}
 		    #]
 		}

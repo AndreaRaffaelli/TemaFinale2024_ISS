@@ -72,6 +72,8 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 													if(VAR.equals("ashLevel")&&VAL.equals("half")){
 														statusAsh= "half";
 													}
+								emit("sonarUpdate", "sonarUpdate($VAR)" ) 
+								
 										    	}
 						}
 						//genTimer( actor, state )

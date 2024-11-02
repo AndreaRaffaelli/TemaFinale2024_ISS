@@ -6,6 +6,7 @@ event( startIncinerator, startIncinerator(X) ).
 request( testStart, testStart(X) ).
 request( testRequest, testRequest(X) ).
 event( sonardata, distance(D) ).
+event( sonarUpdate, sonarUpdate(QTY) ).
 %====================================================================================
 context(ctxservicearea, "192.168.137.1",  "TCP", "8021").
 context(ctxashstorage, "localhost",  "TCP", "8022").
