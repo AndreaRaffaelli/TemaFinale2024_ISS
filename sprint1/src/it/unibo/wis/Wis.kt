@@ -23,7 +23,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		//
 				var Ws_status = 0;
-		        var As_status = 0;
+		        var As_status = "free";
 		
 				var RobotFree = false;
 				var DLIMIT = 3;		// zero non corretto
@@ -58,6 +58,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t00",targetState="controllo",cond=whenDispatch("info"))
+					transition(edgeName="t01",targetState="sonarUpdate",cond=whenEvent("sonarUpdate"))
 				}	 
 				state("controllo") { //this:State
 					action { //it:State
@@ -85,12 +86,10 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						        if( RobotFree === true){
 						            //chiedi Ws_status
 						            Ws_status = (0..5).random()            
-						            //chiedi As_status
-						            As_status = (0..5).random()
 						    	}
 								println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
 						
-						        if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
+						        if(Ws_status>0 && !As_status.equals("full") && RobotFree === true){
 						CommUtils.outmagenta("($name) invio messaggio start")
 						CommUtils.outmagenta("($name) controllo: condizioni corrette e start")
 						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
@@ -114,6 +113,26 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 					transition( edgeName="goto",targetState="polling", cond=doswitchGuarded({! ( RobotFree === false 
 					) }) )
 				}	 
+				state("sonarUpdate") { //this:State
+					action { //it:State
+						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						if( checkMsgContent( Term.createTerm("sonarUpdate(QTY)"), Term.createTerm("sonarUpdate(QTY)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 As_status = payloadArg(0) 
+								updateResourceRep( "info($name,As_status,$As_status)"  
+								)
+						}
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="controllo", cond=doswitchGuarded({ RobotFree === true 
+					}) )
+					transition( edgeName="goto",targetState="polling", cond=doswitchGuarded({! ( RobotFree === true 
+					) }) )
+				}	 
 				state("polling") { //this:State
 					action { //it:State
 						//genTimer( actor, state )
@@ -123,7 +142,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				 	 		stateTimer = TimerActor("timer_polling", 
 				 	 					  scope, context!!, "local_tout_"+name+"_polling", 2000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t11",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_polling"))   
+					 transition(edgeName="t12",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_polling"))   
 				}	 
 			}
 		}

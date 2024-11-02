@@ -8,6 +8,7 @@ dispatch( info, info(X,Y,Z) ).
 request( engage, engage(CALLER) ).
 request( doplan, doplan(PATH,STEPTIME) ).
 event( burnEnd, burnEnd(ARG) ).
+event( sonarUpdate, sonarUpdate(QTY) ).
 event( startIncinerator, startIncinerator(X) ).
 request( moverobot, moverobot(TARGETX,TARGETY) ).
 reply( moverobotdone, moverobotok(ARG) ).  %%for moverobot
@@ -17,6 +18,7 @@ request( testRequest, testRequest(X) ).
 %====================================================================================
 context(ctxtest, "localhost",  "TCP", "6969").
 context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
+context(ctxashstorage, "192.168.137.129",  "TCP", "8021").
  qactor( basicrobot, ctxbasicrobot, "external").
   qactor( wis, ctxtest, "it.unibo.wis.Wis").
  static(wis).

@@ -13,7 +13,7 @@ Request  doplan   : doplan( PATH, STEPTIME )
 Reply doplandone  : doplandone( ARG )
 Reply doplanfailed  : doplanfailed( ARG )
 Event burnEnd : burnEnd( ARG )
-
+Event sonarUpdate : sonarUpdate(QTY)
 Event startIncinerator: startIncinerator(X)
 
 
@@ -28,25 +28,25 @@ Reply testReply : testReply(X ,Y)
 
 Context ctxtest ip [host="localhost" port=6969]
 Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
+Context ctxashstorage ip [host="192.168.137.129" port=8021]
 
 ExternalQActor basicrobot context ctxbasicrobot
-
 
 QActor wis context ctxtest{ 
 	[#//
 		var Ws_status = 0;
-        var As_status = 0;
+        var As_status = "free";
 
 		var RobotFree = false;
 		var DLIMIT = 3;		// zero non corretto
 	#]
+
 	State s0 initial{
 		printCurrentMessage color yellow
 		delay 1000
 		emit startIncinerator : startIncinerator( stop )
 		observeResource oprobot msgid info
 		//updateResource [# "info($name,RobotFree,$RobotFree)" #]			Update di test per l'observer_tests
-		
 	}
 	Goto idle
 	
@@ -58,6 +58,7 @@ QActor wis context ctxtest{
 	}
 	Transition t0			
 		whenMsg info -> controllo		
+		whenEvent sonarUpdate -> sonarUpdate
 		//whenEvent burnEnd -> burnEndHandler		// inc segnala fine combustione (inutile)
 	
 	State controllo {
@@ -85,12 +86,10 @@ QActor wis context ctxtest{
         if( RobotFree === true){
             //chiedi Ws_status
             Ws_status = (0..5).random()            
-            //chiedi As_status
-            As_status = (0..5).random()
     	}
 		println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
 
-        if(Ws_status>0 && As_status< DLIMIT && RobotFree === true){
+        if(Ws_status>0 && !As_status.equals("full") && RobotFree === true){
         #]
         	println("($name) invio messaggio start") color magenta
         	println("($name) controllo: condizioni corrette e start") color magenta
@@ -108,7 +107,16 @@ QActor wis context ctxtest{
         
 	}   
     Goto idle if [# RobotFree === false#] else polling
-
+	
+	State sonarUpdate{
+		printCurrentMessage color yellow
+		onMsg( sonarUpdate : sonarUpdate(QTY)){
+			[# As_status = payloadArg(0)#]
+			updateResource [# "info($name,As_status,$As_status)" #]
+		}
+	}
+	Goto controllo if [# RobotFree === true#] else polling
+    
     State polling{}
     Transition t1 
         whenTime 2000 -> controllo
@@ -121,10 +129,6 @@ QActor wis context ctxtest{
 	//Goto idle
 
 }
-
-
-
-
 
 //
 QActor oprobot context ctxtest{   
