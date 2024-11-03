@@ -28,7 +28,7 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(1000) 
 						//genTimer( actor, state )
@@ -40,9 +40,9 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("start") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						CommUtils.outmagenta("($name): Inizio inceneritore")
+						CommUtils.outyellow("($name): Avvio inceneritore")
 						 active ="on";  
 						updateResourceRep( "info($name,active,$active)"  
 						)
@@ -55,16 +55,16 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("handleStartBurn") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 start ="on";  
-						CommUtils.outmagenta("($name): Inizio bruciatura")
-						delay(2000) 
-						CommUtils.outmagenta("($name): Fine bruciatura")
+						CommUtils.outyellow("($name): Inizio bruciatura")
+						delay(7000) 
+						CommUtils.outyellow("($name): Fine bruciatura")
 						 start ="off";  
 						updateResourceRep( "info($name,start,$start)"  
 						)
-						emit("endBurn", "endBurn(stop)" ) 
+						emit("endBurn", "endBurn(0)" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

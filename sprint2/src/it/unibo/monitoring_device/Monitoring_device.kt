@@ -22,15 +22,15 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val led = LedFactory.create("isico","localhost","8021")
+		 val led = LedFactory.create("fisico","localhost","8021")
 		var statusInc = "off"
 			  var statusAsh = "empty" 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						delay(150) 
+						delay(1000) 
 						observeResource("localhost","8021","ctxashstorage","datacleaner","info")
 						//genTimer( actor, state )
 					}
@@ -43,11 +43,11 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 				}	 
 				state("update") { //this:State
 					action { //it:State
-						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("info(SOURCE,VAL,VAR)"), Term.createTerm("info(SOURCE,VAL,VAR)"), 
+						if( checkMsgContent( Term.createTerm("info(SRC,VAL,VAR)"), Term.createTerm("info(SRC,VAL,VAR)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val SOURCE = payloadArg(0)   
+								 val SRC = payloadArg(0)   
 								 val VAR = payloadArg(1) 
 								 val VAL = payloadArg(2) 
 								
@@ -62,7 +62,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 													if(VAR.equals("ashLevel")&&VAL.equals("half")){
 														statusAsh= "half";
 													}
-								emit("sonarUpdate", "sonarUpdate($VAR)" ) 
+								emit("sonarUpdate", "sonarUpdate($VAL)" ) 
 								
 						}
 						//genTimer( actor, state )
@@ -71,9 +71,13 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t13",targetState="update",cond=whenDispatch("info"))
+					transition(edgeName="t14",targetState="handleStartBurn",cond=whenEvent("startBurn"))
+					transition(edgeName="t15",targetState="handleEndBurn",cond=whenEvent("endBurn"))
 				}	 
 				state("handleStartBurn") { //this:State
 					action { //it:State
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
 						
 									led.turnOn();
 									statusInc = "on"
@@ -82,11 +86,13 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t14",targetState="update",cond=whenDispatch("info"))
-					transition(edgeName="t15",targetState="handleEndBurn",cond=whenEvent("endBurn"))
+					 transition(edgeName="t16",targetState="update",cond=whenDispatch("info"))
+					transition(edgeName="t17",targetState="handleEndBurn",cond=whenEvent("endBurn"))
 				}	 
 				state("handleEndBurn") { //this:State
 					action { //it:State
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
 						
 									led.turnOff();
 									statusInc = "off"
@@ -95,8 +101,8 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t16",targetState="update",cond=whenDispatch("info"))
-					transition(edgeName="t17",targetState="handleStartBurn",cond=whenEvent("startBurn"))
+					 transition(edgeName="t18",targetState="update",cond=whenDispatch("info"))
+					transition(edgeName="t19",targetState="handleStartBurn",cond=whenEvent("startBurn"))
 				}	 
 			}
 		}

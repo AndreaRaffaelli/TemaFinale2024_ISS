@@ -1,6 +1,6 @@
 System sprintdue
 
-Dispatch info : info(SOURCE,VAL, VAR)
+Dispatch info : info(SRC,VAL, VAR)
 
 Event startIncinerator: startIncinerator(X)
 
@@ -16,16 +16,15 @@ Context ctxservicearea ip [host="192.168.137.1" port=8022]
 Context ctxashstorage ip [host="localhost"  port=8021]								
 
 ExternalQActor wis context ctxservicearea
-ExternalQActor incinerator context ctxservicearea
 
-QActor monitoring_device context ctxashstorage withobj led using "LedFactory.create(\"\fisico\",\"localhost\",\"8021\")"{
+QActor monitoring_device context ctxashstorage withobj led using "LedFactory.create(\"fisico\",\"localhost\",\"8021\")"{
 	import "main.resources.LedFactory"
 	[#var statusInc = "off"
 	  var statusAsh = "empty"#]
 	// Scrivere POJO LED FISICO (con supporto a Raspberry)
 	State s0 initial{
-		printCurrentMessage color yellow
-		delay 150
+		printCurrentMessage color magenta
+		delay 1000
 		observeResource datacleaner msgid info    
 	}
 	Transition t0
@@ -34,9 +33,9 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		whenEvent endBurn -> handleEndBurn	
 		
 	State update{
-		printCurrentMessage color red
-		onMsg(info : info(SOURCE,VAL, VAR)){
-			[# val SOURCE = payloadArg(0)  #]
+		printCurrentMessage color magenta
+		onMsg(info : info(SRC,VAL, VAR)){
+			[# val SRC = payloadArg(0)  #]
 			[# val VAR = payloadArg(1)#]
 		    [# val VAL = payloadArg(2)#]
 		    
@@ -53,15 +52,18 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 						statusAsh= "half";
 					}
 					#]
-					emit sonarUpdate : sonarUpdate($VAR)
+					emit sonarUpdate : sonarUpdate($VAL)
 					[#
 		    #]
 		}
 	}		
 	Transition t1
 		whenMsg info -> update
-		
+		whenEvent startBurn -> handleStartBurn	
+		whenEvent endBurn -> handleEndBurn
+			
 	State handleStartBurn{
+		printCurrentMessage color magenta
 		[#
 			led.turnOn();
 			statusInc = "on"
@@ -72,6 +74,7 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		whenEvent endBurn -> handleEndBurn	
 		
 	State handleEndBurn{
+		printCurrentMessage color magenta
 		[#
 			led.turnOff();
 			statusInc = "off"
@@ -89,10 +92,11 @@ QActor sonardevice context ctxashstorage{
     var Distance = 0
 	#]	
 	State s0 initial{
-		println("$name | sonarstart") 
+		printCurrentMessage color magenta
+		println("$name | sonarstart") color yellow
 	 	[#
-			p       = Runtime.getRuntime().exec("python src/main/resources/sonarMock.py")
-			// p       = Runtime.getRuntime().exec("python3 src/main/resources/sonar.py")
+			p       = Runtime.getRuntime().exec("python ../../sonarMock.py")
+			// p       = Runtime.getRuntime().exec("python3 ../../sonar.py")
 			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
 
 		#]		
@@ -126,27 +130,28 @@ QActor sonardevice context ctxashstorage{
 QActor datacleaner context ctxashstorage {
 	[# var D = 0; #]
 	State s0 initial {
+		printCurrentMessage color magenta
 		delay 100
 		subscribeTo sonardevice for sonardata		
-		println("$name subscribed to sonardevice") color blue
+		println("$name subscribed to sonardevice") color yellow
 	}
 	Transition t0 whenEvent sonardata -> filter
 	
 	State filter {
-		 println("$name D=$D") color black	
+		 println("$name D=$D") color green	
 		onMsg(sonardata : distance(D)) {
 	      	[#  D = payloadArg(0).toInt() #]	      	
-	      	println("$name D=$D") color black	
+	      	println("$name D=$D") color green	
 	      	if [# D < 12 #] {
-	      		println("$name ash full ") color magenta	
+	      		println("$name ash full ") color yellow	
 	 			updateResource  [# "info($name,ashLevel,full)" #] 
 	     	}
 	     	if [# D > 90#] {
-	      		println("$name ash empty ") color magenta	
+	      		println("$name ash empty ") color yellow	
 	 			updateResource  [# "info($name,ashLevel,empty)" #] 
 	     	}
 	     	if [# D > 90 && D < 12 #] {
-	      		println("$name ash half") color magenta	
+	      		println("$name ash half") color yellow	
 	 			updateResource  [# "info($name,ashLevel,half)" #] 
 	     	}
      	}
@@ -171,23 +176,6 @@ QActor datacleaner context ctxashstorage {
 //}
 
 
-//QActor test_observer context ctxashstorage{
-//	State s0 initial{
-//		printCurrentMessage color yellow
-//		delay 500
-////		observeResource wis msgid info
-////		observeResource oprobot msgid info
-////		observeResource incinerator msgid info
-//	}
-//	Transition t0
-//		whenMsg info -> monitor
-//	
-//	State monitor{
-//		printCurrentMessage color red
-//	}
-//	Transition t1
-//		whenMsg info -> monitor
-//}
 
 
 

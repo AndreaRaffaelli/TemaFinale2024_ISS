@@ -23,17 +23,17 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		//
 				var Ws_status = 0;
-		        var As_status = "free";
+		        var As_status = "empty";
 		
 				var RobotFree = false;
 				var DLIMIT = 3;		// zero non corretto
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(1000) 
-						emit("startIncinerator", "startIncinerator(stop)" ) 
+						emit("startIncinerator", "startIncinerator(avvio)" ) 
 						observeResource("localhost","8022","ctxservicearea","oprobot","info")
 						//genTimer( actor, state )
 					}
@@ -44,7 +44,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				}	 
 				state("idle") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
 						)
@@ -60,7 +60,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				}	 
 				state("controllo") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(SRC,VAL,VAR)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
@@ -68,7 +68,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 								 val VAR = payloadArg(1) 
 								 val VAL = payloadArg(2) 
 								 var RobotState = ""    
-								CommUtils.outmagenta("$name views $SRC $VAR $VAL")
+								CommUtils.outyellow("$name views $SRC $VAR $VAL")
 								
 											if(SRC.equals("oprobot") && VAR.equals("RobotState")){
 												RobotState = VAL;
@@ -85,11 +85,11 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						            //chiedi Ws_status
 						            Ws_status = (0..5).random()            
 						    	}
-								println("($name) Ws_status: ($Ws_status) , As_status: ($As_status)")
+								println("($name) Ws_status: ($Ws_status) , As_status: ($As_status) , RobotFree: ($RobotFree)")
 						
 						        if(Ws_status>0 && !As_status.equals("full") && RobotFree === true){
-						CommUtils.outmagenta("($name) invio messaggio start")
-						CommUtils.outmagenta("($name) controllo: condizioni corrette e start")
+						CommUtils.outyellow("($name) invio messaggio start")
+						CommUtils.outyellow("($name) controllo: condizioni corrette e start")
 						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
 						
 						        	RobotFree=false;
@@ -108,7 +108,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 				}	 
 				state("sonarUpdate") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						if( checkMsgContent( Term.createTerm("sonarUpdate(QTY)"), Term.createTerm("sonarUpdate(QTY)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList

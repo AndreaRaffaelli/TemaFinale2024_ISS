@@ -29,5 +29,6 @@ with Diagram('ctx1Arch', show=False, outformat='png', graph_attr=graphattr) as d
           prova1=Custom('prova1','./qakicons/symActorSmall.png')
      with Cluster('ctx2', graph_attr=nodeattr):
           prova2=Custom('prova2(ext)','./qakicons/externalQActor.png')
-     prova2 >> Edge(color='blue', style='solid',  decorate='true', label='<info &nbsp; >',  fontcolor='blue') >> prova1
+     sys >> Edge( label='evento', **evattr, decorate='true', fontcolor='darkgreen') >> prova1
+     prova1 >> Edge(color='magenta', style='solid', decorate='true', label='<try &nbsp; >',  fontcolor='magenta') >> prova2
 diag

@@ -37,10 +37,10 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 		return { //this:ActionBasciFsm
 				state("initialize") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(1000) 
-						CommUtils.outmagenta("$name | $MyName engaging ... ")
+						CommUtils.outyellow("$name | $MyName engaging ... ")
 						request("engage", "engage($MyName,330)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
@@ -52,15 +52,15 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("home") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 MentalState="HOME" 
-						CommUtils.outmagenta("($name): $MentalState")
+						CommUtils.outyellow("($name): $MentalState")
 						updateResourceRep(  "info($name,MentalState,$MentalState)"  
 						)
 						if( checkMsgContent( Term.createTerm("engagedone(ARG)"), Term.createTerm("engagedone(X)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								CommUtils.outmagenta("($name): $RobotState")
+								CommUtils.outyellow("($name): $RobotState")
 								updateResourceRep(  "info($name,RobotState,$RobotState)"  
 								)
 						}
@@ -74,7 +74,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("goToWasteIn") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 RobotState="WORKING" 
 						updateResourceRep(  "info($name,RobotState,$RobotState)"  
@@ -90,7 +90,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("loadRP") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 MentalState="WASTEIN" 
 						updateResourceRep(  "info($name,MentalState,$MentalState)"  
@@ -106,7 +106,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("startBurn") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 MentalState="BURNIN" 
 						updateResourceRep(  "info($name,MentalState,$MentalState)"  
@@ -124,7 +124,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("home_go_burnOut") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						request("moverobot", "moverobot($Bo_x,$Bo_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
@@ -137,7 +137,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("gatheringAsh") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 MentalState="BURNOUT" 
 						updateResourceRep(  "info($name,MentalState,$MentalState)"  
@@ -154,7 +154,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("unload") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 MentalState="ASHOUT" 
 						 RobotState="IDLE" 
@@ -173,7 +173,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("end") { //this:State
 					action { //it:State
-						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						System.exit(-1) 
 						//genTimer( actor, state )

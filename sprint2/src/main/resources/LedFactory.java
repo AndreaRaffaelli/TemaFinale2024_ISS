@@ -25,11 +25,11 @@ public class LedFactory  { //extends ApplAbstractObserver {
             try {
 				return new LEDFisico();
 			} catch (IOException e) {
+				System.out.print("errore");
 				return new VirtualLED(address, port);  
 			}   
         } else {
             throw new IllegalArgumentException("Tipo sconosciuto: " + tipo);  
         }
     }
-
 }

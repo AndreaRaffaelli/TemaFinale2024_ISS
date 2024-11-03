@@ -5,12 +5,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import unibo.basicomm23.utils.CommUtils;
+
 public class LEDFisico implements ILED {
     private Process p;
-    private String ledOnPath = "src/main/resources/LedOn.py";
-    private String ledOffPath = "src/main/resources/LedOff.py";
-    private String ledBlinkPath = "src/main/resources/LedBlink.py";
-
+    private String ledOnPath = "../../LedOn.py";
+    private String ledOffPath = "../../LedOff.py";
+    private String ledBlinkPath = "../../LedBlink.py";
+	/*
+	 * private String ledBlinkPath = "src/main/resources/LedBlink.py";
+	 */
 
     public LEDFisico() throws IOException {
 
@@ -18,10 +22,6 @@ public class LEDFisico implements ILED {
         File file1 = new File(ledOnPath);
         File file2 = new File(ledOffPath);
         File file3 = new File(ledBlinkPath);
-        
-    	file1.exists();
-		file2.exists(); 
-		file3.exists();
  
 		if (!file1.exists() || !file2.exists() || !file3.exists()) {
 			throw new IOException();
@@ -34,7 +34,8 @@ public class LEDFisico implements ILED {
     		p.destroy();
     	}
     	try {
-			this.p = Runtime.getRuntime().exec("python3 src/main/resources/LedOn.py");
+			this.p = Runtime.getRuntime().exec("python3 ../../LedOn.py");
+			CommUtils.outcyan("LED | Acceso");
 		} catch (IOException e) {
 			return false;
 		}
@@ -47,7 +48,8 @@ public class LEDFisico implements ILED {
     		p.destroy();
     	}
     	try {
-			this.p = Runtime.getRuntime().exec("python3 src/main/resources/LedOff.py");
+			this.p = Runtime.getRuntime().exec("python3 ../../LedOff.py");
+			CommUtils.outcyan("LED | Spento");
 		} catch (IOException e) {
 			return false;
 		}
@@ -61,7 +63,8 @@ public class LEDFisico implements ILED {
     		p.destroy();
     	}
     	try {
-			this.p = Runtime.getRuntime().exec("python3 src/main/resources/LedBlink.py");
+			this.p = Runtime.getRuntime().exec("python3 ../../LedBlink.py");
+			CommUtils.outcyan("LED | Blink");
 		} catch (IOException e) {
 			return false;
 		}
