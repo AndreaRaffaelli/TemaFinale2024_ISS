@@ -2,11 +2,11 @@
 % sprintdue description   
 %====================================================================================
 dispatch( info, info(SRC,VAL,VAR) ).
+dispatch( sonarUpdate, sonarUpdate(QTY) ).
 event( startIncinerator, startIncinerator(X) ).
 request( testStart, testStart(X) ).
 request( testRequest, testRequest(X) ).
 event( sonardata, distance(D) ).
-event( sonarUpdate, sonarUpdate(QTY) ).
 event( startBurn, startBurn(X) ).
 event( endBurn, endBurn(X) ).
 %====================================================================================

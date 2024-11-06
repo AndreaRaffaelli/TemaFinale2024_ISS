@@ -2,6 +2,7 @@ System sprintuno
  
  
 Dispatch robotStart: robotStart(X)
+Dispatch sonarUpdate: sonarUpdate(QTY)   
 
 Dispatch robotUpdate: robotUpdate(X)
 Dispatch info : info(X, Y, Z)
@@ -11,7 +12,6 @@ Reply   engagerefused : engagerefused(ARG)
 Request  doplan   : doplan( PATH, STEPTIME )
 Reply doplandone  : doplandone( ARG )
 Reply doplanfailed  : doplanfailed( ARG )
-Event sonarUpdate : sonarUpdate(QTY)
 Event startIncinerator: startIncinerator(X)
 Event startBurn : startBurn(X)
 Event endBurn : endBurn( ARG )
@@ -32,102 +32,94 @@ Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
 
 ExternalQActor basicrobot context ctxbasicrobot
 
-QActor wis context ctxservicearea{ 
+QActor wis context ctxservicearea { 
 	[#//
 		var Ws_status = 0;
-        var As_status = "empty";
-
+		var As_status = "empty";
 		var RobotFree = false;
-		var DLIMIT = 3;		// zero non corretto
+		var DLIMIT = 3; // zero non corretto
 	#]
 
-	State s0 initial{
+	// Stato iniziale: avvio e setup dell'osservazione
+	State s0 initial {
 		printCurrentMessage color magenta
 		delay 1000
 		emit startIncinerator : startIncinerator(avvio)
 		observeResource oprobot msgid info
-		//updateResource [# "info($name,RobotFree,$RobotFree)" #]			Update di test per l'observer_tests
-	}
-	Goto idle
-	
-	State idle {
-		printCurrentMessage color magenta
 		updateResource [# "info($name,RobotFree,$RobotFree)" #]
 		updateResource [# "info($name,Ws_status,$Ws_status)" #]
 	}
-	Transition t0			
-		whenMsg info -> controllo		
-		whenEvent sonarUpdate -> sonarUpdate
-		//whenEvent endBurn -> endBurnHandler		// inc segnala fine combustione (inutile)
-	
+	Goto controllo
+
+	// Stato di controllo: gestione della logica basata sui messaggi ricevuti
 	State controllo {
-       	printCurrentMessage color magenta
-		onMsg( info :  info(SRC,VAL, VAR) ){
-			[# val SRC = payloadArg(0)  #]
-			[# val VAR = payloadArg(1)#]
-		    [# val VAL = payloadArg(2)#]
-			[# var RobotState = ""   #]
+		printCurrentMessage color magenta
+		
+		onMsg( info : info(SRC, VAL, VAR) ) {
+			[# 
+			val SRC = payloadArg(0)
+			val VAR = payloadArg(1)
+			val VAL = payloadArg(2)
+			#]
 			println("$name views $SRC $VAR $VAL") color yellow
-			[#
-			if(SRC.equals("oprobot") && VAR.equals("RobotState")){
-				RobotState = VAL;
-				if(RobotState.equals("IDLE")){
-					RobotFree = true;
-				}
-				else{
-					RobotFree = false;
-				}
+
+			// Aggiorna lo stato del robot in base al messaggio ricevuto
+			[# 
+			if (SRC.equals("oprobot") && VAR.equals("RobotState")) {
+				RobotFree = VAL.equals("IDLE");
 			}
 			#]
-		}
-	
-		[#
-        if( RobotFree === true){
-            //chiedi Ws_status
-            Ws_status = (0..5).random()            
-    	}
-		println("($name) Ws_status: ($Ws_status) , As_status: ($As_status) , RobotFree: ($RobotFree)")
-
-        if(Ws_status>0 && !As_status.equals("full") && RobotFree === true){
-        #]
-        	println("($name) invio messaggio start") color yellow
-        	println("($name) controllo: condizioni corrette e start") color yellow
-        	forward oprobot -m robotStart : robotStart( parti )
-        	[#
-        	RobotFree=false;
-        	#]
 			updateResource [# "info($name,RobotFree,$RobotFree)" #]
-            updateResource [# "info($name,Ws_status,$Ws_status)" #]
-        [#
-        }
-        #]
-        
-        
-	}   
-    Transition t0			
+		}
+
+		// Controllo delle condizioni per l'avvio del robot
+		[# 
+		if (RobotFree) {
+			Ws_status = 1;
+		}
+		#]
+		println("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
+		[#
+		// Se tutte le condizioni sono soddisfatte, avvia il robot
+		if (Ws_status > 0 && !As_status.equals("full") && RobotFree) {
+			#]
+			println("($name) invio messaggio start") color yellow
+			println("($name) controllo: condizioni corrette e start") color yellow
+			forward oprobot -m robotStart : robotStart(parti)
+			[#
+			RobotFree = false;
+			#]
+			updateResource [# "info($name,RobotFree,$RobotFree)" #]
+			updateResource [# "info($name,Ws_status,$Ws_status)" #]
+			[#
+		}
+		#]
+	}
+	Transition t0
+		whenTime 5000 -> controllo
+		whenMsg sonarUpdate -> sonarUpdate
 		whenMsg info -> controllo
-	
-	State sonarUpdate{
+		
+		
+
+	// Stato di aggiornamento tramite sonar
+	State sonarUpdate {
 		printCurrentMessage color magenta
-		onMsg( sonarUpdate : sonarUpdate(QTY)){
-			[# As_status = payloadArg(0)#]
+		onMsg( sonarUpdate : sonarUpdate(QTY) ) {
+			[# 
+			As_status = payloadArg(0)
+			#]
 			updateResource [# "info($name,As_status,$As_status)" #]
 		}
+		println("($name) sonarUpdate: ricevuto: $As_status") color yellow
 	}
-	Goto controllo if [# RobotFree === true#] else polling
-    
-    State polling{}
-    Transition t1 
-        whenTime 2000 -> controllo
-        
-        //whenEvent endBurn -> endBurnHandler		// inc segnala fine combustione (inutile)
-	
-	//State endBurnHandler{
-	//	println("($name): ricevuto segnale di fine combustione dall'inc") color blue 
-	//}
-	//Goto idle
-
+	Goto controllo
 }
+
+
+
+
+
 
 //
 QActor oprobot context ctxservicearea{   

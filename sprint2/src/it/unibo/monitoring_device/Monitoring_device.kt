@@ -24,7 +24,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		 val led = LedFactory.create("fisico","localhost","8021")
 		var statusInc = "off"
-			  var statusAsh = "empty" 
+			  var StatusAsh = "empty" 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -52,17 +52,18 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 								 val VAL = payloadArg(2) 
 								
 													if(VAR.equals("ashLevel")&&VAL.equals("full")){
-														statusAsh = "full"
+														StatusAsh = "full"
 														led.turnBlink();
 													}
 													if(VAR.equals("ashLevel")&&VAL.equals("empty")){
-														statusAsh = "empty"	
+														StatusAsh = "empty"	
 														led.turnBlink();
 													}
 													if(VAR.equals("ashLevel")&&VAL.equals("half")){
-														statusAsh= "half";
+														StatusAsh= "half";
 													}
-								emit("sonarUpdate", "sonarUpdate($VAL)" ) 
+								forward("sonarUpdate", "sonarUpdate($StatusAsh)" ,"wis" ) 
+								CommUtils.outgreen("Emesso valore: $StatusAsh")
 								
 						}
 						//genTimer( actor, state )

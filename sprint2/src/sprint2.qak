@@ -1,6 +1,7 @@
 System sprintdue
 
 Dispatch info : info(SRC,VAL, VAR)
+Dispatch sonarUpdate: sonarUpdate(QTY)   
 
 Event startIncinerator: startIncinerator(X)
 
@@ -8,7 +9,6 @@ Request testStart : testStart(X)
 Request testRequest : testRequest(X)
 Reply testReply : testReply(X ,Y)
 Event sonardata : distance(D)   // Valori grezzi letti dal sonar 
-Event sonarUpdate: sonarUpdate(QTY)   // Valori grezzi letti dal sonar 
 Event startBurn : startBurn(X)
 Event endBurn : endBurn(X)
 
@@ -20,7 +20,7 @@ ExternalQActor wis context ctxservicearea
 QActor monitoring_device context ctxashstorage withobj led using "LedFactory.create(\"fisico\",\"localhost\",\"8021\")"{
 	import "main.resources.LedFactory"
 	[#var statusInc = "off"
-	  var statusAsh = "empty"#]
+	  var StatusAsh = "empty"#]
 	// Scrivere POJO LED FISICO (con supporto a Raspberry)
 	State s0 initial{
 		printCurrentMessage color magenta
@@ -41,18 +41,19 @@ QActor monitoring_device context ctxashstorage withobj led using "LedFactory.cre
 		    
 		    [#
 					if(VAR.equals("ashLevel")&&VAL.equals("full")){
-						statusAsh = "full"
+						StatusAsh = "full"
 						led.turnBlink();
 					}
 					if(VAR.equals("ashLevel")&&VAL.equals("empty")){
-						statusAsh = "empty"	
+						StatusAsh = "empty"	
 						led.turnBlink();
 					}
 					if(VAR.equals("ashLevel")&&VAL.equals("half")){
-						statusAsh= "half";
+						StatusAsh= "half";
 					}
 					#]
-					emit sonarUpdate : sonarUpdate($VAL)
+					forward wis -m sonarUpdate : sonarUpdate($StatusAsh)
+					println("Emesso valore: $StatusAsh") color green
 					[#
 		    #]
 		}
@@ -138,7 +139,6 @@ QActor datacleaner context ctxashstorage {
 	Transition t0 whenEvent sonardata -> filter
 	
 	State filter {
-		 println("$name D=$D") color green	
 		onMsg(sonardata : distance(D)) {
 	      	[#  D = payloadArg(0).toInt() #]	      	
 	      	println("$name D=$D") color green	
@@ -150,7 +150,7 @@ QActor datacleaner context ctxashstorage {
 	      		println("$name ash empty ") color yellow	
 	 			updateResource  [# "info($name,ashLevel,empty)" #] 
 	     	}
-	     	if [# D > 90 && D < 12 #] {
+	     	if [# D < 90 && D > 12 #] {
 	      		println("$name ash half") color yellow	
 	 			updateResource  [# "info($name,ashLevel,half)" #] 
 	     	}

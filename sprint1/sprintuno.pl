@@ -2,11 +2,11 @@
 % sprintuno description   
 %====================================================================================
 dispatch( robotStart, robotStart(X) ).
+dispatch( sonarUpdate, sonarUpdate(QTY) ).
 dispatch( robotUpdate, robotUpdate(X) ).
 dispatch( info, info(X,Y,Z) ).
 request( engage, engage(CALLER) ).
 request( doplan, doplan(PATH,STEPTIME) ).
-event( sonarUpdate, sonarUpdate(QTY) ).
 event( startIncinerator, startIncinerator(X) ).
 event( startBurn, startBurn(X) ).
 event( endBurn, endBurn(ARG) ).

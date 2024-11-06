@@ -32,7 +32,6 @@ with Diagram('sprintunoArch', show=False, outformat='png', graph_attr=graphattr)
      with Cluster('ctxbasicrobot', graph_attr=nodeattr):
           basicrobot=Custom('basicrobot(ext)','./qakicons/externalQActor.png')
      wis >> Edge( label='startIncinerator', **eventedgeattr, decorate='true', fontcolor='red') >> sys
-     sys >> Edge( label='sonarUpdate', **evattr, decorate='true', fontcolor='darkgreen') >> wis
      sys >> Edge( label='endBurn', **evattr, decorate='true', fontcolor='darkgreen') >> oprobot
      oprobot >> Edge( label='startBurn', **eventedgeattr, decorate='true', fontcolor='red') >> sys
      sys >> Edge( label='startIncinerator', **evattr, decorate='true', fontcolor='darkgreen') >> incinerator
