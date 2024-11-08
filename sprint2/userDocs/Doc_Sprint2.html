@@ -430,7 +430,9 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
         Il test simula che l'AshStorage sia pieno inoltrando al Wis un messaggio in cui venga superato il valore soglia di polvere. <br>
 		<ul>
 			<li>Verifichiamo che l'OpRobot non inizi un ciclo di lavoro.<br>
-				&#x2705; Il test e' superato se il <code style="padding: 0%;">test_observer</code> ha osservato un messaggio <code style="padding: 0%;">info(Wis,As_Status,full)</code>, asserendo a Vera una varibile di test <code style="padding: 0%;">ASH_FULL</code>. Questa condizione implica che l'OpRobot non venga avviato, come gia' testato in nello  <a href="../../sprint1/userDocs/Doc_Sprint1.html#test">sprint1</a>.</br>
+				&#x2705; Il test e' superato se il <code style="padding: 0%;">test_observer</code> ha osservato un messaggio <code style="padding: 0%;">info(Wis,As_Status,full)</code>, 
+				 terminando l'esecuzione con l'exit code "30". Questa condizione implica che l'OpRobot non venga avviato, come gia' testato in nello  
+				 <a href="../../sprint1/userDocs/Doc_Sprint1.html#test">sprint1</a>.</br>
 			</li>
 		</ul>
 		<a href="../src/main/java/test/TestLed.java">Test JUnit Funzionale</a>	

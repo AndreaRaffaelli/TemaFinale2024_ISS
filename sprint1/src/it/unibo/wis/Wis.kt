@@ -69,6 +69,10 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 								}
 						CommUtils.outblack("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
 						
+								if(As_status.equals("full")){
+									
+								}
+								
 								// Se tutte le condizioni sono soddisfatte, avvia il robot
 								if (Ws_status > 0 && !As_status.equals("full") && RobotFree) {
 						CommUtils.outyellow("($name) invio messaggio start")
