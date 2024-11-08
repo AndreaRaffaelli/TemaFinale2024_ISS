@@ -21,100 +21,43 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		//
-				var Ws_status = 0;
-				var As_status = "empty";
-				var RobotFree = false;
-				var DLIMIT = 3; // zero non corretto
+		 val d = utils.Sonar.create()
+		
+				val e = utils.Scale.create()
+				var ws_status = 0;
+				var as_status = 0;
+				var inc_status= false;
+				var robotWait = true;
+				val DLIMIT = 3; //ipotetico
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						delay(1000) 
-						emit("startIncinerator", "startIncinerator(avvio)" ) 
-						observeResource("localhost","8022","ctxservicearea","oprobot","info")
-						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
-						)
-						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
-						)
+						delay(500) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="controllo", cond=doswitch() )
+					 transition( edgeName="goto",targetState="idle", cond=doswitch() )
 				}	 
-				state("controllo") { //this:State
+				state("idle") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(SRC,VAL,VAR)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								 
-											val SRC = payloadArg(0)
-											val VAR = payloadArg(1)
-											val VAL = payloadArg(2)
-								CommUtils.outyellow("$name views $SRC $VAR $VAL")
-								 
-											if (SRC.equals("oprobot") && VAR.equals("RobotState")) {
-												RobotFree = VAL.equals("IDLE");
-											}
-								updateResourceRep( "info($name,RobotFree,$RobotFree)"  
-								)
-						}
-						 
-								if (RobotFree) {
-									Ws_status = 1;
-								}
-						CommUtils.outblack("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
-						
-								if(As_status.equals("full")){
-									
-								}
-								
-								// Se tutte le condizioni sono soddisfatte, avvia il robot
-								if (Ws_status > 0 && !As_status.equals("full") && RobotFree) {
-						CommUtils.outyellow("($name) invio messaggio start")
-						CommUtils.outyellow("($name) controllo: condizioni corrette e start")
-						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
-						
-									RobotFree = false;
-						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
-						)
-						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
-						)
-						
-								}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
-				 	 		stateTimer = TimerActor("timer_controllo", 
-				 	 					  scope, context!!, "local_tout_"+name+"_controllo", 5000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t00",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_controllo"))   
-					transition(edgeName="t01",targetState="sonarUpdate",cond=whenDispatch("sonarUpdate"))
-					transition(edgeName="t02",targetState="controllo",cond=whenDispatch("info"))
+					 transition(edgeName="t00",targetState="stopInc",cond=whenEvent("burnEnd"))
 				}	 
-				state("sonarUpdate") { //this:State
+				state("stopInc") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						if( checkMsgContent( Term.createTerm("sonarUpdate(QTY)"), Term.createTerm("sonarUpdate(QTY)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								 
-											As_status = payloadArg(0)
-								updateResourceRep( "info($name,As_status,$As_status)"  
-								)
-						}
-						CommUtils.outyellow("($name) sonarUpdate: ricevuto: $As_status")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="controllo", cond=doswitch() )
 				}	 
 			}
 		}

@@ -36,7 +36,6 @@ public class Sprint12Test {
     private static Process p;
     private static ProcessBuilder prodBr;
 
-    @BeforeClass
     public static void activateSystemUsingDeploy() {
         Thread th = new Thread(() -> {
             Process br = null;
@@ -44,28 +43,42 @@ public class Sprint12Test {
             String processPath = "";
             try {
                 String osName = System.getProperty("os.name");
-                                
-                docker = Runtime.getRuntime().exec("docker run -d -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0");                                 
+                
+                // Avvia il container Docker
+                docker = Runtime.getRuntime().exec("docker run -d -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0");
+                
+                // Determina il percorso del processo in base al sistema operativo
                 if (osName.startsWith("Linux")) {
                     cleanOldDeployment();
                     processPath = "./build/distributions/testfunzionale-1.0/bin/testfunzionale";
                 } else if (osName.startsWith("Windows")) {
+                    cleanOldDeployment(); // Assicurati di pulire anche su Windows
                     processPath = "./build/distributions/testfunzionale-1.0/bin/testfunzionale.bat";
                 } else {
                     CommUtils.outred("Unsupported operating system: " + osName);
                     return;
                 }
-                extractTarball();                
+    
+                // Estrai il tarball
+                extractTarball();
+                
+                // Configura e avvia il processo del robot
                 prodBr = new ProcessBuilder();
                 prodBr.directory(new java.io.File("../basicrobot24-1.0/bin"));
                 
-                prodBr.command("./basicrobot24.bat");
-
-                br = prodBr.start();  
+                if (osName.startsWith("Windows")) {
+                    prodBr.command("cmd.exe", "/c", "basicrobot24.bat"); // Usa cmd.exe per Windows
+                } else {
+                    prodBr.command("./basicrobot24"); // Comando per Linux
+                }
+    
+                br = prodBr.start();
                 showOutput(br, ColorsOut.GREEN);
-
+    
                 pidBr = Long.toString(br.pid());
-                Thread.sleep(2000);
+                Thread.sleep(2000); // Attendi un attimo per garantire che il processo si avvii
+    
+                // Avvia il processo principale
                 p = startProcess(processPath);
                 pidContext = Long.toString(p.pid());
                 
@@ -76,6 +89,7 @@ public class Sprint12Test {
             } catch (Exception e) {
                 CommUtils.outred("Error during deployment: " + e.getMessage());
             } finally {
+                // Pulisci i processi avviati
                 if (p != null) {
                     p.destroy();
                 }
@@ -89,19 +103,20 @@ public class Sprint12Test {
         });
         th.start();
     }
+    
 
     @Test
     public void test() {
         try {
-            CommUtils.outmagenta("test_funzionale_Sprint1.2 ======================================= ");
+//            CommUtils.outmagenta("test_funzionale_Sprint1.2 ======================================= ");
             
             boolean result= p.waitFor(MAX_T,TimeUnit.SECONDS);
             
             assertTrue(result); // True se terminato prima dello scadere di MAX_T
             assertEquals(p.exitValue(),30);
         } catch (Exception e) {
-            CommUtils.outred("test_observer ERROR " + e.getMessage());
-            fail("testRequest " + e.getMessage());
+//            CommUtils.outred("test_observer ERROR " + e.getMessage());
+            fail("Test Ssytem Exit " + e.getMessage());
         }
     }
 

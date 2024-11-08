@@ -22,55 +22,26 @@ class Incinerator ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		
-		        val BTIME = 3000L;
-		        var start = "off";
-		        var active = "off";
+					val BTIME = 3000L;
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						delay(1000) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t019",targetState="start",cond=whenEvent("startIncinerator"))
 				}	 
 				state("start") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						CommUtils.outyellow("($name): Avvio inceneritore")
-						 active ="on";  
-						updateResourceRep( "info($name,active,$active)"  
-						)
+						emit("burnEnd", "burnEnd(stop)" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t120",targetState="handleStartBurn",cond=whenEvent("startBurn"))
-				}	 
-				state("handleStartBurn") { //this:State
-					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						 start ="on";  
-						CommUtils.outyellow("($name): Inizio bruciatura")
-						delay(7000) 
-						CommUtils.outyellow("($name): Fine bruciatura")
-						 start ="off";  
-						updateResourceRep( "info($name,start,$start)"  
-						)
-						emit("endBurn", "endBurn(0)" ) 
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t221",targetState="handleStartBurn",cond=whenEvent("startBurn"))
 				}	 
 			}
 		}
