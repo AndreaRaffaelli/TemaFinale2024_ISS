@@ -22,7 +22,7 @@ class Monitoring_device ( name: String, scope: CoroutineScope, isconfined: Boole
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val led = LedFactory.create("fisico","localhost","8021")
+		 val led = LedFactory.create("virtuale","localhost","8021")
 		var statusInc = "off"
 			  var StatusAsh = "empty" 
 		return { //this:ActionBasciFsm

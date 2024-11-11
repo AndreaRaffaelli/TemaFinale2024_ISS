@@ -32,7 +32,8 @@ class Sonardevice ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						 	   
 						CommUtils.outyellow("$name | sonarstart")
 						
-							 		p       = Runtime.getRuntime().exec("python ../../sonarMockTest.py")
+									p       = Runtime.getRuntime().exec("python3 ./sonarMockTest.py")
+									// p       = Runtime.getRuntime().exec("python ../../sonarMockTest.py")
 									// p       = Runtime.getRuntime().exec("python ../../sonarMock.py")
 									// p       = Runtime.getRuntime().exec("python3 ../../sonar.py")
 									reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	

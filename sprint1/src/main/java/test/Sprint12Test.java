@@ -13,8 +13,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import it.unibo.kactor.sysUtil;
-import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.msg.ProtocolType;
 import unibo.basicomm23.utils.ColorsOut;
@@ -23,141 +21,160 @@ import unibo.basicomm23.utils.ConnectionFactory;
 
 public class Sprint12Test {
     private static Interaction connSupport;
+    
+    // Paths and settings
+    private static final String TAR_DIR = "build/distributions/sprintuno_due-1.0.tar";
+    private static final String DIST_DIR = "build/distributions/sprintuno_due-1.0";
+    private static final String ADDRESS = "localhost";
+    private static final String PORT = "8022";
+    private static final ProtocolType PROTOCOL = ProtocolType.tcp;
+    private static final String DOCKER_IMAGE = "docker.io/natbodocker/virtualrobotdisi23:1.0";
+    private static final int MAX_TIMEOUT_SEC = 30;
 
-    private static final String ADDRESS = "localhost"; // Indirizzo dell'host
-    private static final String PORT = "6969"; // Porta (modificare secondo necessità)
-    private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
-    private static final String DOCKER_NAME = "container_docker";
-    private static final int MAX_T = 15;
     private static String pidContext = "";
-    private static String pidDocker = "";
     private static String pidBr = "";
-    private static Process docker = null;
-    private static Process p;
-    private static ProcessBuilder prodBr;
+    private static String pidSP2 = "";
+    private static Process mainProcess;
+    private static Process dockerProcess;
 
+    @BeforeClass
     public static void activateSystemUsingDeploy() {
-        Thread th = new Thread(() -> {
-            Process br = null;
-            Process p = null;
-            String processPath = "";
-            try {
-                String osName = System.getProperty("os.name");
-                
-                // Avvia il container Docker
-                docker = Runtime.getRuntime().exec("docker run -d -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0");
-                
-                // Determina il percorso del processo in base al sistema operativo
-                if (osName.startsWith("Linux")) {
-                    cleanOldDeployment();
-                    processPath = "./build/distributions/testfunzionale-1.0/bin/testfunzionale";
-                } else if (osName.startsWith("Windows")) {
-                    cleanOldDeployment(); // Assicurati di pulire anche su Windows
-                    processPath = "./build/distributions/testfunzionale-1.0/bin/testfunzionale.bat";
-                } else {
-                    CommUtils.outred("Unsupported operating system: " + osName);
-                    return;
-                }
-    
-                // Estrai il tarball
-                extractTarball();
-                
-                // Configura e avvia il processo del robot
-                prodBr = new ProcessBuilder();
-                prodBr.directory(new java.io.File("../basicrobot24-1.0/bin"));
-                
-                if (osName.startsWith("Windows")) {
-                    prodBr.command("cmd.exe", "/c", "basicrobot24.bat"); // Usa cmd.exe per Windows
-                } else {
-                    prodBr.command("./basicrobot24"); // Comando per Linux
-                }
-    
-                br = prodBr.start();
-                showOutput(br, ColorsOut.GREEN);
-    
-                pidBr = Long.toString(br.pid());
-                Thread.sleep(2000); // Attendi un attimo per garantire che il processo si avvii
-    
-                // Avvia il processo principale
-                p = startProcess(processPath);
-                pidContext = Long.toString(p.pid());
-                
-                showOutput(p, ColorsOut.BLACK);
-                int exitCode = p.waitFor();
-                CommUtils.outmagenta("Process exited with code: " + exitCode);
-                
-            } catch (Exception e) {
-                CommUtils.outred("Error during deployment: " + e.getMessage());
-            } finally {
-                // Pulisci i processi avviati
-                if (p != null) {
-                    p.destroy();
-                }
-                if (br != null) {
-                    br.destroy();
-                }
-                if (docker != null) {
-                    docker.destroy();
-                }
-            }
-        });
-        th.start();
+        new Thread(Sprint12Test::deploySystem).start();
     }
-    
+
+    private static void deploySystem() {
+        try {
+            startDockerContainer();
+            extractTarball();
+            startProcessComponents();
+        } catch (Exception e) {
+            CommUtils.outred("Error during deployment: " + e.getMessage());
+            cleanup();
+        }
+    }
+
+    private static void startDockerContainer() throws IOException {
+        dockerProcess = Runtime.getRuntime().exec(
+            "docker run -d -p 8090:8090 -p 8091:8091 --rm " + DOCKER_IMAGE
+        );
+        CommUtils.outcyan("Docker container started with image: " + DOCKER_IMAGE);
+
+        // Open the default browser to localhost:8090
+        String osName = System.getProperty("os.name").toLowerCase();
+        ProcessBuilder browserProcess;
+
+        if (osName.contains("win")) {
+            browserProcess = new ProcessBuilder("rundll32", "url.dll,FileProtocolHandler", "http://localhost:8090");
+        } else if (osName.contains("mac")) {
+            browserProcess = new ProcessBuilder("open", "http://localhost:8090");
+        } else if (osName.contains("nix") || osName.contains("nux")) {
+            browserProcess = new ProcessBuilder("xdg-open", "http://localhost:8090");
+        } else {
+            throw new UnsupportedOperationException("Unsupported operating system for opening a browser.");
+        }
+
+        browserProcess.start();
+        CommUtils.outcyan("Opened localhost:8090 in the default browser.");
+    }
+
+
+    private static void extractTarball() throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder("tar", "-xvf", TAR_DIR, "-C", "build/distributions/");
+        Process tarProcess = pb.start();
+        tarProcess.waitFor();
+        tarProcess.destroy();
+        CommUtils.outcyan("Tarball extracted to: " + DIST_DIR);
+    }
+
+    private static void startProcessComponents() throws IOException, InterruptedException {
+        String osName = System.getProperty("os.name");
+        String mainScript = osName.startsWith("Windows") ? "sprintuno_due.bat" : "./sprintuno_due";
+        
+        ProcessBuilder pb = new ProcessBuilder(mainScript);
+        pb.directory(new java.io.File(DIST_DIR + "/bin"));
+        mainProcess = pb.start();
+        pidContext = Long.toString(mainProcess.pid());
+        
+        CommUtils.outcyan("Started main process with PID: " + pidContext);
+        showOutput(mainProcess, ColorsOut.BLACK);
+
+        String robotScript = osName.startsWith("Windows") ? "basicrobot24.bat" : "./basicrobot24";
+        ProcessBuilder robotPB = new ProcessBuilder(robotScript);
+        robotPB.directory(new java.io.File("../basicrobot24-1.0/bin"));
+        Process robotProcess = robotPB.start();
+        pidBr = Long.toString(robotProcess.pid());
+        
+        CommUtils.outcyan("Started basicrobot process with PID: " + pidBr);
+//        showOutput(robotProcess, ColorsOut.BLACK);
+
+        String sprintScript = osName.startsWith("Windows") ? "sprintdue.bat" : "./sprintdue";
+        ProcessBuilder sprintPB = new ProcessBuilder(sprintScript);
+        sprintPB.directory(new java.io.File("../sprintdue-1.0/bin"));
+        Process sprintProcess = sprintPB.start();
+        pidSP2 = Long.toString(sprintProcess.pid());
+        
+        CommUtils.outcyan("Started sprintdue process with PID: " + pidSP2);
+        showOutput(sprintProcess, ColorsOut.GREEN);
+    }
 
     @Test
-    public void test() {
+    public void testSystemFunctionality() {
         try {
-//            CommUtils.outmagenta("test_funzionale_Sprint1.2 ======================================= ");
-            
-            boolean result= p.waitFor(MAX_T,TimeUnit.SECONDS);
-            
-            assertTrue(result); // True se terminato prima dello scadere di MAX_T
-            assertEquals(p.exitValue(),30);
+            while (connSupport == null) {
+                connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
+                CommUtils.outcyan("Attempting to connect...");
+                Thread.sleep(1000);
+            }
+            assertTrue("Main process did not finish in time", mainProcess.waitFor(MAX_TIMEOUT_SEC, TimeUnit.SECONDS));
+            assertEquals("Unexpected exit value", 30, mainProcess.exitValue());
         } catch (Exception e) {
-//            CommUtils.outred("test_observer ERROR " + e.getMessage());
-            fail("Test Ssytem Exit " + e.getMessage());
+            CommUtils.outred("Test error: " + e.getMessage());
+            fail("Test failed with exception: " + e.getMessage());
         }
     }
 
     @AfterClass
-    public static void terminateSystemUsingDeploy() throws IOException {
+    public static void terminateSystemUsingDeploy() {
+        try {
+            terminateProcesses();
+            stopDockerContainer();
+        } catch (Exception e) {
+            CommUtils.outred("Error during termination: " + e.getMessage());
+        }
+    }
+
+    private static void terminateProcesses() throws IOException, InterruptedException {
         String osName = System.getProperty("os.name");
-        ProcessBuilder pbContext, pbBr;
 
         if (osName.startsWith("Linux")) {
-            pbContext = new ProcessBuilder("kill", "-15", pidContext);
-            pbBr = new ProcessBuilder("kill", "-15", pidBr);
+            runCommand("kill", "-15", pidContext, pidBr, pidSP2);
         } else if (osName.startsWith("Windows")) {
-            pbContext = new ProcessBuilder("taskkill", "/F", "/PID", pidContext);
-            pbBr = new ProcessBuilder("taskkill", "/F", "/PID", pidBr);
+            runCommand("taskkill", "/F", "/PID", pidContext, pidBr);
         } else {
             CommUtils.outred("Unsupported operating system: " + osName);
-            return;
         }
+    }
 
-        try {
-            
-        	pbContext.start().waitFor();
-            pbBr.start().waitFor();
-         // Recupera l'ID del container avviato
-            Process getDockerIdProcess= startProcess("docker ps -q --filter ancestor=docker.io/natbodocker/virtualrobotdisi23:1.0");
-            BufferedReader reader=new BufferedReader(new InputStreamReader(getDockerIdProcess.getInputStream()));
-            pidDocker = reader.readLine();  // Legge l'ID del container
-
-            CommUtils.outmagenta("Docker container ID: " + pidDocker);
-            
-            startProcess("docker stop " + DOCKER_NAME).waitFor();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            CommUtils.outred("Context stopped");
+    private static void stopDockerContainer() throws IOException, InterruptedException {
+        if (dockerProcess != null) {
+            dockerProcess.destroy();
+            dockerProcess.waitFor();
+            dockerProcess = null;
+            CommUtils.outcyan("Docker container stopped");
         }
+    }
+
+    private static void runCommand(String... command) throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder(command);
+        Process process = pb.start();
+        process.waitFor();
+        process.destroy();
     }
 
     private static void showOutput(Process proc, String color) {
         new Thread(() -> {
             try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()))) {
-                ColorsOut.outappl("Here is the standard output of the command:\n", color);
+                ColorsOut.outappl("Process output:\n" + proc.info(), color);
                 String s;
                 while ((s = stdInput.readLine()) != null) {
                     ColorsOut.outappl(s, color);
@@ -168,35 +185,8 @@ public class Sprint12Test {
         }).start();
     }
 
-    private static void cleanOldDeployment() throws IOException {
-        ProcessBuilder pb = new ProcessBuilder("rm", "-rf", "build/distributions/testfunzionale-1.0");
-        Process p = pb.start();
-        try {
-            p.waitFor();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            CommUtils.outred("Cleanup interrupted");
-        } finally {
-            p.destroy();
-        }
-    }
-
-    private static void extractTarball() throws IOException {
-        ProcessBuilder pb = new ProcessBuilder("tar", "-xvf", "build/distributions/testfunzionale-1.0.tar", "-C", "build/distributions/");
-        Process p = pb.start();
-        try {
-            p.waitFor();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            CommUtils.outred("Extraction interrupted");
-        } finally {
-            p.destroy();
-        }
-    }
-
-    private static Process startProcess(String command) throws IOException {
-        ProcessBuilder pb = new ProcessBuilder(command.split(" "));
-        pb.redirectErrorStream(true); // Redirects error stream to output stream
-        return pb.start();
+    private static void cleanup() {
+        if (mainProcess != null) mainProcess.destroy();
+        if (dockerProcess != null) dockerProcess.destroy();
     }
 }
