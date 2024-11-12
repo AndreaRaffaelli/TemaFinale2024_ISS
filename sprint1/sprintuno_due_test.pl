@@ -1,5 +1,5 @@
 %====================================================================================
-% sprintuno description   
+% sprintuno_due_test description   
 %====================================================================================
 dispatch( robotStart, robotStart(X) ).
 dispatch( sonarUpdate, sonarUpdate(QTY) ).
@@ -17,7 +17,7 @@ request( testStart, testStart(X) ).
 request( testRequest, testRequest(X) ).
 %====================================================================================
 context(ctxservicearea, "localhost",  "TCP", "8022").
-context(ctxashstorage, "192.168.137.129",  "TCP", "8021").
+context(ctxashstorage, "127.0.0.1",  "TCP", "8021").
 context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
  qactor( basicrobot, ctxbasicrobot, "external").
   qactor( wis, ctxservicearea, "it.unibo.wis.Wis").
@@ -26,3 +26,5 @@ context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
  static(oprobot).
   qactor( incinerator, ctxservicearea, "it.unibo.incinerator.Incinerator").
  static(incinerator).
+  qactor( test_observer, ctxservicearea, "it.unibo.test_observer.Test_observer").
+ static(test_observer).

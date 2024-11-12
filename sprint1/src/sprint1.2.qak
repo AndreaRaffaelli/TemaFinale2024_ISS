@@ -1,6 +1,5 @@
-System sprintuno
- 
- 
+System sprintuno_due
+
 Dispatch robotStart: robotStart(X)
 Dispatch sonarUpdate: sonarUpdate(QTY)   
 

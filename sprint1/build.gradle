@@ -170,9 +170,9 @@ task dovesiamo {
 
 distributions {
     main {
-        distributionBaseName = 'sprintzero'
+        distributionBaseName = 'sprintuno_due'
         contents { 
-             from './sprintzero.pl'
+             from './sprintuno_due.pl'
              from './sysRules.pl'
              from './facadeConfig.json'
         }

@@ -1,5 +1,5 @@
 %====================================================================================
-% sprintuno description   
+% sprintuno_due description   
 %====================================================================================
 dispatch( robotStart, robotStart(X) ).
 dispatch( sonarUpdate, sonarUpdate(QTY) ).

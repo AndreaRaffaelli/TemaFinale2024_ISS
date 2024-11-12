@@ -1,0 +1,3 @@
+{"actor":"wis", "msgType":"dispatch", "curstate":"controllo", "nextstate":"sonarUpdate", "msgId":"sonarUpdate"}
+{"actor":"wis", "msgType":"dispatch", "curstate":"controllo", "nextstate":"controllo", "msgId":"info"}
+{"actor":"oprobot", "msgType":"dispatch", "curstate":"home", "nextstate":"goToWasteIn", "msgId":"robotStart"}
