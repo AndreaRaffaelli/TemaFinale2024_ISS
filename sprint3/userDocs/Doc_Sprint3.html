@@ -253,7 +253,7 @@
 
 
 
-<title>Sprint 2</title>
+<title>Sprint 3</title>
 </head>
 
 <body>
@@ -273,13 +273,36 @@
 			Analisi dei Requisiti
 		</h2>
 		<a href="../../sprint0/userDocs/Doc_Sprint03.html">Requisiti</a><br>
-		Architettura logica prodotta all'interno dello <a href="../../sprint1/userDocs/Doc_Sprint1.html">sprint1</a>:<br>
-		<center><img src="./img/archLogica.png" alt="imgAL" width="75%" height="75%"></center>
-		<h2> Goal Dello Sprint 2</h2>
-		Affrontare l'analisi dei problemi introdotti dai requisiti R1, generare un'architettura logica, un modello
+		Architettura logica prodotta all'interno dello <a href="../../sprint2/userDocs/Doc_Sprint2.html">sprint2</a>:<br>
+		<center>
+			<img src="./img/archLogica2.png" alt="imgAL" width="49%" height="50%">
+			<img src="./img/archLogica_1.2.png" alt="imgAL" width="49%" height="50%">
+		</center>		
+		
+		<h2> Goal Dello Sprint 3</h2>
+		Affrontare l'analisi dei problemi introdotti dai requisiti R5, generare un'architettura logica, un modello
 		eseguibile e dei test automatizzati.
+		<br><br>
 
 		<h2>Analisi dei requisiti</h2>
+		
+		<ul>			
+			<li>R5.1: Visualizzare lo stato del WasteStorage.</li>
+			<li>R5.2: Visualizzare lo stato dell'AshStorage.</li>
+			<li>R5.3: Visualizzare lo stato dell'inceneritore.</li>
+			<li>R5.4: Visualizzare lo stato del OpRobot.</li>
+		</ul>
+		Dissertazione: al fine di dividere le responsabilità di visualizzazione dalla logica di business 
+		SSGUI e' implementata nel contesto <code style="padding:0%;">ctxgui</code>.
+		Tutte le informazioni visibili nella GUI sono disponibili all'interno del WIS, rispettivamete:
+		<ul> 
+			<li>R5.1: <code>Ws_status</code></li>
+			<li>R5.2: <code>As_status</code></li>
+			<li>R5.3: <code>Ws_status</code></li>
+			<li>R5.4: <code>Ws_status</code></li>			
+		</ul>
+
+
 		<ul>
 			<li>R1.1: Segnalare lo stato dell'inceneritore e del AshStorage tramite un LED.
                 <ul>
