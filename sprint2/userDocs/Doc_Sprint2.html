@@ -348,21 +348,26 @@ updateResource [# "info($name,start,$start)" #]
 					Attraverso questa separazione dei compiti si evita un accorpamento delle responsabilità, garantendo che ogni attore abbia un ruolo ben definito nel processo.
 					Al Monitoring Device viene delegato il compito di gestire i valori logici inviati dal DataCleaner: quest'ultimo sarà anche <b>osservabile</b> in prospettiva dell'implementazione della GUI.
             </ul>
-			<li>R4.2: Come fa Montioring Device ad inviare informazioni al WIS?
+			<li>R4.2: Come fa Monitoring Device ad inviare informazioni al WIS?
 				<ul>
 					<li>
 						L'invio di informazioni dal <b>Monitoring Device</b> e' interessante per due entita': <b>Wis</b> e <b>Gui</b>, che verra' trattata successivamente. La soluzione ottimale sarebbe un'inversione di controllo utilizzando il <b>pattern Observer</b>. 
-						Purtroppo il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, per cui si tenta di emulare questo comportamento attraverso <b>l'invio di eventi</b> che contengono l'informazione logica sullo stato dell'AshStorage.
+						Purtroppo il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, per cui si tenta di emulare questo comportamento attraverso <b>l'invio di un dispatch</b> che contiene l'informazione logica sullo stato dell'AshStorage.
 						<br>
 <pre><code>
-Event sonarUpdate : sonarUpdate(X) 
+Dispatch sonarUpdate : sonarUpdate(X) 
 			</code></pre>
 					</li>                   
 				</ul>
 			</li>
         </ul>
         <h2>Architettura Logica</h2>
-        <center><img src="./img/sprintduearch.png" alt="imgAL" width="50%" height="50%"></center>
+        <center><img src="./img/archLogica2.png" alt="imgAL" width="50%" height="50%"></center>
+		<br>
+		<center>
+			L'architettura logica dello sprint1 viene modificata come segue:<br>
+			<img src="./img/archLogica_1.2.png" alt="imgAL" width="50%" height="50%">
+		</center>		
 		<h2>Progettazione</h2>
 		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint2.qak">sprint2.qak</a>.<br>
 		Ai fini di test si e' introdotto un <a href="../src/main/resources/VirtualLED.java">LED virtuale</a> 
@@ -424,8 +429,7 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 				&#x2705; Il test e' superato se la variabile booleana <code style="padding: 0%;">LEDBLINK</code> viene resa <code style="padding: 0%;">true</code>.</br>
 			</li>
 		</ul>
-		<a href="../src/main/java/test/TestLed.java">Test JUnit Funzionale</a>	
-		
+		<a href="../src/main/java/test/TestLed.java">Test JUnit LED</a>
 		<h4>Test 4</h4>
         Il test simula che l'AshStorage sia pieno inoltrando al Wis un messaggio in cui venga superato il valore soglia di polvere. <br>
 		<ul>
@@ -435,9 +439,8 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 				 <a href="../../sprint1/userDocs/Doc_Sprint1.html#test">sprint1</a>.</br>
 			</li>
 		</ul>
-		<a href="../src/main/java/test/TestLed.java">Test JUnit Funzionale</a>	
 		
-		<a href="../src/main/java/test/TestLed.java">Test JUnit Funzionale</a>
+		<a href="../../sprint1/src/main/java/test/Sprint12Test.java">Test JUnit Funzionale</a>
 		<h2>Pianificazione del lavoro</h2>
 		<ul>
 			<li><b>Sprint 3</b></li>
