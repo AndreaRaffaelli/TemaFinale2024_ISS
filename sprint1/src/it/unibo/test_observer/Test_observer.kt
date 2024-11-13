@@ -21,58 +21,47 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		
-		        var CICLO_FINITO= false;
+		 var unloaded = false  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(500) 
-						observeResource("localhost","6969","ctxtest","wis","info")
-						observeResource("localhost","6969","ctxtest","oprobot","info")
-						observeResource("localhost","6969","ctxtest","incinerator","info")
+						observeResource("localhost","8022","ctxservicearea","wis","info")
+						observeResource("localhost","8022","ctxservicearea","oprobot","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t021",targetState="monitor",cond=whenDispatch("info"))
-					transition(edgeName="t022",targetState="handleRequest",cond=whenRequest("testRequest"))
+					 transition(edgeName="t022",targetState="end",cond=whenDispatch("info"))
 				}	 
-				state("monitor") { //this:State
+				state("end") { //this:State
 					action { //it:State
 						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(N,VAL,VAR)"), 
+						if( checkMsgContent( Term.createTerm("info(X,Y,Z)"), Term.createTerm("info(SRC,VAL,VAR)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val N = payloadArg(0)   
-								 val VAR = payloadArg(1) 
-								 val VAL = payloadArg(2) 
-								
-											if(N.equals("oprobot") && VAR.equals("MentalState")){
-												var MentalState = VAL;
-												if(MentalState.equals("ASHOUT")){
-													CICLO_FINITO=true;
-												}
+								 
+											val SRC = payloadArg(0)
+											val VAR = payloadArg(1)
+											val VAL = payloadArg(2)
+								CommUtils.outred("$name views $SRC $VAR $VAL")
+								 
+											if (SRC.equals("oprobot") && VAR.equals("MentalState")&& VAL.equals("ASHOUT")) {
+												unloaded = true	
 											}
+											if (SRC.equals("wis") && VAR.equals("As_status")&& VAL.equals("half") && unloaded==true) {
+												System.exit(31);
+											} 
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t123",targetState="monitor",cond=whenDispatch("info"))
-					transition(edgeName="t124",targetState="handleRequest",cond=whenRequest("testRequest"))
-				}	 
-				state("handleRequest") { //this:State
-					action { //it:State
-						answer("testRequest", "testReply", "testReply($CICLO_FINITO)"   )  
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
+					 transition(edgeName="t023",targetState="end",cond=whenDispatch("info"))
 				}	 
 			}
 		}

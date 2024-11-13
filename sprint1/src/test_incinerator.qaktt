@@ -5,7 +5,7 @@ Reply testReply : testReply(X,Y,Z)
 
 Event burnEnd : burnEnd( ARG )
 Dispatch info : info(N,VAR,VAL)
-
+Disparch burnStart : burnStart(z)
 Event startIncinerator: startIncinerator(X)
 
 

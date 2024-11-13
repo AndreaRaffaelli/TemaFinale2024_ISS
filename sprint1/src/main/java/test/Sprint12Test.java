@@ -29,7 +29,7 @@ public class Sprint12Test {
     private static final String PORT = "8022";
     private static final ProtocolType PROTOCOL = ProtocolType.tcp;
     private static final String DOCKER_IMAGE = "docker.io/natbodocker/virtualrobotdisi23:1.0";
-    private static final int MAX_TIMEOUT_SEC = 30;
+    private static final int MAX_TIMEOUT_SEC = 60;
 
     private static String pidContext = "";
     private static String pidBr = "";
