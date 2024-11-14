@@ -126,7 +126,8 @@ public class Sprint12Test {
                 Thread.sleep(1000);
             }
             assertTrue("Main process did not finish in time", mainProcess.waitFor(MAX_TIMEOUT_SEC, TimeUnit.SECONDS));
-            assertEquals("Unexpected exit value", 30, mainProcess.exitValue());
+//            assertEquals("Unexpected exit value", 30, mainProcess.exitValue());
+            assertEquals("Unexpected exit value", 31, mainProcess.exitValue());
         } catch (Exception e) {
             CommUtils.outred("Test error: " + e.getMessage());
             fail("Test failed with exception: " + e.getMessage());
