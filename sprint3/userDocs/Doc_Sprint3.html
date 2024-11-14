@@ -294,103 +294,60 @@
 		</ul>
 		Dissertazione: al fine di dividere le responsabilità di visualizzazione dalla logica di business 
 		SSGUI e' implementata nel contesto <code style="padding:0%;">ctxgui</code>.
-		Tutte le informazioni visibili nella GUI sono disponibili all'interno del WIS, rispettivamete:
-		<ul> 
-			<li>R5.1: <code>Ws_status</code></li>
-			<li>R5.2: <code>As_status</code></li>
-			<li>R5.3: <code>Ws_status</code></li>
-			<li>R5.4: <code>Ws_status</code></li>			
-		</ul>
-
-
-		<ul>
-			<li>R1.1: Segnalare lo stato dell'inceneritore e del AshStorage tramite un LED.
-                <ul>
-                    <li>R1.1: Il LED deve essere acceso quando l'inceneritore è in fase di bruciatura.</li>                    
-                    <li>R1.2: Il LED deve essere spento quando l'inceneritore non è in funzione.</li>
-                    <li>R1.3: Il LED deve lampeggiare quando l'AshStorage è pieno o vuoto.</li>
-                </ul>
-            </li>
-            Dissertazione: Il monitoring device deve essere in grado di percepire i segnali di stato dell'inceneritore.<br> 
-            Inoltre deve essere in grado di percepire quando l'AshStorage è pieno o vuoto. <br>           
-			<li>R4.2: WIS riceverà in input i valori della bilancia e del sonar.
-				<ul>
-					<li>Quando l'OpRobot si trova in modalità Home e ci sono RP da caricare, WIS deve verificare se è possibile scaricare la cenere nell'AshStorage prima di avviare un ciclo di bruciatura. 
-						Questa informazione può essere ottenuta a intervalli regolari con una interazione <code>reply-response</code>, ma ciò comporterebbe un'occupazione del sistema in cicli di attesa attiva. Per evitare questa situazione, si preferisce adottare un modello inverso in cui il Monitoring Device trasmette le informazioni rilevanti sullo stato della polvere, mantenendo il Sonar Device e le sue implementazioni in secondo piano.
-					</li>                   
-				</ul>
-			</li>
-				  
-		</ul>
-
+		Le informazioni necessarie per R5.1, R5.2 ed R5.3 sono reperibili all'interno del WIS o 
+		tramite la ricezione di Eventi, rispettivamente:
+		<pre><code>
+R5.1: Wis::Ws_status
+R5.2: Wis::As_status
+R5.3: Event::startBurn
+      Event::endBurn
+		</code></pre>
+		<br>
+		
 		<h2>Problematiche</h2>
 		<ul>
-            <li><b>R1</b></li>
+            <li><b>R5.4</b></li>
             <ul>
-				<li>Come avviene la gestione del LED?
-					<ul>
-						<li>Attraverso un'interfaccia il Monitoring Device controlla il LED fisico:
-							<pre><code>
-public interface ILED{
-	void turnOn();
-	void turnOff();
-	void blink();
-}           
-				</code></pre>
-						</li>
-					</ul>
-				</li>
-                <li>Come fa il Monitoring Device ad accorgersi che l'inceneritore è in fase di bruciatura?</li>
-                <ul>
-                    <li>Dissertazione: Il Monitoring Device dovrebbe percepire i cambiamenti di stato dell'Inicinerator al fine di gestire lo stato del LED in base alla fase di bruciatura.<br> 
-                        Per questo si rende osservabile l'Incenirator dal Monitoring Device.
-                		
-<pre><code>
-observeResource incinerator msgid info    
+				<li>Come fa SSGUI a mostrare la posizione e il lavoro che opRobot sta eseguendo?</li>
+				<ul>
+					<li>Dissertazione: 
+						Ricordiamo da <a href="../../sprint1/userDocs/Doc_Sprint1.html">sprint1</a> gli stati <code style="padding:0%;">MentalState</code> e <code style="padding:0%;">RobotState</code> di
+						opRobot osservabili da <code style="padding:0;">WIS</code>. 
+						Poiche' il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, una possibilita' potrebbe essere
+						l'inserimento di un nuovo attore <code style="padding:0;">opEventBridge</code> con il compito di osservare i cambi di stato del
+						opRobot ed inviare informazioni a SSGUI.
+						Considerando il costo contenuto per una modifica all'attore <code style="padding:0;">WIS</code>, 
+						non si reputa vantaggiosa la creazione di <code style="padding:0;">opEventBridge</code>.
+						Si modifica quindi <code style="padding:0;">WIS</code> in modo tale da inviare informazioni a SSGUI riguardo i cambi di stato del opRobot.
+					</li>
+ 				</ul>
+			</ul>
 
-//  Nell'Incinerator:
-println("($name): Inizio inceneritore") color magenta
-[# start ="on"; #]
-updateResource [# "info($name,start,$start)" #]     
-                                                                        </code></pre>
-                                                                        
-</ul>
-                <li><b>Aggiornamento Sprint1:</b></li>
-				<ul>Il nuovo modello aggiornato è stato inserito nello sprint1 con il nome di: <a href="../../sprint1/src/sprint1.2.qak">sprint1.2</a>.</ul>
-            </ul>
-            <li><b>R1.3</b></li>
-            <ul>
-				<li>Come fa il Monitoring Device a percepire il livello della polvere?</li>
-				<ul>
-					<li>Dissertazione: il Sonar è un elemento che misura costantemente il livello della polvere. Il Monitoring Device attende i dati delle misurazioni, per questo si introducono la pipe di attori:</li>
-					<ul>
-						<li>Il <strong>SonarDevice</strong>, un nuovo attore che si interfaccierà con il sonar SONAR HC-SR04.</li>
-						<li>Il <strong>DataCleaner</strong> filtrerà i dati grezzi inviati dal SonarDevice in modo da ottenere una corrispondenza tra valori fisici e logici (<code>empty, half, full</code>).<br>
-						Questa relazione è stata introdotta per creare un livello di separazione tra le misurazioni del Sonar e le dimensioni effettive dell'AshStorage.</li>
-					</ul>
-					Attraverso questa separazione dei compiti si evita un accorpamento delle responsabilità, garantendo che ogni attore abbia un ruolo ben definito nel processo.
-					Al Monitoring Device viene delegato il compito di gestire i valori logici inviati dal DataCleaner: quest'ultimo sarà anche <b>osservabile</b> in prospettiva dell'implementazione della GUI.
-            </ul>
-			<li>R4.2: Come fa Monitoring Device ad inviare informazioni al WIS?
-				<ul>
-					<li>
-						L'invio di informazioni dal <b>Monitoring Device</b> e' interessante per due entita': <b>Wis</b> e <b>Gui</b>, che verra' trattata successivamente. La soluzione ottimale sarebbe un'inversione di controllo utilizzando il <b>pattern Observer</b>. 
-						Purtroppo il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, per cui si tenta di emulare questo comportamento attraverso <b>l'invio di un dispatch</b> che contiene l'informazione logica sullo stato dell'AshStorage.
-						<br>
-<pre><code>
-Dispatch sonarUpdate : sonarUpdate(X) 
-			</code></pre>
-					</li>                   
-				</ul>
-			</li>
+			<li>Come fa WIS a comunicare Ws_status, As_status e i cambi di stato del opRobot con SSGUI?</li>
+			<ul>
+				<li>Dissertazione:
+
+				</li>
+			 </ul>
         </ul>
+
+<!-- 
+		
+FacadeController: restituisce la GUI iniziale e crea il facadeBuilder
+FacadeBuilder: crea tutti gli altri e basta
+WSHandler: fa connessione client server attraverso web socket (get e post sono dirette a FacadeController)
+		quando riceve un messaggio, inoltra a Applguicore (handleWsMsg) che, se e' un cmd, lo inoltra ad ActorOutIn che lo
+		inviera' all'actor
+CoapObserver: osserva gli actors e inoltra a ApplguiCore (handleMsgFromActor) che poi fa una ActorOutIn.sendtoall()
+		quando coapobserver osserva quindi, wsHandler.sendToAll viene chiamato, sempre!
+RobotUtils da utilizzare solo sendApplMsg(...) per inviare messaggi agli actors
+
+-->
+
+
+
         <h2>Architettura Logica</h2>
-        <center><img src="./img/archLogica2.png" alt="imgAL" width="50%" height="50%"></center>
-		<br>
-		<center>
-			L'architettura logica dello sprint1 viene modificata come segue:<br>
-			<img src="./img/archLogica_1.2.png" alt="imgAL" width="50%" height="50%">
-		</center>		
+        <center><img src="./img/archLogica2.png" alt="imgAL" width="50%" height="50%"></center>		
 		<h2>Progettazione</h2>
 		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint2.qak">sprint2.qak</a>.<br>
 		Ai fini di test si e' introdotto un <a href="../src/main/resources/VirtualLED.java">LED virtuale</a> 
