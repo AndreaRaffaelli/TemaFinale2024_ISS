@@ -1,6 +1,5 @@
-package src.main.java.prog_iss.spring3;
+package prog_iss.spring3;
 
- 
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.tcp.TcpClientSupport;
