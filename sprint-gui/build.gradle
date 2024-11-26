@@ -60,11 +60,10 @@ javafx {
 }
 
 sourceSets {
-    main.java.srcDirs += 'src'
-    main.java.srcDirs += 'src/main/java'
-    main.java.srcDirs += 'src/main/resources'
-    test.java.srcDirs += 'src/test/java' // Ensure this points to your test source directory
+    main.java.srcDirs = ['src/main/java']
+    main.resources.srcDirs = ['src/main/resources']
 }
+
 
 eclipse {
     classpath {
@@ -73,8 +72,9 @@ eclipse {
 }
 
 application {
-    mainClassName = 'Spring3Application'
+    mainClass = 'prog_iss.spring3.Spring3Application'
 }
+
 
 jar {
     println("building jar")

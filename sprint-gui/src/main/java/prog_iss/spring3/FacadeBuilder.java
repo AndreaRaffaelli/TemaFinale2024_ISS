@@ -1,6 +1,7 @@
 package prog_iss.spring3;
 import unibo.basicomm23.coap.CoapConnection;
 import unibo.basicomm23.utils.CommUtils;
+import java.util.List;
 
 public class FacadeBuilder {
     public static  WSHandler wsHandler;
@@ -12,16 +13,16 @@ public class FacadeBuilder {
     }
 
     public void create(){
-        //C
+        //LETTURA VALORI
+        ApplSystemInfo.readConfig();
+
         wsHandler    = new WSHandler();
         outinadapter = new ActorOutIn( wsHandler );
         guiCore      = new ApplguiCore(outinadapter);
         outinadapter.setGuiCore(guiCore); //Injection
         wsHandler.setGuiCore(guiCore); //Injection
 
-        //CommUtils.outred("FacadeBuilder create wsHandler=" + wsHandler);
-//        List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
-//        if( config != null ) {
+        ////        if( config != null ) {
             String qakSysHost    = ApplSystemInfo.qakSysHost;
             String ctxportStr    = ApplSystemInfo.ctxportStr;
             String qakSysCtx     = ApplSystemInfo.qakSysCtx;

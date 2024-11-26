@@ -36,6 +36,7 @@ public class ApplSystemInfo {
       "sysdescr":"<appName>" }
      */
     public static void readConfig(){
+        CommUtils.outgreen("ApplSysInfo | :"+System.getProperty("user.dir"));
         List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
         if( config != null ) {
             qakSysHost    = config.get(0);
@@ -76,6 +77,7 @@ public class ApplSystemInfo {
     public static void setup() {
         try {
             pengine = new Prolog();
+            System.out.println(appName);
             Theory systemTh = new Theory(new FileInputStream(appName + ".pl"));
             Theory rulesTh  = new Theory(new FileInputStream("sysRules.pl"));
             //CommUtils.outblue("ApplSystemInfo | setup systemTh:\n" + systemTh);

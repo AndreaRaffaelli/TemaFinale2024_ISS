@@ -1,11 +1,13 @@
 package prog_iss.spring3;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import unibo.basicomm23.utils.CommUtils;
  
 
@@ -14,19 +16,21 @@ import unibo.basicomm23.utils.CommUtils;
 @Controller
 public class FacadeController {
     String protocol="tcp";
-    //@Value("${robot23.webcamip}")
-    String webcamip;
-    @Value("${wis.wisip}")
-    String wisip="wis";
 
+    @Value("${wis.ip}")
+    String wisip = "localhost";
+    @Value("${wis.port}")
+    String wisport;
     @Value("${spring.application.name}")
-    String appNameOld;  //vedi application.properties
-     
+    String appNameOld;  //vedi application.properties 
     protected String mainPage = "Fcd24SGui"; //TODO: "WebRobot24Gui";  
 
+    @Autowired
     public FacadeController(){
         CommUtils.outgreen (" --- FacadeController | STARTS " );
-        new FacadeBuilder( ) ;
+        System.out.println(wisip);
+        System.out.println(wisport);
+        new FacadeBuilder();
     }
  
 

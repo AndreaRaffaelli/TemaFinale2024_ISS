@@ -23,8 +23,9 @@ public class ActorOutIn {
             String facadeportStr  = ApplSystemInfo.facadeportStr;
             int    ctxport        = ApplSystemInfo.ctxport;
 
-             tcpConn = TcpClientSupport.connect(qakSysHost, ctxport, 20);
-             CommUtils.outblue("OUTIN | Stabilita tcpConn: " + tcpConn + " con " + facadeportStr);
+            CommUtils.outblue("OUTIN | Tentativa tcpConn: " + qakSysHost + " port " + ctxport);
+            tcpConn = TcpClientSupport.connect(qakSysHost, ctxport, 20);
+            CommUtils.outblue("OUTIN | Stabilita tcpConn: " + tcpConn + " con " + facadeportStr);
         } catch (Exception e) {
             tcpConn = null;
             CommUtils.outred("OUTIN | creation WARNING: " + e.getMessage());
