@@ -10,6 +10,8 @@ request( doplan, doplan(PATH,STEPTIME) ).
 event( startIncinerator, startIncinerator(X) ).
 event( startBurn, startBurn(X) ).
 event( endBurn, endBurn(ARG) ).
+dispatch( addrp, addrp(X) ).
+request( addrp, addrp(X) ).
 request( moverobot, moverobot(TARGETX,TARGETY) ).
 reply( moverobotdone, moverobotok(ARG) ).  %%for moverobot
 reply( moverobotfailed, moverobotfailed(PLANDONE,PLANTODO) ).  %%for moverobot
@@ -26,5 +28,3 @@ context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
  static(oprobot).
   qactor( incinerator, ctxservicearea, "it.unibo.incinerator.Incinerator").
  static(incinerator).
-  qactor( test_observer, ctxservicearea, "it.unibo.test_observer.Test_observer").
- static(test_observer).

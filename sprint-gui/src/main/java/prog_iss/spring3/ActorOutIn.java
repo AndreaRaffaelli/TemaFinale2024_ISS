@@ -65,10 +65,10 @@ public class ActorOutIn {
         sendToActor( message );
     }
 
-    public void docmd(String msg ) {
-        CommUtils.outred("OUTIN | WARNING: docmd NOT IMPLEMENTED" + msg );
-//        IApplMessage message = CommUtils.buildDispatch(senderId, cmdid, cmdarg.replace("X",msg) , destActor);
-//        sendToActor(message, msgId);
+    public void dodispatch( String senderId, String destActor, String disid, String disarg) {
+        CommUtils.outred("OUTIN | dispatch " + disarg );
+        IApplMessage message = CommUtils.buildDispatch(senderId,  disid, disarg  , destActor);
+        sendToActor(message);
     }
     public void doreply(String senderId, String destActor, String replyId, String replyArg ) {
         CommUtils.outmagenta("OUTIN | doreply  " + replyId );

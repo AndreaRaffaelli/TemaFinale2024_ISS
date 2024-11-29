@@ -54,8 +54,8 @@ public class ApplguiCore {
              case "request":
                 dorequest(id,payload );
                 break;
-            case "cmd":
-                docmd(id,payload );
+            case "dispatch":
+                dodispatch(id,payload );
                 break;
             case "reply":
                 doreply(id,payload);
@@ -80,8 +80,8 @@ public class ApplguiCore {
                id, destActor, reqid, reqcontent.replace("X", payload));
         }
     }
-    private void docmd(String id,String payload ) {
-        //outinadapter.docmd(payload );
+    private void dodispatch(String id,String payload ) {
+        outinadapter.dodispatch(id, destActor,reqid, payload);
     }
     private void doreply(String id,String payload ) {
         CommUtils.outred("AGC | doreply id=" + id + " payload=" + payload );

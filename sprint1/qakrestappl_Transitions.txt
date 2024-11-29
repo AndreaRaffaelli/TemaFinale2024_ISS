@@ -1,5 +1,3 @@
 {"actor":"wis", "msgType":"dispatch", "curstate":"controllo", "nextstate":"sonarUpdate", "msgId":"sonarUpdate"}
 {"actor":"wis", "msgType":"dispatch", "curstate":"controllo", "nextstate":"controllo", "msgId":"info"}
 {"actor":"oprobot", "msgType":"dispatch", "curstate":"home", "nextstate":"goToWasteIn", "msgId":"robotStart"}
-{"actor":"test_observer", "msgType":"dispatch", "curstate":"s0", "nextstate":"end", "msgId":"info"}
-{"actor":"test_observer", "msgType":"dispatch", "curstate":"end", "nextstate":"end", "msgId":"info"}

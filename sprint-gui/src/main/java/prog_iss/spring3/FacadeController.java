@@ -45,6 +45,7 @@ public class FacadeController {
     public String homePage(Model viewmodel) {
         //CommUtils.outcyan("FacadeController homePage appNameOld=" + appNameOld);
         viewmodel.addAttribute("appname", ApplSystemInfo.appName);
+        viewmodel.addAttribute("wisip", wisip);  
         String dir = System.getProperty("user.dir");
         CommUtils.outgreen (" --- FacadeController | entry dir= "+dir  );
         return buildThePage(viewmodel); //"qakFacadeGUI";

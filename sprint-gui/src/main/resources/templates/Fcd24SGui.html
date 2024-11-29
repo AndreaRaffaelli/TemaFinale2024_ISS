@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en">s
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +19,34 @@
         }
     </style>
 </head>
+
+
+
 <body>
     <h1>Welcome to Sprint3 Application</h1>
     <p>This is a test page served by Spring Boot.</p>
     <p>Current WIS IP: <span th:text="${wisip}">not connected</span></p>
     <p>Application Name: <span th:text="${appname}">Unknown</span></p>
+
+    <p>Current WasteStorage: <span th:text="${wasteStorage}">Unknown</span></p>
+    <p>Current AshStorage: <span th:text="${ashStorage}">Unknown</span></p>
+    <p>Current Incinerator: <span th:text="${incinerator}">Unknown</span></p>
+    <p>Current OpRobot: <span th:text="${opRobot}">Unknown</span></p>
+
+    <button onclick="sendMessage('request/')">Aggiungi RP</button>
+
+
 </body>
 </html>
+
+
+<!-- 
+
+    the current state of the WasteStorage, i.e. the number of RP currently stored in it;
+
+    the current state of the AshStorage, i.e. an indication of the level of its capacity currently used;
+
+    the current state of the Incinerator, i.e. if it burning or not;
+
+    the state of the OpRobot, i.e. an indication of its current location in the service area and of the job that it is doing.
+ -->
