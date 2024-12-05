@@ -10,7 +10,6 @@ request( doplan, doplan(PATH,STEPTIME) ).
 event( startIncinerator, startIncinerator(X) ).
 event( startBurn, startBurn(X) ).
 event( endBurn, endBurn(ARG) ).
-dispatch( addrp, addrp(X) ).
 request( addrp, addrp(X) ).
 request( moverobot, moverobot(TARGETX,TARGETY) ).
 reply( moverobotdone, moverobotok(ARG) ).  %%for moverobot

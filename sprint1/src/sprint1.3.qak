@@ -16,7 +16,7 @@ Event startBurn : startBurn(X)
 Event endBurn : endBurn( ARG )
 
 
-Dispatch addrp : addrp(X)
+//Dispatch addrp : addrp(X)
 Request addrp : addrp(X)
 
 //Inglobamento endosimbitico di robotpos
@@ -26,7 +26,7 @@ Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
 
 Request testStart : testStart(X)
 Request testRequest : testRequest(X)
-Reply testReply : testReply(X )
+Reply testReply : testReply(X)
 	
 
 
@@ -104,9 +104,9 @@ QActor wis context ctxservicearea {
 		printCurrentMessage color magenta
 		onMsg( addrp : addrp(X) ) {
 			[#
-				Ws_status = Ws_status +1
-				replyTo addrp with testReply : testReply(end) 
+				Ws_status += 1
 			#]
+			replyTo addrp with testReply : testReply(1)
 		}
 	}
 

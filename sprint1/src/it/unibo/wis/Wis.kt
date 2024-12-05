@@ -97,8 +97,8 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						if( checkMsgContent( Term.createTerm("addrp(X)"), Term.createTerm("addrp(X)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								
-												Ws_status = Ws_status +1
-												replyTo addrp with testReply : testReply(end) 
+												Ws_status += 1
+								answer("addrp", "testReply", "testReply(1)"   )  
 						}
 						//genTimer( actor, state )
 					}
