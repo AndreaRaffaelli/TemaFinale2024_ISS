@@ -28,7 +28,7 @@ Request testStart : testStart(X)
 Request testRequest : testRequest(X)
 Reply testReply : testReply(X )
 	
-)
+
 
 Context ctxservicearea ip [host="localhost" port=8022]
 Context ctxashstorage ip [host="127.0.0.1" port=8021]
