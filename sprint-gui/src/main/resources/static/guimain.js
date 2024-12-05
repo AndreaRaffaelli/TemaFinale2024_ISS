@@ -15,11 +15,11 @@ function connect() {
 
     socket.onopen = function (event) {
         //addTo_msgArea("Connessione " + addr + " ok");
-        showMsg("Connessione " + addr + " ok");
+        console.log("Connessione " + addr + " ok");
     };
     socket.onerror = function (event) {
         //addTo_msgArea("ERROR " + event.data);
-        showMsg("ERROR " + event.data);
+        console.log("ERROR " + event.data);
     };
     socket.onmessage = function (event) { // RICEZIONE
         //let [type, payload, info] = event.data.split("/");
@@ -34,5 +34,7 @@ function sendMessage(message) {
     console.log("sendMessage "+ message);
     socket.send(message);
 }
+
+document.getElementById("pulsante").addEventListener("click", ()=>sendMessage('request/1'));
 
 

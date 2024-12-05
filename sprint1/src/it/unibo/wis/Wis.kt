@@ -34,9 +34,10 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						delay(1000) 
 						emit("startIncinerator", "startIncinerator(avvio)" ) 
 						observeResource("localhost","8022","ctxservicearea","oprobot","info")
-						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
-						)
 						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
+						)
+						delay(200) 
+						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
 						)
 						//genTimer( actor, state )
 					}
@@ -74,6 +75,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 									RobotFree = false;
 						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
 						)
+						delay(200) 
 						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
 						)
 						
@@ -98,13 +100,14 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								
 												Ws_status += 1
-								answer("addrp", "testReply", "testReply(1)"   )  
+								answer("addrp", "clientReply", "testReply($Ws_status)"   )  
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition( edgeName="goto",targetState="controllo", cond=doswitch() )
 				}	 
 				state("sonarUpdate") { //this:State
 					action { //it:State
