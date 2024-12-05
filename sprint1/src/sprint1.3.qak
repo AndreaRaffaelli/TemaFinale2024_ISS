@@ -15,9 +15,8 @@ Event startIncinerator: startIncinerator(X)
 Event startBurn : startBurn(X)
 Event endBurn : endBurn( ARG )
 
-
-//Dispatch addrp : addrp(X)
 Request addrp : addrp(X)
+Reply clientReply : clientReply(X)
 
 //Inglobamento endosimbitico di robotpos
 Request moverobot    :  moverobot(TARGETX, TARGETY)  
@@ -26,7 +25,7 @@ Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
 
 Request testStart : testStart(X)
 Request testRequest : testRequest(X)
-Reply testReply : testReply(X)
+
 	
 
 
@@ -50,8 +49,10 @@ QActor wis context ctxservicearea {
 		delay 1000
 		emit startIncinerator : startIncinerator(avvio)
 		observeResource oprobot msgid info
-		updateResource [# "info($name,RobotFree,$RobotFree)" #]
 		updateResource [# "info($name,Ws_status,$Ws_status)" #]
+		delay 200
+		updateResource [# "info($name,RobotFree,$RobotFree)" #]
+
 	}
 	Goto controllo
 
@@ -88,6 +89,7 @@ QActor wis context ctxservicearea {
 			RobotFree = false;
 			#]
 			updateResource [# "info($name,RobotFree,$RobotFree)" #]
+			delay 200
 			updateResource [# "info($name,Ws_status,$Ws_status)" #]
 			[#
 		}
@@ -106,9 +108,10 @@ QActor wis context ctxservicearea {
 			[#
 				Ws_status += 1
 			#]
-			replyTo addrp with testReply : testReply(1)
+			replyTo addrp with clientReply : testReply($Ws_status)
 		}
 	}
+	Goto controllo
 
 	// Stato di aggiornamento tramite sonar
 	State sonarUpdate {

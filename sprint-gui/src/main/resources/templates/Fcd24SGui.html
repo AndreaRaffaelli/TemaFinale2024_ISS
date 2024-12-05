@@ -28,12 +28,12 @@
     <p>Current WIS IP: <span th:text="${wisip}">not connected</span></p>
     <p>Application Name: <span th:text="${appname}">Unknown</span></p>
 
-    <p>Current WasteStorage: <span th:text="${wasteStorage}">Unknown</span></p>
-    <p>Current AshStorage: <span th:text="${ashStorage}">Unknown</span></p>
-    <p>Current Incinerator: <span th:text="${incinerator}">Unknown</span></p>
-    <p>Current OpRobot: <span th:text="${opRobot}">Unknown</span></p>
+    <p>Current WasteStorage: <span th:text="${wasteStorage}" id="WasteStorage">Unknown</span></p>
+    <p>Current AshStorage: <span th:text="${ashStorage}" id="AshStorage">Unknown</span></p>
+    <p>Current Incinerator: <span th:text="${incinerator}" id="Incinerator">Unknown</span></p>
+    <p>Current OpRobot: <span th:text="${opRobot}" id="OpRobot">Unknown</span></p>
 
-    <button onclick="sendMessage('request/')">Aggiungi RP</button>
+    <button id="pulsante">Aggiungi RP</button>
 
     <script src="guimain.js"></script>
 
