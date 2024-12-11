@@ -16,7 +16,7 @@ Event startBurn : startBurn(X)
 Event endBurn : endBurn( ARG )
 
 Request addrp : addrp(X)
-Reply clientReply : clientReply(X)
+Reply replyAddrp : info(X, Y, Z)
 
 //Inglobamento endosimbitico di robotpos
 Request moverobot    :  moverobot(TARGETX, TARGETY)  
@@ -72,34 +72,53 @@ QActor wis context ctxservicearea {
 			[# 
 			if (SRC.equals("oprobot") && VAR.equals("RobotState")) {
 				RobotFree = VAL.equals("IDLE");
+				#]
+//				updateResource [# "info($name,RobotFree,$RobotFree)" #]
+				[#
 			}
 			#]
-			updateResource [# "info($name,RobotFree,$RobotFree)" #]
+			
+			
+			//Se abbiamo ritiato un RP riduciamo contatore Ws_status
+			[# 
+			if (SRC.equals("oprobot") && VAR.equals("MentalState") && VAL.equals("WASTEIN")) {			
+				Ws_status -= 1
+				#]
+				updateResource [# "info($name,Ws_status,$Ws_status)" #]
+				[#
+			} else{
+				#]
+				updateResource [# "info($name,$VAR,$VAL)" #]
+				[#
+			}
+			#]
+			println("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
 		}
 
-		println("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
+		
 		[#
 		// Se tutte le condizioni sono soddisfatte, avvia il robot
 		if (Ws_status > 0 && !As_status.equals("full") && RobotFree) {
 			#]
-			println("($name) invio messaggio start") color yellow
+			println("($name) invio messaggio start oprobot") color yellow
 			println("($name) controllo: condizioni corrette e start") color yellow
 			forward oprobot -m robotStart : robotStart(parti)
 			[#
 			RobotFree = false;
 			#]
-			updateResource [# "info($name,RobotFree,$RobotFree)" #]
-			delay 200
-			updateResource [# "info($name,Ws_status,$Ws_status)" #]
+//			updateResource [# "info($name,RobotFree,$RobotFree)" #]
+//			delay 200
+//			updateResource [# "info($name,Ws_status,$Ws_status)" #]
 			[#
 		}
 		#]
+		
 	}
 	Transition t0
-		whenTime 5000 -> controllo
 		whenMsg sonarUpdate -> sonarUpdate
 		whenMsg info -> controllo
 		whenRequest addrp -> newRp
+//		whenTime 5000 -> controllo
 		    
 		
 	State newRp {
@@ -108,7 +127,8 @@ QActor wis context ctxservicearea {
 			[#
 				Ws_status += 1
 			#]
-			replyTo addrp with clientReply : testReply($Ws_status)
+			replyTo addrp with replyAddrp : info(wis, Ws_status, $Ws_status)	
+//			updateResource [# "info($name,Ws_status,$Ws_status)" #]
 		}
 	}
 	Goto controllo
