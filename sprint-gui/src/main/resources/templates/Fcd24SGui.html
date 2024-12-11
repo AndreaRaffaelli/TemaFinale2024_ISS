@@ -31,14 +31,15 @@
     <p>Current WasteStorage: <span th:text="${wasteStorage}" id="WasteStorage">Unknown</span></p>
     <p>Current AshStorage: <span th:text="${ashStorage}" id="AshStorage">Unknown</span></p>
     <p>Current Incinerator: <span th:text="${incinerator}" id="Incinerator">Unknown</span></p>
-    <p>Current OpRobot: <span th:text="${opRobot}" id="OpRobot">Unknown</span></p>
+    <p>Current OpRobot status: <span th:text="${opRobot_status}" id="OpRobot_Status">Unknown</span></p>
+    <p>Current OpRobot job: <span th:text="${opRobot_job}" id="OpRobot_Job">Unknown</span></p>
 
     <button id="pulsante">Aggiungi RP</button>
 
     <script src="guimain.js"></script>
-
+    <br>
     <!-- Aggiungi l'immagine in basso a destra -->
-    <img src="/images/mbot.png" alt="mbot" class="bottom-right-image">
+    <img src="/images/mbot.png" alt="mbot" class="bottom-right-image">  <!-- NN o cpt che immagine  -->
 
 </body>
 </html>

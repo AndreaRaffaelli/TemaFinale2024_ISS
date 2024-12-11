@@ -60,37 +60,39 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 								 
 											if (SRC.equals("oprobot") && VAR.equals("RobotState")) {
 												RobotFree = VAL.equals("IDLE");
+								
 											}
-								updateResourceRep( "info($name,RobotFree,$RobotFree)"  
+								 
+											if (SRC.equals("oprobot") && VAR.equals("MentalState") && VAL.equals("WASTEIN")) {			
+												Ws_status -= 1
+								updateResourceRep( "info($name,Ws_status,$Ws_status)"  
 								)
+								
+											} else{
+								updateResourceRep( "info($name,$VAR,$VAL)"  
+								)
+								
+											}
+								CommUtils.outblack("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
 						}
-						CommUtils.outblack("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
 						
 								// Se tutte le condizioni sono soddisfatte, avvia il robot
 								if (Ws_status > 0 && !As_status.equals("full") && RobotFree) {
-						CommUtils.outyellow("($name) invio messaggio start")
+						CommUtils.outyellow("($name) invio messaggio start oprobot")
 						CommUtils.outyellow("($name) controllo: condizioni corrette e start")
 						forward("robotStart", "robotStart(parti)" ,"oprobot" ) 
 						
 									RobotFree = false;
-						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
-						)
-						delay(200) 
-						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
-						)
 						
 								}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
-				 	 		stateTimer = TimerActor("timer_controllo", 
-				 	 					  scope, context!!, "local_tout_"+name+"_controllo", 5000.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t00",targetState="controllo",cond=whenTimeout("local_tout_"+name+"_controllo"))   
-					transition(edgeName="t01",targetState="sonarUpdate",cond=whenDispatch("sonarUpdate"))
-					transition(edgeName="t02",targetState="controllo",cond=whenDispatch("info"))
-					transition(edgeName="t03",targetState="newRp",cond=whenRequest("addrp"))
+					 transition(edgeName="t00",targetState="sonarUpdate",cond=whenDispatch("sonarUpdate"))
+					transition(edgeName="t01",targetState="controllo",cond=whenDispatch("info"))
+					transition(edgeName="t02",targetState="newRp",cond=whenRequest("addrp"))
 				}	 
 				state("newRp") { //this:State
 					action { //it:State
@@ -100,7 +102,7 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								
 												Ws_status += 1
-								answer("addrp", "clientReply", "testReply($Ws_status)"   )  
+								answer("addrp", "replyAddrp", "info(wis,Ws_status,$Ws_status)"   )  
 						}
 						//genTimer( actor, state )
 					}

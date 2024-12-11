@@ -42,7 +42,8 @@ function connect() {
                 "Ws_status": "WasteStorage",
                 "As_status": "AshStorage",
                 "Incinerator_status": "Incinerator",            /* MANCA UPDATE DALL'INC! */
-                "MentalState": "OpRobot"
+                "MentalState": "OpRobot_Status",
+                "RobotState": "OpRobot_Job"
             };
     
             // Aggiorna il valore dell'elemento DOM corrispondente
@@ -50,7 +51,7 @@ function connect() {
             if (elementId) {
                 const element = document.getElementById(elementId);
                 if (element) {
-                    element.textContent = value;
+                    element.innerHTML  = value;
                     console.log(`Updated ${elementId} with value: ${value}`);
                 } else {
                     console.warn(`Element with ID ${elementId} not found.`);
@@ -65,6 +66,15 @@ function connect() {
     
     return socket;
 }
+
+function sendMessage(message) {
+    console.log("sendMessage "+ message);
+    socket.send(message);
+}
+
+document.getElementById("pulsante").addEventListener("click", ()=>sendMessage('request/1'));
+
+
 
 
 /* 
@@ -87,12 +97,3 @@ function connect() {
  - WORKING 
  -->
 */
-
-function sendMessage(message) {
-    console.log("sendMessage "+ message);
-    socket.send(message);
-}
-
-document.getElementById("pulsante").addEventListener("click", ()=>sendMessage('request/1'));
-
-
