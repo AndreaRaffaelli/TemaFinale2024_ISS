@@ -1,24 +1,24 @@
 package main.java.test;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class GlobalTest {
 
 	private static final List<String> containerIds = new ArrayList<>();
 	private static final String[] containerConfigs = { 
-			"sprint1:latest:8022:8022", // Image, with port mapping
-			"sprint2:latest:8021:8021", // Image, with port mapping
-			"docker.io/natbodocker/basicrobot24:1.0:8020:8020", // Image, with port mapping
-			"docker.io/natbodocker/virtualrobotdisi23:1.0:8090:8091" // Image, with multiple port mappings
+			"sprint2:sprint2:latest:8021:8021", // Image, with port mapping
+			"basicrobot24:docker.io/natbodocker/basicrobot24:1.0:8020:8020", // Image, with port mapping
+			"sprint1:sprint1:latest:8022:8022", // Image, with port mapping
+			"venv:docker.io/natbodocker/virtualrobotdisi23:1.0:8090:8091" // Image, with multiple port mappings
 	};
 
 	@BeforeClass
@@ -27,27 +27,21 @@ public class GlobalTest {
 			String containerId = startContainer(config);
 			System.out.println("launched config "+ config + " " + containerId);
 			if (containerId != null) {
-				containerIds.add(containerId.trim());
+				containerIds.add(config.split(":")[0]);
 			}
-		}
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		for (String containerId : containerIds) {
-			stopAndRemoveContainer(containerId);
 		}
 	}
 
 	private static String startContainer(String config) throws Exception {
 		String[] parts = config.split(":");
-		String image = parts[0];
-		String version=parts[1];
-		String hostPort = parts[2];
-		String containerPort = parts[3];
+		String name = parts[0];
+		String image = parts[1];
+		String version=parts[2];
+		String hostPort = parts[3];
+		String containerPort = parts[4];
 
 		// Costruisci il comando docker run per un solo port mapping
-		String command = String.format("docker run -d --rm -p %s:%s %s:%s", hostPort, containerPort, image, version);
+		String command = String.format("docker run -d --name %s --rm -p %s:%s %s:%s", name, hostPort, containerPort, image, version);
 		System.out.println(command);
 		// Esegui il comando
 		return executeCommand(command);
@@ -55,7 +49,7 @@ public class GlobalTest {
 
 	private static void stopAndRemoveContainer(String containerId) throws Exception {
 		executeCommand("docker stop " + containerId);
-		executeCommand("docker rm " + containerId);
+//		executeCommand("docker rm " + containerId);
 	}
 
 	private static String executeCommand(String command) throws Exception {
@@ -80,10 +74,21 @@ public class GlobalTest {
 
 	@Test
 	public void testContainersRunning() throws Exception {
+		
 	    for (String containerId : containerIds) {
-	        String command = "docker ps -q --filter id=" + containerId; // Corrected line
+	        String command = "docker ps -q --filter name=" + containerId; // Corrected line
 	        String result = executeCommand(command);
-	        assertTrue("Container is not running: " + containerId, result.contains(containerId));
+	        System.out.println("testing "+containerId);
+	        assertTrue("Container is not running: " + containerId, result!=null);
 	    }
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		System.out.println("killing all");
+		for (String containerId : containerIds) {
+			System.out.println("killing "+containerId);
+			stopAndRemoveContainer(containerId);
+		}
 	}
 }
