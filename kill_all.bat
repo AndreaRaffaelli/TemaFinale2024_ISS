@@ -1,14 +1,18 @@
 @echo off
+start /B docker stop virtual
+start /B docker stop basic
+start /B docker stop sprint1
+start /B docker stop sprint2
 
-REM Ferma e rimuove il container Docker
-FOR /F "tokens=*" %%i IN ('docker ps -q --filter "ancestor=docker.io/natbodocker/virtualrobotdisi23:1.0"') DO (
-    docker stop %%i
-)
+:: Ferma e rimuove il container Docker
+:: docker ps -q --filter "ancestor=docker.io/natbodocker/virtualrobotdisi23:1.0" | xargs -r docker stop
+::
+:: Termina i processi Gradle
+:: taskkill /F /IM gradle.exe
+::
+:: Termina il processo basicrobot24
+:: taskkill /F /IM basicrobot24.exe
 
-REM Termina i processi Gradle
-taskkill /F /IM gradle.exe /T
-
-REM Termina il processo basicrobot.bat
-taskkill /F /IM basicrobot.bat
-
+:: Aspetta che tutti i processi siano terminati
+timeout /t 5 >nul  :: Attendere un po' per garantire che i comandi siano completati
 echo Tutti i processi sono stati terminati.

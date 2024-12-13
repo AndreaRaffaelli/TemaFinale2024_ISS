@@ -1,15 +1,9 @@
 @echo off
+start /B docker run -d --name virtual -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0
+start /B docker run -d --name basic -p 8020:2020 --rm docker.io/natbodocker/basicrobot24:1.0
+start /B docker run -d --name sprint2 -p 8021:2021 --rm sprint2:latest
+start /B docker run -d --name sprint1 -p 8022:2022 --rm sprint1:latest
 
-REM Avvia il container Docker
-docker run -d -p 8090:8090 -p 8091:8091 --rm docker.io/natbodocker/virtualrobotdisi23:1.0
-
-REM Avvia basicrobot.bat in background
-start /B cmd /c "cd basicrobot24-1.0\bin && basicrobot.bat"
-
-REM Avvia il primo progetto Gradle in background
-start /B cmd /c "cd sprint1 && gradle run"
-
-REM Avvia il secondo progetto Gradle in background
-start /B cmd /c "cd sprint2 && gradle run"
-
-echo Tutti i processi sono stati avviati.
+:: Aspetta che tutti i container siano avviati
+timeout /t 5 >nul  :: Attendere un po' per garantire che i comandi siano completati
+echo Lanciati tutti i container
