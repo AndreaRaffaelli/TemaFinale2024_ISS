@@ -23,7 +23,7 @@ public class TestFunzionale {
     private static Interaction connSupport;
 
     private static final String ADDRESS = "localhost"; // Indirizzo dell'host
-    private static final String PORT = "6969"; // Porta (modificare secondo necessità)
+    private static final String PORT = "8022"; // Porta (modificare secondo necessità)
     private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
     private static final String DOCKER_NAME = "container_docker";
     private static final int MAX_T = 15000;
