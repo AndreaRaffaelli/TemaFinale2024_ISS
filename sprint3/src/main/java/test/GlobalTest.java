@@ -14,9 +14,9 @@ import static org.junit.Assert.*;
 public class GlobalTest {
 	// Indirizzo e porta della GUI:
     private static final String ADDRESS = "localhost"; // 
-    private static final String PORT = "8085"; //
+    private static final String PORT = "8022"; //
     private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
-	private static final int MAX_T = 40000;
+	private static final int MAX_T = 15000;
 
 
 	private static final List<String> containerIds = new ArrayList<>();
