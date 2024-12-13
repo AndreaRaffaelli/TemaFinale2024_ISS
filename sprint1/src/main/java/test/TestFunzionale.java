@@ -23,10 +23,10 @@ public class TestFunzionale {
     private static Interaction connSupport;
 
     private static final String ADDRESS = "localhost"; // Indirizzo dell'host
-    private static final String PORT = "6969"; // Porta (modificare secondo necessità)
+    private static final String PORT = "8022"; // Porta (modificare secondo necessità)
     private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
     private static final String DOCKER_NAME = "container_docker";
-    private static final int MAX_T = 40000;
+    private static final int MAX_T = 15000;
     private static String pidContext = "";
     private static String pidDocker = "";
     private static String pidBr = "";
@@ -86,6 +86,7 @@ public class TestFunzionale {
     @Test
     public void test() {
         IApplMessage testRequest = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
+        IApplMessage testAddrp = CommUtils.buildRequest("tester", "addrp", "addrp(1)", "wis");
 
         try {
             CommUtils.outmagenta("test_observer ======================================= ");
@@ -95,6 +96,7 @@ public class TestFunzionale {
                 Thread.sleep(1000);
             }
             CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+            connSupport.request(testAddrp);
             Thread.sleep(this.MAX_T);
 
             IApplMessage reply = connSupport.request(testRequest);

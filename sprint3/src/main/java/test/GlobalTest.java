@@ -1,17 +1,23 @@
 package main.java.test;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class GlobalTest {
+	// Indirizzo e porta della GUI:
+    private static final String ADDRESS = "localhost"; // 
+    private static final String PORT = "8022"; //
+    private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
+	private static final int MAX_T = 15000;
+
 
     private static final String DOCKER_COMPOSE_FILE = "/home/andrea/unibo/iss/TemaFinale2024_ISS/docker-compose.yml";
 
@@ -63,4 +69,32 @@ public class GlobalTest {
     public static void tearDownAfterClass() throws Exception {
         executeCommand("docker-compose -f " + DOCKER_COMPOSE_FILE + " down");
     }
+	@Test
+	public void test() throws Exception {
+		// Modifica da qui:
+		IApplMessage testRequest = CommUtils.buildRequest("tester", "addrp", "addrp(A)", "wis");
+	    try {
+            CommUtils.outmagenta("test_observer ======================================= ");
+            while (connSupport == null) {
+                connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
+                CommUtils.outcyan("testfunzionale another connect attempt ");
+                Thread.sleep(1000);
+            }
+            CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+            Thread.sleep(this.MAX_T);
+
+			// Invia AddRP al wis
+
+            IApplMessage reply = connSupport.request(testRequest);
+            CommUtils.outcyan("test_observer reply=" + reply);
+            String answer = reply.msgContent();
+            String s = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+
+            assertTrue(Boolean.parseBoolean(s)); 
+        } catch (Exception e) {
+            CommUtils.outred("test_observer ERROR " + e.getMessage());
+            fail("testRequest " + e.getMessage());
+        }
+	}
+
 }

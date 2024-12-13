@@ -147,7 +147,7 @@ eclipse {
 
 application {
     //Define the main class for the application.
-    mainClassName    = 'it.unibo.gui.MainGuiKt'
+    mainClassName    = 'it.unibo.ctxservicearea.MainCtxserviceareaKt'
 }
  
  jar {
@@ -170,9 +170,9 @@ task dovesiamo {
 
 distributions {
     main {
-        distributionBaseName = 'sprinttre'
+        distributionBaseName = 'test_sprint_tre'
         contents { 
-             from './sprinttre.pl'
+             from './test_sprint_tre.pl'
              from './sysRules.pl'
              from './facadeConfig.json'
         }
@@ -183,7 +183,7 @@ task run0(type: JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
-    main = 'it.unibo.gui.MainGuiKt'
+    main = 'it.unibo.ctxservicearea.MainCtxserviceareaKt'
 }
 
 /*
