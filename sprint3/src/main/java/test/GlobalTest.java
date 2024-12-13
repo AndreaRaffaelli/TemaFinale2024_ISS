@@ -1,15 +1,21 @@
 package main.java.test;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import unibo.basicomm23.interfaces.IApplMessage;
+import unibo.basicomm23.msg.ProtocolType;
+import unibo.basicomm23.utils.CommUtils;
+import unibo.basicomm23.utils.ConnectionFactory;
 
 public class GlobalTest {
 	// Indirizzo e porta della GUI:
