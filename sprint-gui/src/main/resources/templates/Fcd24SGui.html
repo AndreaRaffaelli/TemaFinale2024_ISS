@@ -10,12 +10,96 @@
             background-color: #f4f4f9;
             color: #333;
             margin: 20px;
+            padding: 0;
         }
+
         h1 {
             color: #4CAF50;
+            text-align: center;
+            margin-bottom: 20px;
         }
+
         p {
             font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .pre {
+            font-size: 0.9em;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .pre span {
+            font-weight: bold;
+            color: #4CAF50;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .container {
+            position: relative;
+            margin: 0 auto;
+            max-width: 400px;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;    
+        }
+
+        .container p {
+            width: 100%;
+        }
+
+        .container p span {
+            position: absolute;
+            right: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+            text-align: right;
+            width: 100%;
+        }
+
+        .footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            background-color: #f4f4f9;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+        }
+
+        #pulsante {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        #pulsante:hover {
+            background-color: #45a049;
+        }
+
+        .bottom-right-image {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            max-width: 100px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .bottom-right-image:hover {
+            opacity: 1;
         }
     </style>
 </head>
@@ -23,23 +107,30 @@
 
 
 <body>
-    <h1>Welcome to Sprint3 Application</h1>
-    <p>This is a test page served by Spring Boot.</p>
-    <p>Current WIS IP: <span th:text="${wisip}">not connected</span></p>
-    <p>Application Name: <span th:text="${appname}">Unknown</span></p>
-
-    <p>Current WasteStorage: <span th:text="${wasteStorage}" id="WasteStorage">Unknown</span></p>
-    <p>Current AshStorage: <span th:text="${ashStorage}" id="AshStorage">Unknown</span></p>
-    <p>Current Incinerator: <span th:text="${incinerator}" id="Incinerator">Unknown</span></p>
-    <p>Current OpRobot status: <span th:text="${opRobot_status}" id="OpRobot_Status">Unknown</span></p>
-    <p>Current OpRobot job: <span th:text="${opRobot_job}" id="OpRobot_Job">Unknown</span></p>
-
-    <button id="pulsante">Aggiungi RP</button>
+    <h1>Waste Incinerator Service</h1>
+    
+    <div class="pre">
+        Application Name: <span th:text="${appname}">Unknown</span>
+        <br>
+        Current WIS IP: <span th:text="${wisip}">not connected</span>
+    </div>
+    
+    <div class="container">
+        <p>Current WasteStorage:   <span th:text="${wasteStorage}" id="WasteStorage">Unknown</span></p>
+        <p>Current AshStorage:     <span th:text="${ashStorage}" id="AshStorage">Unknown</span></p>
+        <p>Current Incinerator:    <span th:text="${incinerator}" id="Incinerator">Unknown</span></p>
+        <p>Current OpRobot status: <span th:text="${opRobot_status}" id="OpRobot_Status">Unknown</span></p>
+        <p>Current OpRobot job:    <span th:text="${opRobot_job}" id="OpRobot_Job">Unknown</span></p>    
+    </div>
+    
+    <div class="footer">
+        <button id="pulsante">Aggiungi RP</button>
+    </div>
 
     <script src="guimain.js"></script>
     <br>
     <!-- Aggiungi l'immagine in basso a destra -->
-    <img src="/images/mbot.png" alt="mbot" class="bottom-right-image">  <!-- NN o cpt che immagine  -->
+    <!-- <img src="/images/mbot.png" alt="mbot" class="bottom-right-image">  NN o cpt che immagine  -->
 
 </body>
 </html>
