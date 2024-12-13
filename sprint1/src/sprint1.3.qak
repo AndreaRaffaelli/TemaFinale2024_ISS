@@ -1,4 +1,4 @@
-System sprintuno_due
+System sprintuno_tre
 
 Dispatch robotStart: robotStart(X)
 Dispatch sonarUpdate: sonarUpdate(QTY)   
@@ -30,8 +30,8 @@ Request testRequest : testRequest(X)
 
 
 Context ctxservicearea ip [host="localhost" port=8022]
-Context ctxashstorage ip [host="127.0.0.1" port=8021]
-Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
+Context ctxashstorage ip [host="sprint2" port=8021]
+Context ctxbasicrobot ip [host="basic_robot"  port=8020]
 
 ExternalQActor basicrobot context ctxbasicrobot
 
