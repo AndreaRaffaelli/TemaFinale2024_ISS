@@ -1,0 +1,356 @@
+System test_sprint_tre 
+
+Dispatch robotStart: robotStart(X)
+Dispatch sonarUpdate: sonarUpdate(QTY)   
+
+Dispatch robotUpdate: robotUpdate(X)
+Dispatch info : info(X, Y, Z)
+Request engage        : engage(CALLER)
+Reply   engagedone    : engagedone(ARG)
+Reply   engagerefused : engagerefused(ARG)
+Request  doplan   : doplan( PATH, STEPTIME )
+Reply doplandone  : doplandone( ARG )
+Reply doplanfailed  : doplanfailed( ARG )
+Event startIncinerator: startIncinerator(X)
+Event startBurn : startBurn(X)
+Event endBurn : endBurn( ARG )
+
+Request addrp : addrp(X)
+Reply replyAddrp : info(X, Y, Z)
+
+//Inglobamento endosimbitico di robotpos
+Request moverobot    :  moverobot(TARGETX, TARGETY)  
+Reply moverobotdone  :  moverobotok(ARG)                    for moverobot
+Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
+
+Request testStart : testStart(X)
+Request testRequest : testRequest(X)
+Reply testReply : testReply(X)
+
+	
+
+
+Context ctxservicearea ip [host="localhost" port=8022]
+Context ctxashstorage ip [host="127.0.0.1" port=8021]
+Context ctxbasicrobot ip [host="127.0.0.1"  port=8020]
+
+ExternalQActor basicrobot context ctxbasicrobot
+
+QActor wis context ctxservicearea { 
+	[#//
+		var Ws_status = 0;
+		var As_status = "empty";
+		var RobotFree = false;
+		var DLIMIT = 3; // zero non corretto
+	#]
+
+	// Stato iniziale: avvio e setup dell'osservazione
+	State s0 initial {
+		printCurrentMessage color magenta
+		delay 1000
+		emit startIncinerator : startIncinerator(avvio)
+		observeResource oprobot msgid info
+		updateResource [# "info($name,Ws_status,$Ws_status)" #]
+		delay 200
+		updateResource [# "info($name,RobotFree,$RobotFree)" #]
+
+	}
+	Goto controllo
+
+	// Stato di controllo: gestione della logica basata sui messaggi ricevuti
+	State controllo {
+		printCurrentMessage color magenta
+		
+		onMsg( info : info(SRC, VAL, VAR) ) {
+			[# 
+			val SRC = payloadArg(0)
+			val VAR = payloadArg(1)
+			val VAL = payloadArg(2)
+			#]
+			println("$name views $SRC $VAR $VAL") color yellow
+
+			// Aggiorna lo stato del robot in base al messaggio ricevuto
+			[# 
+			if (SRC.equals("oprobot") && VAR.equals("RobotState")) {
+				RobotFree = VAL.equals("IDLE");
+			}
+			#]
+			
+			
+			//Se abbiamo ritiato un RP riduciamo contatore Ws_status
+			[# 
+			if (SRC.equals("oprobot") && VAR.equals("MentalState") && VAL.equals("WASTEIN")) {			
+				Ws_status -= 1
+				#]
+				updateResource [# "info($name,Ws_status,$Ws_status)" #]
+				[#
+			} else{
+				#]
+				updateResource [# "info($name,$VAR,$VAL)" #]
+				[#
+			}
+			#]
+			println("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")
+		}
+
+		
+		[#
+		// Se tutte le condizioni sono soddisfatte, avvia il robot
+		if (Ws_status > 0 && !As_status.equals("full") && RobotFree) {
+			#]
+			println("($name) invio messaggio start oprobot") color yellow
+			println("($name) controllo: condizioni corrette e start") color yellow
+			forward oprobot -m robotStart : robotStart(parti)
+			[#
+			RobotFree = false;
+			#]
+//			updateResource [# "info($name,RobotFree,$RobotFree)" #]
+//			delay 200
+//			updateResource [# "info($name,Ws_status,$Ws_status)" #]
+			[#
+		}
+		#]
+		
+	}
+	Transition t0
+		whenMsg sonarUpdate -> sonarUpdate
+		whenMsg info -> controllo
+		whenRequest addrp -> newRp
+//		whenTime 5000 -> controllo
+		    
+		
+	State newRp {
+		printCurrentMessage color magenta
+		onMsg( addrp : addrp(X) ) {
+			[#
+				Ws_status += 1
+			#]
+			replyTo addrp with replyAddrp : info(wis, Ws_status, $Ws_status)	
+//			updateResource [# "info($name,Ws_status,$Ws_status)" #]
+		}
+	}
+	Goto controllo
+
+	// Stato di aggiornamento tramite sonar
+	State sonarUpdate {
+		printCurrentMessage color magenta
+		onMsg( sonarUpdate : sonarUpdate(QTY) ) {
+			[# 
+			As_status = payloadArg(0)
+			#]
+			updateResource [# "info($name,As_status,$As_status)" #]
+		}
+		println("($name) sonarUpdate: ricevuto: $As_status") color yellow
+	}
+	Goto controllo
+}
+
+
+
+
+
+
+//
+QActor oprobot context ctxservicearea{   
+[# 	
+	var RobotState = "IDLE";
+	var MentalState = "";
+	val Waste_x = 0; //waste
+	val Waste_y = 4;		
+	val In_x = 3; //burnin
+	val In_y = 1;
+	val Ho_x = 0; //home
+	val Ho_y = 0;
+	val Bo_x = 4; //burnout
+	val Bo_y = 3;
+	val Ao_x = 6; //AshOut
+	val Ao_y = 4;
+#]
+	State initialize initial{
+		printCurrentMessage color magenta
+		delay 1000
+		println("$name | $MyName engaging ... ") color yellow 
+		request basicrobot -m engage : engage($MyName,330)
+	}
+	Transition t0 whenReply engagedone   -> home				
+ 	              whenReply engagerefused -> end					//Fallimento Grave
+
+ 	State home{
+ 		printCurrentMessage color magenta
+		[# MentalState="HOME"#]
+		println("($name): $MentalState") color yellow 
+//		forward test_observer -m info : info(ciao)
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
+		onMsg( engagedone : engagedone(X) ){		
+			println("($name): $RobotState") color yellow
+//			forward wis -m robotUpdate : robotUpdate(idle)
+			updateResource [#  "info($name,RobotState,$RobotState)" #]
+		}
+	}   
+ 	Transition t0
+		whenMsg robotStart -> goToWasteIn
+		whenEvent endBurn -> home_go_burnOut
+ 	
+	State goToWasteIn{
+		printCurrentMessage color magenta
+		[# RobotState="WORKING"#]
+		updateResource [#  "info($name,RobotState,$RobotState)" #]
+		//println("($name): start") color magenta 
+		request basicrobot -m moverobot : moverobot($Waste_x,$Waste_y) //posizione WastePort
+	}
+	Transition t1
+		whenReply moverobotdone -> loadRP
+		whenReply moverobotfailed -> end //errore grave?? mossa fallita
+	
+	State loadRP{
+		printCurrentMessage color magenta
+		[# MentalState="WASTEIN"#]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
+		request basicrobot -m moverobot : moverobot($In_x,$In_y) //posizione BurnIn
+	}
+	Transition t2
+		whenReply moverobotdone -> startBurn
+		whenReply moverobotfailed -> end //errore grave?? mossa fallita
+	
+	State startBurn{
+		printCurrentMessage color magenta
+		[# MentalState="BURNIN"#]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
+		delay 5000
+		emit startBurn : startBurn(1)
+		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione BurnIn
+	}
+	Transition t3 
+			whenReply moverobotdone -> home
+			whenReply moverobotfailed -> end //errore grave?? mossa fallita
+	
+	State home_go_burnOut {
+		printCurrentMessage color magenta
+		request basicrobot -m moverobot : moverobot($Bo_x,$Bo_y) //posizione BurnOut	
+	}
+	Transition t4			
+			whenReply moverobotdone -> gatheringAsh
+			whenReply moverobotfailed -> end //errore grave?? mossa fallita
+
+	State gatheringAsh{
+		printCurrentMessage color magenta
+		[# MentalState="BURNOUT"#]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
+		delay 1000
+		request basicrobot -m moverobot : moverobot($Ao_x,$Ao_y) //posizione ASHOUT
+	}
+	Transition t5 			
+			whenReply moverobotdone -> unload
+			whenReply moverobotfailed -> end //errore grave?? mossa fallita
+	
+	State unload{
+		printCurrentMessage color magenta
+		[# MentalState="ASHOUT"#]
+		[# RobotState="IDLE"#]
+		updateResource [#  "info($name,RobotState,$RobotState)" #]
+		//println("($name): $MentalState") color magenta 
+		updateResource [#  "info($name,MentalState,$MentalState)" #]
+		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione home
+		//forward wis -m robotUpdate : robotUpdate(idle) 
+	}
+	Transition t6		
+			whenReply moverobotdone -> home
+			whenReply moverobotfailed -> end //errore grave?? mossa fallita	
+	
+	//BasicRobot non disponibile, fallimento grave
+	State end {
+		printCurrentMessage color magenta
+		[#System.exit(-1)#]
+	}
+}
+
+QActor incinerator context ctxservicearea{ 
+	[#
+        val BTIME = 3000L;
+        var start = "off";
+        var active = "off";
+	#]
+	State s0 initial{
+		printCurrentMessage color magenta
+		delay 1000
+	}	
+	Transition t0
+		whenEvent startIncinerator -> start
+		
+	State start{
+		printCurrentMessage color magenta
+		println("($name): Avvio inceneritore") color yellow
+		[# active ="on"; #]
+		updateResource [# "info($name,active,$active)" #]
+	}
+	Transition t1
+		whenEvent startBurn -> handleStartBurn
+		
+	State handleStartBurn{
+		printCurrentMessage color magenta
+		[# start ="on"; #]
+		println("($name): Inizio bruciatura") color yellow
+		delay 7000
+		println("($name): Fine bruciatura") color yellow
+		[# start ="off"; #]
+		updateResource [# "info($name,start,$start)" #]
+		emit endBurn : endBurn(0)
+		//replyTo startBurn with testReply : testReply(endBurn)			Reply a soli fini di test
+	}
+	Transition t2
+		whenEvent startBurn -> handleStartBurn	
+}
+
+
+
+QActor test_observer context ctxashstorage{
+	[# 	
+		var result= false;
+	#]
+	
+	State s0 initial{
+		printCurrentMessage color magenta
+		delay 500
+	}
+	Transition t0
+		whenMsg info -> monitor
+		whenRequest testRequest -> handleTest
+		
+	State monitor{
+		printCurrentMessage color magenta
+		onMsg(info : info(X,Y,Z)){
+			[# val N 	= payloadArg(0)#]
+			[# val VAR 	= payloadArg(1)#]
+		    [# val VAL 	= payloadArg(2)#]
+
+		    if [# N.equals("wis") && VAR.equals("As_status") && (VAL.toInt())>0 #]{		// Verifichiamo che ameno una volta la gui viene aggiornata con un livello polvere>0
+		    		[# 	
+						result = true 
+					#]
+		    }    
+		}
+	}
+	Transition t1
+		whenMsg info -> monitor
+		whenRequest testRequest -> handleTest
+		
+	State handleTest {
+		printCurrentMessage color magenta
+		[# var RES = "$result"#]
+  		replyTo testRequest with testReply : testReply($RES) 
+	}
+
+		
+}
+
+
+
+
+
+
+
+
+

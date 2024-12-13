@@ -1,24 +1,30 @@
 package main.java.test;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class GlobalTest {
+	// Indirizzo e porta della GUI:
+    private static final String ADDRESS = "localhost"; // 
+    private static final String PORT = "8085"; //
+    private static final ProtocolType PROTOCOL = ProtocolType.tcp; // Protocollo da utilizzare
+	private static final int MAX_T = 40000;
+
 
 	private static final List<String> containerIds = new ArrayList<>();
 	private static final String[] containerConfigs = { 
-			"sprint2:sprint2:latest:8021:8021", // Image, with port mapping
-			"basicrobot24:docker.io/natbodocker/basicrobot24:1.0:8020:8020", // Image, with port mapping
-			"sprint1:sprint1:latest:8022:8022", // Image, with port mapping
-			"venv:docker.io/natbodocker/virtualrobotdisi23:1.0:8090:8091" // Image, with multiple port mappings
+			"sprint1:latest:8022:8022", // Image, with port mapping
+			"sprint2:latest:8021:8021", // Image, with port mapping
+			"docker.io/natbodocker/basicrobot24:1.0:8020:8020", // Image, with port mapping
+			"docker.io/natbodocker/virtualrobotdisi23:1.0:8090:8091" // Image, with multiple port mappings
 	};
 
 	@BeforeClass
@@ -27,21 +33,27 @@ public class GlobalTest {
 			String containerId = startContainer(config);
 			System.out.println("launched config "+ config + " " + containerId);
 			if (containerId != null) {
-				containerIds.add(config.split(":")[0]);
+				containerIds.add(containerId.trim());
 			}
+		}
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		for (String containerId : containerIds) {
+			stopAndRemoveContainer(containerId);
 		}
 	}
 
 	private static String startContainer(String config) throws Exception {
 		String[] parts = config.split(":");
-		String name = parts[0];
-		String image = parts[1];
-		String version=parts[2];
-		String hostPort = parts[3];
-		String containerPort = parts[4];
+		String image = parts[0];
+		String version=parts[1];
+		String hostPort = parts[2];
+		String containerPort = parts[3];
 
 		// Costruisci il comando docker run per un solo port mapping
-		String command = String.format("docker run -d --name %s --rm -p %s:%s %s:%s", name, hostPort, containerPort, image, version);
+		String command = String.format("docker run -d --rm -p %s:%s %s:%s", hostPort, containerPort, image, version);
 		System.out.println(command);
 		// Esegui il comando
 		return executeCommand(command);
@@ -49,7 +61,7 @@ public class GlobalTest {
 
 	private static void stopAndRemoveContainer(String containerId) throws Exception {
 		executeCommand("docker stop " + containerId);
-//		executeCommand("docker rm " + containerId);
+		executeCommand("docker rm " + containerId);
 	}
 
 	private static String executeCommand(String command) throws Exception {
@@ -74,21 +86,39 @@ public class GlobalTest {
 
 	@Test
 	public void testContainersRunning() throws Exception {
-		
 	    for (String containerId : containerIds) {
-	        String command = "docker ps -q --filter name=" + containerId; // Corrected line
+	        String command = "docker ps -q --filter id=" + containerId; // Corrected line
 	        String result = executeCommand(command);
-	        System.out.println("testing "+containerId);
-	        assertTrue("Container is not running: " + containerId, result!=null);
+	        assertTrue("Container is not running: " + containerId, result.contains(containerId));
 	    }
 	}
-	
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		System.out.println("killing all");
-		for (String containerId : containerIds) {
-			System.out.println("killing "+containerId);
-			stopAndRemoveContainer(containerId);
-		}
+
+
+	@Test
+	public void test() throws Exception {
+		// Modifica da qui:
+		IApplMessage testRequest = CommUtils.buildRequest("tester", "addrp", "addrp(A)", "wis");
+	    try {
+            CommUtils.outmagenta("test_observer ======================================= ");
+            while (connSupport == null) {
+                connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
+                CommUtils.outcyan("testfunzionale another connect attempt ");
+                Thread.sleep(1000);
+            }
+            CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+            Thread.sleep(this.MAX_T);
+
+			// Invia AddRP al wis
+
+            IApplMessage reply = connSupport.request(testRequest);
+            CommUtils.outcyan("test_observer reply=" + reply);
+            String answer = reply.msgContent();
+            String s = answer.substring(answer.indexOf('(') + 1, answer.lastIndexOf(')'));
+
+            assertTrue(Boolean.parseBoolean(s)); 
+        } catch (Exception e) {
+            CommUtils.outred("test_observer ERROR " + e.getMessage());
+            fail("testRequest " + e.getMessage());
+        }
 	}
 }
