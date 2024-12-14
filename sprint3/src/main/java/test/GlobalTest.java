@@ -1,15 +1,21 @@
 package main.java.test;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import unibo.basicomm23.interfaces.IApplMessage;
+import unibo.basicomm23.msg.ProtocolType;
+import unibo.basicomm23.utils.CommUtils;
+import unibo.basicomm23.utils.ConnectionFactory;
 
 public class GlobalTest {
 	// Indirizzo e porta della GUI:
@@ -19,81 +25,56 @@ public class GlobalTest {
 	private static final int MAX_T = 15000;
 
 
-	private static final List<String> containerIds = new ArrayList<>();
-	private static final String[] containerConfigs = { 
-			"sprint1:latest:8022:8022", // Image, with port mapping
-			"sprint2:latest:8021:8021", // Image, with port mapping
-			"docker.io/natbodocker/basicrobot24:1.0:8020:8020", // Image, with port mapping
-			"docker.io/natbodocker/virtualrobotdisi23:1.0:8090:8091" // Image, with multiple port mappings
-	};
+    private static final String DOCKER_COMPOSE_FILE = "/home/andrea/unibo/iss/TemaFinale2024_ISS/docker-compose.yml";
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		for (String config : containerConfigs) {
-			String containerId = startContainer(config);
-			System.out.println("launched config "+ config + " " + containerId);
-			if (containerId != null) {
-				containerIds.add(containerId.trim());
-			}
-		}
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        executeCommand("docker-compose -f " + DOCKER_COMPOSE_FILE + " up -d");
+    }
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		for (String containerId : containerIds) {
-			stopAndRemoveContainer(containerId);
-		}
-	}
+    @Test
+    public void testContainersRunning() throws Exception {
+        List<String> containerIds = getRunningContainerIds();
+        for (String containerId : containerIds) {
+            System.out.println("testing " + containerId);
+            assertTrue("Container is not running: " + containerId, containerId != null);
+        }
+    }
 
-	private static String startContainer(String config) throws Exception {
-		String[] parts = config.split(":");
-		String image = parts[0];
-		String version=parts[1];
-		String hostPort = parts[2];
-		String containerPort = parts[3];
+    private static List<String> getRunningContainerIds() throws Exception {
+        List<String> containerIds = new ArrayList<>();
+        String command = "docker ps -q";
+        String result = executeCommand(command);
+        for (String line : result.split("\n")) {
+            containerIds.add(line.trim());
+        }
+        return containerIds;
+    }
 
-		// Costruisci il comando docker run per un solo port mapping
-		String command = String.format("docker run -d --rm -p %s:%s %s:%s", hostPort, containerPort, image, version);
-		System.out.println(command);
-		// Esegui il comando
-		return executeCommand(command);
-	}
+    private static String executeCommand(String command) throws Exception {
+        Process process = new ProcessBuilder().command(command.split(" ")).redirectErrorStream(true).start();
 
-	private static void stopAndRemoveContainer(String containerId) throws Exception {
-		executeCommand("docker stop " + containerId);
-		executeCommand("docker rm " + containerId);
-	}
+        StringBuilder output = new StringBuilder();
 
-	private static String executeCommand(String command) throws Exception {
-		Process process = new ProcessBuilder().command(command.split(" ")).redirectErrorStream(true).start();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+        }
 
-		StringBuilder output = new StringBuilder();
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new RuntimeException("Command failed: " + command + "\nOutput: " + output);
+        }
 
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				output.append(line).append("\n");
-			}
-		}
+        return output.toString().trim();
+    }
 
-		int exitCode = process.waitFor();
-		if (exitCode != 0) {
-			throw new RuntimeException("Command failed: " + command + "\nOutput: " + output);
-		}
-
-		return output.toString().trim();
-	}
-
-	@Test
-	public void testContainersRunning() throws Exception {
-	    for (String containerId : containerIds) {
-	        String command = "docker ps -q --filter id=" + containerId; // Corrected line
-	        String result = executeCommand(command);
-	        assertTrue("Container is not running: " + containerId, result.contains(containerId));
-	    }
-	}
-
-
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        executeCommand("docker-compose -f " + DOCKER_COMPOSE_FILE + " down");
+    }
 	@Test
 	public void test() throws Exception {
 		// Modifica da qui:
@@ -121,4 +102,5 @@ public class GlobalTest {
             fail("testRequest " + e.getMessage());
         }
 	}
+
 }

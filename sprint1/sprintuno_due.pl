@@ -18,8 +18,8 @@ request( testStart, testStart(X) ).
 request( testRequest, testRequest(X) ).
 %====================================================================================
 context(ctxservicearea, "localhost",  "TCP", "8022").
-context(ctxashstorage, "127.0.0.1",  "TCP", "8021").
-context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
+context(ctxashstorage, "sprint2",  "TCP", "8021").
+context(ctxbasicrobot, "basic_robot",  "TCP", "8020").
  qactor( basicrobot, ctxbasicrobot, "external").
   qactor( wis, ctxservicearea, "it.unibo.wis.Wis").
  static(wis).

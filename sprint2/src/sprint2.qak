@@ -13,7 +13,7 @@ Event startBurn : startBurn(X)
 Event endBurn : endBurn(X)
 
 // Context ctxservicearea ip [host="192.168.137.1" port=8022]
-Context ctxservicearea ip [host="127.0.0.1" port=8022]
+Context ctxservicearea ip [host="sprint1" port=8022]
 Context ctxashstorage ip [host="localhost"  port=8021]								
 
 ExternalQActor wis context ctxservicearea
