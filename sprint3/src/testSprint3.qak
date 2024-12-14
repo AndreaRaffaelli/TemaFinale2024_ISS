@@ -253,6 +253,9 @@ QActor oprobot context ctxservicearea{
 		updateResource [#  "info($name,RobotState,$RobotState)" #]
 		//println("($name): $MentalState") color magenta 
 		updateResource [#  "info($name,MentalState,$MentalState)" #]
+		// A fini di test:
+		forward wis -m sonarUpdate : sonarUpdate(half)
+		
 		request basicrobot -m moverobot : moverobot($Ho_x,$Ho_y) //posizione home
 		//forward wis -m robotUpdate : robotUpdate(idle) 
 	}
@@ -306,7 +309,7 @@ QActor incinerator context ctxservicearea{
 
 
 
-QActor test_observer context ctxashstorage{
+QActor test_observer context ctxservicearea{
 	[# 	
 		var result= false;
 	#]
@@ -314,6 +317,8 @@ QActor test_observer context ctxashstorage{
 	State s0 initial{
 		printCurrentMessage color magenta
 		delay 500
+		observeResource wis msgid info
+		
 	}
 	Transition t0
 		whenMsg info -> monitor
@@ -326,12 +331,13 @@ QActor test_observer context ctxashstorage{
 			[# val VAR 	= payloadArg(1)#]
 		    [# val VAL 	= payloadArg(2)#]
 
-		    if [# N.equals("wis") && VAR.equals("As_status") && (VAL.toInt())>0 #]{		// Verifichiamo che ameno una volta la gui viene aggiornata con un livello polvere>0
+		    if [# N.equals("wis") && VAR.equals("As_status") && VAL.equals("half")#]{		// Verifichiamo che ameno una volta la gui viene aggiornata con un livello polvere>0
 		    		[# 	
 						result = true 
 					#]
+				println ("As_status ricevuto") color yellow
 		    }    
-		}
+		}    
 	}
 	Transition t1
 		whenMsg info -> monitor
@@ -340,6 +346,7 @@ QActor test_observer context ctxashstorage{
 	State handleTest {
 		printCurrentMessage color magenta
 		[# var RES = "$result"#]
+		println ("RES: $RES") color yellow
   		replyTo testRequest with testReply : testReply($RES) 
 	}
 
