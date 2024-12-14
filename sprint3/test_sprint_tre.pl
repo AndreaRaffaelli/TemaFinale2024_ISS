@@ -27,5 +27,5 @@ context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
  static(oprobot).
   qactor( incinerator, ctxservicearea, "it.unibo.incinerator.Incinerator").
  static(incinerator).
-  qactor( test_observer, ctxashstorage, "it.unibo.test_observer.Test_observer").
+  qactor( test_observer, ctxservicearea, "it.unibo.test_observer.Test_observer").
  static(test_observer).

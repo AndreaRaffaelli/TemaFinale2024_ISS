@@ -335,7 +335,6 @@ QActor test_observer context ctxservicearea{
 		    		[# 	
 						result = true 
 					#]
-				println ("As_status ricevuto") color yellow
 		    }    
 		}    
 	}
@@ -346,7 +345,6 @@ QActor test_observer context ctxservicearea{
 	State handleTest {
 		printCurrentMessage color magenta
 		[# var RES = "$result"#]
-		println ("RES: $RES") color yellow
   		replyTo testRequest with testReply : testReply($RES) 
 	}
 

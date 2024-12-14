@@ -162,6 +162,7 @@ class Oprobot ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						)
 						updateResourceRep(  "info($name,MentalState,$MentalState)"  
 						)
+						forward("sonarUpdate", "sonarUpdate(half)" ,"wis" ) 
 						request("moverobot", "moverobot($Ho_x,$Ho_y)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}

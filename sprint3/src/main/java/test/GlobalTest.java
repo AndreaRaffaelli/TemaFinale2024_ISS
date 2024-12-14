@@ -13,11 +13,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import unibo.basicomm23.interfaces.IApplMessage;
+import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.msg.ProtocolType;
 import unibo.basicomm23.utils.CommUtils;
 import unibo.basicomm23.utils.ConnectionFactory;
 
 public class GlobalTest {
+	private static Interaction connSupport;
+
 	// Indirizzo e porta della GUI:
     private static final String ADDRESS = "localhost"; // 
     private static final String PORT = "8022"; //
@@ -78,8 +81,9 @@ public class GlobalTest {
 	@Test
 	public void test() throws Exception {
 		// Modifica da qui:
-		IApplMessage testRequest = CommUtils.buildRequest("tester", "addrp", "addrp(A)", "wis");
-	    try {
+		IApplMessage testRequest = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
+	    IApplMessage testAddrp = CommUtils.buildRequest("tester", "addrp", "addrp(1)", "wis");
+		try {
             CommUtils.outmagenta("test_observer ======================================= ");
             while (connSupport == null) {
                 connSupport = ConnectionFactory.createClientSupport(PROTOCOL, ADDRESS, PORT);
@@ -87,9 +91,11 @@ public class GlobalTest {
                 Thread.sleep(1000);
             }
             CommUtils.outcyan("CONNECTED to test_observer " + connSupport);
+			IApplMessage replyAddrp = connSupport.request(testAddrp);
+			CommUtils.outcyan("Iniviato: "+ testAddrp.toString());
             Thread.sleep(this.MAX_T);
 
-			// Invia AddRP al wis
+			//
 
             IApplMessage reply = connSupport.request(testRequest);
             CommUtils.outcyan("test_observer reply=" + reply);

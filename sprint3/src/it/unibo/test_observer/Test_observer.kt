@@ -29,6 +29,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						delay(500) 
+						observeResource("localhost","8022","ctxservicearea","wis","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -46,7 +47,7 @@ class Test_observer ( name: String, scope: CoroutineScope, isconfined: Boolean=f
 								 val N 	= payloadArg(0) 
 								 val VAR 	= payloadArg(1) 
 								 val VAL 	= payloadArg(2) 
-								if(  N.equals("wis") && VAR.equals("As_status") && (VAL.toInt())>0  
+								if(  N.equals("wis") && VAR.equals("As_status") && VAL.equals("half") 
 								 ){ 	
 														result = true 
 								}
