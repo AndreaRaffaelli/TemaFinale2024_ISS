@@ -319,17 +319,18 @@ public interface ILED{
 				</li>
                 <li>Come fa il Monitoring Device ad accorgersi che l'inceneritore è in fase di bruciatura?</li>
                 <ul>
-                    <li>Dissertazione: Il Monitoring Device dovrebbe percepire i cambiamenti di stato dell'Inicinerator al fine di gestire lo stato del LED in base alla fase di bruciatura.<br> 
-                        Per questo si rende osservabile l'Incenirator dal Monitoring Device.
-                		
-<pre><code>
-observeResource incinerator msgid info    
-
-//  Nell'Incinerator:
-println("($name): Inizio inceneritore") color magenta
-[# start ="on"; #]
-updateResource [# "info($name,start,$start)" #]     
-                                                                        </code></pre>
+                    <li>Dissertazione: 
+						Il Monitoring Device dovrebbe percepire i cambiamenti di stato dell'Inicinerator al fine di gestire 
+						lo stato del LED in base alla fase di bruciatura.<br> 
+						Il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, quindi si e' reso il messaggio
+						<pre><code>
+Dispatch startBurn: startBurn(X)
+						</code></pre>
+						un evento:
+						<pre><code>
+Event startBurn: startBurn(X)							
+						</code></pre>
+						permettendo cosi la ricezione di esso al Monitoring Device. 
                                                                         
 </ul>
                 <li><b>Aggiornamento Sprint1:</b></li>

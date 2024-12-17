@@ -48,6 +48,8 @@ QActor wis context ctxservicearea {
 		printCurrentMessage color magenta
 		delay 1000
 		emit startIncinerator : startIncinerator(avvio)
+		updateResource [# "info($name,Incinerator,True)" #]
+		
 		observeResource oprobot msgid info
 		updateResource [# "info($name,Ws_status,$Ws_status)" #]
 		delay 200

@@ -292,44 +292,48 @@
 			<li>R5.3: Visualizzare lo stato dell'inceneritore.</li>
 			<li>R5.4: Visualizzare lo stato del OpRobot.</li>
 		</ul>
-		Dissertazione: al fine di dividere le responsabilità di visualizzazione dalla logica di business 
-		SSGUI e' implementata nel contesto <code style="padding:0%;">ctxgui</code>.
-		Le informazioni necessarie per R5.1, R5.2 ed R5.3 sono reperibili all'interno del WIS o 
-		tramite la ricezione di Eventi, rispettivamente:
-		<pre><code>
-R5.1: Wis::Ws_status
-R5.2: Wis::As_status
-R5.3: Event::startBurn
-      Event::endBurn
-		</code></pre>
-		<br>
+		Dissertazione: 
 		
+		Non è specificato in che modo la GUI debba ottenere queste informazioni dal sistema, e ci sono diverse alternative possibili:  
+		<ul>
+			<li>La GUI potrebbe eseguire un polling periodico sui vari componenti per rilevare eventuali cambiamenti.  </li>
+			<li>Potrebbe ricevere notifiche sui cambiamenti di stato da parte di un attore dedicato.  </li>
+			<li>Oppure potrebbe ricevere direttamente dal sistema WIS le informazioni aggiornate.  </li>
+		</ul>
+		Attualmente, il sistema WIS dispone già di tutte le informazioni necessarie per aggiornare lo stato della GUI.
+
+
+		Poiche' il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, una possibilita' potrebbe essere
+		l'inserimento di un nuovo attore <code style="padding:0;">opEventBridge</code> con il compito di osservare i cambi di stato del
+		opRobot ed inviare informazioni a SSGUI.
+		Considerando il costo contenuto per una modifica all'attore <code style="padding:0;">WIS</code>, 
+		non si reputa vantaggiosa la creazione di <code style="padding:0;">opEventBridge</code>.
+		Si modifica quindi <code style="padding:0;">WIS</code> in modo tale da inviare informazioni a SSGUI riguardo i cambi di stato del opRobot.
+		<br>
+		Dai requisiti non si evince che la GUI sia una pagina web ma per semplicita' di sviluppo ed utilizzo si e' scelto l'impiego di un approccio 
+		simil Facade, utilizzando il framework SpringBoot.
+		<br>
+
+
+
 		<h2>Problematiche</h2>
 		<ul>
-            <li><b>R5.4</b></li>
-            <ul>
-				<li>Come fa SSGUI a mostrare la posizione e il lavoro che opRobot sta eseguendo?</li>
-				<ul>
-					<li>Dissertazione: 
-						Ricordiamo da <a href="../../sprint1/userDocs/Doc_Sprint1.html">sprint1</a> gli stati <code style="padding:0%;">MentalState</code> e <code style="padding:0%;">RobotState</code> di
-						opRobot osservabili da <code style="padding:0;">WIS</code>. 
-						Poiche' il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, una possibilita' potrebbe essere
-						l'inserimento di un nuovo attore <code style="padding:0;">opEventBridge</code> con il compito di osservare i cambi di stato del
-						opRobot ed inviare informazioni a SSGUI.
-						Considerando il costo contenuto per una modifica all'attore <code style="padding:0;">WIS</code>, 
-						non si reputa vantaggiosa la creazione di <code style="padding:0;">opEventBridge</code>.
-						Si modifica quindi <code style="padding:0;">WIS</code> in modo tale da inviare informazioni a SSGUI riguardo i cambi di stato del opRobot.
-					</li>
- 				</ul>
-			</ul>
+			<li>**Come avviene la comunicazione tra WIS e SSGUI?**</li>
+			<li>
+				**Analisi:**
+				<br>
+				La comunicazione avviene tramite l’aggiornamento delle risorse relative alle seguenti variabili: 
+				<code style="padding: 0%;">Ws_status</code> e 
+				<code style="padding: 0%;">As_status</code> di WIS, e 
+				<code style="padding: 0%;">MentalState</code> e 
+				<code style="padding: 0%;">RobotState</code> di opRobot, osservate da WIS.
+				<br>
+				Queste variabili gestiscono lo stato dei componenti richiesti, ad eccezione dello stato dell’inceneritore, che sarà aggiornato separatamente attraverso la variabile <code style="padding: 0%;">oprobotstatus</code>.
+				<br>
+				Tutte queste informazioni sono monitorate e osservate da <code style="padding: 0%;">CoapObserver</code>.
+			</li>
+		</ul>
 
-			<li>Come fa WIS a comunicare Ws_status, As_status e i cambi di stato del opRobot con SSGUI?</li>
-			<ul>
-				<li>Dissertazione:
-
-				</li>
-			 </ul>
-        </ul>
 
 <!-- 
 		
