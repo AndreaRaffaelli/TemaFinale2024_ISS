@@ -79,7 +79,7 @@ public class GlobalTest {
         executeCommand("docker-compose -f " + DOCKER_COMPOSE_FILE + " down");
     }
 	@Test
-	public void test() throws Exception {
+	public void guiTest() throws Exception {
 		// Modifica da qui:
 		IApplMessage testRequest = CommUtils.buildRequest("tester", "testRequest", "testRequest(A)", "test_observer");
 	    IApplMessage testAddrp = CommUtils.buildRequest("tester", "addrp", "addrp(1)", "wis");
