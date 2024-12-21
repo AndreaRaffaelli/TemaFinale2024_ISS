@@ -305,10 +305,11 @@
 
 		Poiche' il linguaggio di modellazione non permette l'osservazione tra due nodi remoti, una possibilita' potrebbe essere
 		l'inserimento di un nuovo attore <code style="padding:0;">opEventBridge</code> con il compito di osservare i cambi di stato del
-		opRobot ed inviare informazioni a SSGUI.
+		opRobot ed inviare informazioni a SSGUI. <br>
 		Considerando il costo contenuto per una modifica all'attore <code style="padding:0;">WIS</code>, 
-		non si reputa vantaggiosa la creazione di <code style="padding:0;">opEventBridge</code>.
-		Si modifica quindi <code style="padding:0;">WIS</code> in modo tale da inviare informazioni a SSGUI riguardo i cambi di stato del opRobot.
+		non si reputa vantaggiosa l'aggiunta di nuovo componente per questo fine, in quanto non è un requisito richiesto dal committente. 
+		Per questo quindi si valuta di effettuare il deploy della GUI nello stesso nodo della ServiceArea, modificando <code style="padding:0;">WIS</code> 
+		in modo tale da inviare informazioni alla dashboard riguardo i cambi di stato del opRobot.
 		<br>
 		Dai requisiti non si evince che la GUI sia una pagina web ma per semplicita' di sviluppo ed utilizzo si e' scelto l'impiego di un approccio 
 		simil Facade, utilizzando il framework SpringBoot.
@@ -318,9 +319,9 @@
 
 		<h2>Problematiche</h2>
 		<ul>
-			<li>**Come avviene la comunicazione tra WIS e SSGUI?**</li>
+			<li>Come avviene la comunicazione tra WIS e SSGUI?</li>
 			<li>
-				**Analisi:**
+				Dissertazione:
 				<br>
 				La comunicazione avviene tramite l’aggiornamento delle risorse relative alle seguenti variabili: 
 				<code style="padding: 0%;">Ws_status</code> e 
@@ -328,7 +329,9 @@
 				<code style="padding: 0%;">MentalState</code> e 
 				<code style="padding: 0%;">RobotState</code> di opRobot, osservate da WIS.
 				<br>
-				Queste variabili gestiscono lo stato dei componenti richiesti, ad eccezione dello stato dell’inceneritore, che sarà aggiornato separatamente attraverso la variabile <code style="padding: 0%;">oprobotstatus</code>.
+				Queste variabili gestiscono lo stato dei componenti richiesti, ad eccezione dello stato dell’inceneritore, che sarà aggiornato separatamente attraverso 
+				la variabile <code style="padding: 0%;">MentalState</code>. Ricordiamo la differenze tra le variabili RobotState e MentalState: la prima
+				rappresenta lo stato di occupazione (working/idle) e la seconda rappresenta l'attività che sta svolgendo.
 				<br>
 				Tutte queste informazioni sono monitorate e osservate da <code style="padding: 0%;">CoapObserver</code>.
 			</li>
@@ -353,13 +356,10 @@ RobotUtils da utilizzare solo sendApplMsg(...) per inviare messaggi agli actors
         <h2>Architettura Logica</h2>
         <center><img src="./img/archLogica2.png" alt="imgAL" width="50%" height="50%"></center>		
 		<h2>Progettazione</h2>
-		Vista l'analisi del problema si e' implentato il modello come segue: <a href="../src/sprint2.qak">sprint2.qak</a>.<br>
-		Ai fini di test si e' introdotto un <a href="../src/main/resources/VirtualLED.java">LED virtuale</a> 
-		il quale, quando viene effettuato un <code style="padding-left: 0;">ILED.turnOn()</code>, invia un messaggio testimoniando la sua accensione.		
-		Per questo e' stata introdotta una <a href="../src/main/resources/LedFactory.java">classe factory</a> (<code style="padding-left: 0;">LedFactory</code>)
-		alla quale il Monitoring Device puo' richiedere una creazione dell'istanza del LED, <a href="../src/main/resources/VirtualLED.java">virtuale</a> o <a href="../src/main/resources/LEDFisico.java">fisico</a>. <br>
+		<br>
 		<br>
 		<h3>Deploy</h3>		
+		
 		<pre>
 			<code>
 docker run -ti -p 8090:8090 -p 8091:8091 --rm  docker.io/natbodocker/virtualrobotdisi23:1.0

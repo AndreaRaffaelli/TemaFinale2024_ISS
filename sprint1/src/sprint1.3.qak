@@ -72,9 +72,6 @@ QActor wis context ctxservicearea {
 			[# 
 			if (SRC.equals("oprobot") && VAR.equals("RobotState")) {
 				RobotFree = VAL.equals("IDLE");
-				#]
-//				updateResource [# "info($name,RobotFree,$RobotFree)" #]
-				[#
 			}
 			#]
 			

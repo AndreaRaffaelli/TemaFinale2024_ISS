@@ -60,7 +60,6 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 								 
 											if (SRC.equals("oprobot") && VAR.equals("RobotState")) {
 												RobotFree = VAL.equals("IDLE");
-								
 											}
 								 
 											if (SRC.equals("oprobot") && VAR.equals("MentalState") && VAL.equals("WASTEIN")) {			

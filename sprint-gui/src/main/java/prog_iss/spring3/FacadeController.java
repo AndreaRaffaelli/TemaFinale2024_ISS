@@ -51,6 +51,17 @@ public class FacadeController {
         return buildThePage(viewmodel); //"qakFacadeGUI";
     }
     
+
+    @GetMapping("/test")
+    public String testPage(Model viewmodel) {
+        //CommUtils.outcyan("FacadeController homePage appNameOld=" + appNameOld);
+        viewmodel.addAttribute("appname", ApplSystemInfo.appName);
+        viewmodel.addAttribute("wisip", wisip);  
+        String dir = System.getProperty("user.dir");
+        CommUtils.outgreen (" --- FacadeController | entry dir= "+dir  );
+        return "Fcd24SGuiTest"; //"qakFacadeGUI";
+    }
+
     @PostMapping("/addrp")
     public String addrp(Model viewmodel, @RequestParam String ipaddr  ){
         wisip = ipaddr;
