@@ -1,1 +1,1 @@
-{"host":"localhost", "port":"8022", "context":"ctxservicearea", "facade": "wis", "facadeport":"8085", "sysdescr":"TemaFinale24" }
+{"host":"sprint1", "port":"8022", "context":"ctxservicearea", "facade": "wis", "facadeport":"8085", "sysdescr":"TemaFinale24" }

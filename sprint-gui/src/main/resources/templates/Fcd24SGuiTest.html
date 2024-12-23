@@ -116,11 +116,11 @@
     </div>
     
     <div class="container">
-        <p>Current WasteStorage:   <span th:text="${wasteStorage}" id="WasteStorage">Unknown</span></p>
-        <p>Current AshStorage:     <span th:text="${ashStorage}" id="AshStorage">AndreaRaffaelli</span></p>
-        <p>Current Incinerator:    <span th:text="${incinerator}" id="Incinerator">Unknown</span></p>
-        <p>Current OpRobot status: <span th:text="${opRobot_status}" id="OpRobot_Status">Unknown</span></p>
-        <p>Current OpRobot job:    <span th:text="${opRobot_job}" id="OpRobot_Job">Unknown</span></p>    
+        <p>Current WasteStorage:   <span th:text="${wasteStorage ?: 'Unknown'}" id="WasteStorage">Unknown</span></p>
+        <p>Current AshStorage:     <span th:text="${ashStorage ?: 'Unknown'}" id="AshStorage">Unknown</span></p>
+        <p>Current Incinerator:    <span th:text="${incinerator ?: 'Unknown'}" id="Incinerator">Unknown</span></p>
+        <p>Current OpRobot status: <span th:text="${opRobot_status ?: 'Unknown'}" id="OpRobot_Status">Unknown</span></p>
+        <p>Current OpRobot job:    <span th:text="${opRobot_job ?: 'Unknown'}" id="OpRobot_Job">Unknown</span></p> 
     </div>
     
     <div class="footer">

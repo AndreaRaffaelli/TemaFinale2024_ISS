@@ -28,3 +28,11 @@ services:
     depends_on:
       - basic_robot
       - sprint1
+
+  sprintgui:
+    image: sprintgui:latest # Sostituisci con l'immagine del tuo container sprint2
+    ports:
+     - "8085:8085"
+    depends_on:
+     - sprint1
+      

@@ -42,7 +42,7 @@ function connect() {
                 "As_status": "AshStorage",
                 "Incinerator_status": "Incinerator",            /* MANCA UPDATE DALL'INC! */
                 "MentalState": "OpRobot_Status",
-                "RobotState": "OpRobot_Job"
+                "RobotFree": "OpRobot_Job"
             };
     
             // Aggiorna il valore dell'elemento DOM corrispondente
@@ -75,7 +75,7 @@ document.getElementById("pulsante").addEventListener("click", ()=>sendMessage('r
 
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(test, 2000);
-    setTimeout(controllaCampi, 20000);
+    setTimeout(controllaCampi, 50000);
 })
 
 function test(){
@@ -87,7 +87,7 @@ function test(){
 function controllaCampi() {
     const campoAsh = document.getElementById("AshStorage");
     const campoWaste = document.getElementById("WasteStorage");
-    console.log(campoAsh);
+
     // Controllo del contenuto dei campi
     if (campoAsh.innerHTML.trim() === "half") {
         console.log("Il campoAsh è OK");
@@ -97,7 +97,7 @@ function controllaCampi() {
         campoAsh.style.border = "2px solid red";
     }
 
-    if (campoWaste.value.trim() === "0") {
+    if (campoWaste.innerHTML.trim() === "0") {
         console.log("Il campoWaste è OK");
         campoWaste.style.border = "2px solid green";
     } else {
@@ -105,6 +105,7 @@ function controllaCampi() {
         campoWaste.style.border = "2px solid red";
     }
 }
+
 
 
 

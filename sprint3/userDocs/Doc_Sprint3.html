@@ -354,12 +354,19 @@ RobotUtils da utilizzare solo sendApplMsg(...) per inviare messaggi agli actors
 
 
         <h2>Architettura Logica</h2>
-        <center><img src="./img/archLogica2.png" alt="imgAL" width="50%" height="50%"></center>		
+        <center><img src="./img/Facade24StartCreation.PNG" alt="imgAL" width="50%" height="50%"></center>		
 		<h2>Progettazione</h2>
-		<br>
+		Poiché la bilancia sarà fornita dal committente, in questo sprint è stata emulata mediante un pulsante, che invia una richiesta di aggiunta 
+		RP al sistema WIS. <br>
+		Quando il componente verrà fornito, sarà possibile implemntare un attore adapter per incapsularlo in quanto consentirà 
+		di gestire la bilancia come un componente attivo, in grado di inviare messaggi ogni volta che viene aggiunto un RP.
 		<br>
 		<h3>Deploy</h3>		
-		
+		Come già anticipato in Problematiche, è necessario effettuare il deploy della GUI nello stesso nodo della Service Area, a causa della natura 
+		dei metodi di comunicazione fornite dal Qak.
+
+		Per il depl
+
 		<pre>
 			<code>
 docker run -ti -p 8090:8090 -p 8091:8091 --rm  docker.io/natbodocker/virtualrobotdisi23:1.0
@@ -389,7 +396,7 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 		</pre>	
 
 		<h2>Test Unit</h2>
-		<h3>Test Funzionale Monitoring Device</h3>
+		<h3>Test Funzionale GUI</h3>
 		<h4>Test 1</h4>
 		Nel test l'Inceneritor modifica il suo stato, iniziando la fase di combustione. <br>
 		<ul>
