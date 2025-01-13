@@ -14,6 +14,6 @@ COPY ./*.pl ./
 COPY ./*.json ./
 COPY ./*.bin ./
 COPY ./*.txt ./
-
+COPY ./src/main/resources/* ./  
 # Specify the command to run your application
 CMD ["sh", "./sprintdue"]

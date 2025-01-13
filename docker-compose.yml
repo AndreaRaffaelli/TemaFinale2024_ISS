@@ -30,7 +30,7 @@ services:
       - sprint1
 
   sprintgui:
-    image: sprintgui:latest # Sostituisci con l'immagine del tuo container sprint2
+    image: sprintgui:latest 
     ports:
      - "8085:8085"
     depends_on:

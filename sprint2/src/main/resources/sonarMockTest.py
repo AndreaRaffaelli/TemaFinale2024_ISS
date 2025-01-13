@@ -8,12 +8,18 @@ values = list(range(100, 0, -1))
 
 # Funzione che stampa un valore dall'array ogni 1 secondo
 def sonar():
-	print(1)
+	print(80)
 	sys.stdout.flush()
 	time.sleep(5)
 
-if __name__ == "__main__":
-    while True:
-        sonar()
+def empty():
+	print(90)
+	sys.stdout.flush()
+	time.sleep(5)
 
-    
+
+if __name__ == "__main__":
+	for i in range(0, 3):
+		empty()
+	while True:
+		sonar()
