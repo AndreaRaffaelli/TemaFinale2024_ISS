@@ -1,0 +1,4 @@
+docker build --tag sprint2 .
+docker build --tag sprint1 .
+docker build --tag sprintgui .
+
