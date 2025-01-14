@@ -49,10 +49,9 @@ QActor wis context ctxservicearea {
 		delay 1000
 		emit startIncinerator : startIncinerator(avvio)
 		observeResource oprobot msgid info
+		observeResource incinerator msgid info
 		updateResource [# "info($name,Ws_status,$Ws_status)" #]
 		delay 200
-		updateResource [# "info($name,RobotFree,$RobotFree)" #]
-
 	}
 	Goto controllo
 
@@ -82,10 +81,12 @@ QActor wis context ctxservicearea {
 				Ws_status -= 1
 				#]
 				updateResource [# "info($name,Ws_status,$Ws_status)" #]
+				delay 200
 				[#
 			} else{
 				#]
 				updateResource [# "info($name,$VAR,$VAL)" #]
+				delay 200
 				[#
 			}
 			#]
@@ -283,19 +284,20 @@ QActor incinerator context ctxservicearea{
 		printCurrentMessage color magenta
 		println("($name): Avvio inceneritore") color yellow
 		[# active ="on"; #]
-		updateResource [# "info($name,active,$active)" #]
+		// updateResource [# "info($name,Incinerator_status,$active)" #]
 	}
 	Transition t1
 		whenEvent startBurn -> handleStartBurn
 		
 	State handleStartBurn{
 		printCurrentMessage color magenta
-		[# start ="on"; #]
+		[# start ="ON"; #]
 		println("($name): Inizio bruciatura") color yellow
+		updateResource [# "info($name,Incinerator_status,$start)" #]
 		delay 7000
 		println("($name): Fine bruciatura") color yellow
-		[# start ="off"; #]
-		updateResource [# "info($name,start,$start)" #]
+		[# start ="OFF"; #]
+		updateResource [# "info($name,Incinerator_status,$start)" #]
 		emit endBurn : endBurn(0)
 		//replyTo startBurn with testReply : testReply(endBurn)			Reply a soli fini di test
 	}

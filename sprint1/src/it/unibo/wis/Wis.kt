@@ -34,11 +34,10 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 						delay(1000) 
 						emit("startIncinerator", "startIncinerator(avvio)" ) 
 						observeResource("localhost","8022","ctxservicearea","oprobot","info")
+						observeResource("localhost","8022","ctxservicearea","incinerator","info")
 						updateResourceRep( "info($name,Ws_status,$Ws_status)"  
 						)
 						delay(200) 
-						updateResourceRep( "info($name,RobotFree,$RobotFree)"  
-						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -66,10 +65,12 @@ class Wis ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : 
 												Ws_status -= 1
 								updateResourceRep( "info($name,Ws_status,$Ws_status)"  
 								)
+								delay(200) 
 								
 											} else{
 								updateResourceRep( "info($name,$VAR,$VAL)"  
 								)
+								delay(200) 
 								
 											}
 								CommUtils.outblack("($name) Ws_status: ($Ws_status), As_status: ($As_status), RobotFree: ($RobotFree)")

@@ -33,7 +33,7 @@ function connect() {
         if (match) {
             const src = match[1].trim();
             const variable = match[2].trim();
-            const value = match[3].trim();
+            const value = match[3].trim().toLowerCase();
     
             console.log(`Parsed message: SRC=${src}, VAR=${variable}, VAL=${value}`);
     
@@ -41,7 +41,7 @@ function connect() {
             const variableToElementId = {
                 "Ws_status": "WasteStorage",
                 "As_status": "AshStorage",
-                "Incinerator_status": "Incinerator",            /* MANCA UPDATE DALL'INC! */
+                "Incinerator_status": "Incinerator",            
                 "MentalState": "OpRobot_Status",
                 "RobotState": "OpRobot_Job"
             };
