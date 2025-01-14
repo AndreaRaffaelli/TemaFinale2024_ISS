@@ -398,47 +398,21 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 		<h2>Test Unit</h2>
 		<h3>Test Funzionale GUI</h3>
 		<h4>Test 1</h4>
-		Nel test l'Inceneritor modifica il suo stato, iniziando la fase di combustione. <br>
+		Nel test funzionale non abbiamo fatto riferimento alla JUnit ma si è preferito utilizzare le tecnologie Web verificando la corretta integrazione della GUI spring con il modello precedentemente sviluppo.  <br>
 		<ul>
-			<li>Verifichiamo che il LED si accenda.<br>
-				&#x2705; Il test e' superato se la variabile booleana <code style="padding: 0%;">LEDON</code> viene resa <code style="padding: 0%;">true</code>.</br>
+			<li>Verifichiamo corretta gestione dell'inserimento di un nuovo RP dalla GUI.<br>
+				&#x2705; Il test e' superato se i campi della GUI <code style="padding: 0%;">AshOut</code> e <code style="padding: 0%;">WasteIn</code> hanno registro il corretto processamento dell'RP:
+				<ul>
+					<li><code style="padding: 0%;">WasteIn</code> passa da <b>1</b> al valore <b>0</b></li>
+					<li><code style="padding: 0%;">AshOut</code> passa da <b>empty</b> a <b>half</b></li>
+				</ul>
 			</li>
 		</ul>
-		
-		<h4>Test 2</h4>
-        Nel test l'Inceneritor modifica il suo stato, terminando la fase di combustione. <br>
-		<ul>
-			<li>Verifichiamo che il LED si spenga.<br>
-				&#x2705; Il test e' superato se la variabile booleana <code style="padding: 0%;">LEDOFF</code> viene resa <code style="padding: 0%;">true</code>.</br>
-			</li>
-		</ul>
-		
-		<h4>Test 3</h4>
-        Il test simula che l'AshStorage sia pieno inoltrando al Monitoring Device un messaggio in cui venga superato il valore soglia di polvere. <br>
-		<ul>
-			<li>Verifichiamo che il LED lampeggi.<br>
-				&#x2705; Il test e' superato se la variabile booleana <code style="padding: 0%;">LEDBLINK</code> viene resa <code style="padding: 0%;">true</code>.</br>
-			</li>
-		</ul>
-		<a href="../src/main/java/test/TestLed.java">Test JUnit LED</a>
-		<h4>Test 4</h4>
-        Il test simula che l'AshStorage sia pieno inoltrando al Wis un messaggio in cui venga superato il valore soglia di polvere. <br>
-		<ul>
-			<li>Verifichiamo che l'OpRobot non inizi un ciclo di lavoro.<br>
-				&#x2705; Il test e' superato se il <code style="padding: 0%;">test_observer</code> ha osservato un messaggio <code style="padding: 0%;">info(Wis,As_Status,full)</code>, 
-				 terminando l'esecuzione con l'exit code "30". Questa condizione implica che l'OpRobot non venga avviato, come gia' testato in nello  
-				 <a href="../../sprint1/userDocs/Doc_Sprint1.html#test">sprint1</a>.</br>
-			</li>
-		</ul>
-		
-		<a href="../../sprint1/src/main/java/test/Sprint12Test.java">Test JUnit Funzionale</a>
-		<h2>Pianificazione del lavoro</h2>
-		<ul>
-			<li><b>Sprint 3</b></li>
-			<ul>
-				<li>Analisi del problema relativo al requisito R5</li>
-			</ul>
-		</ul>
+
+		Al fine di automatizzare il test è stato previsto l'endpoint <code style="padding: 0%;">/test</code>, il quale una volta caricata la pagina, invia automaticamente un RP al sistema WIS e 
+		dopo un tempo di attesa di 50 secondi verifica i campi precedentemente citati. <br><br><br>
+
+
 	</div>
 
 	<div style="background-color:rgba(86, 56, 253, 0.9);text-align:left;color:white">
