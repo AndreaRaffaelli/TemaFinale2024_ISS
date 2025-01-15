@@ -6,9 +6,9 @@ var socket = connect();
 let stateSequences = {
     WasteStorage: { expected: ["1", "0"], index: 0 },
     AshStorage: { expected: ["empty", "half"], index: 0 },
-    Incinerator: { expected: ["off", "on", "off"], index: 0 },
-    OpRobot_Status: { expected: ["home", "burnin", "home", "burnout", "ashout", "home"], index: 0 },
-    OpRobot_Job: { expected: ["idle", "working", "idle"], index: 0 }
+    Incinerator: { expected: ["on", "off"], index: 0 },
+    OpRobot_Status: { expected: ["burnin", "home", "burnout", "ashout", "home"], index: 0 },
+    OpRobot_Job: { expected: ["working", "idle"], index: 0 }
 };
 
 function connect() {
@@ -63,10 +63,9 @@ function connect() {
                     console.log(`Updated ${elementId} with value: ${value}`);
 
                     // FOR TESTING
-                    const sequence = stateSequences[elementId];
-                    if (sequence) {
-                        if (value === sequence.expected[sequence.index]) {
-                            sequence.index++; // Avanza alla fase successiva
+                    if (stateSequences[elementId]) {
+                        if (value === stateSequences[elementId].expected[stateSequences[elementId].index]) {
+                            stateSequences[elementId].index++; // Avanza alla fase successiva
                             console.log(`Correct state for ${elementId}: ${value}`);
                         } else {
                             console.warn(`Incorrect state for ${elementId}: ${value}`);
@@ -128,6 +127,9 @@ function test(){
 
 
 function controllaCampi() {
+
+    console.log(stateSequences)
+
     for (const [elementId, sequence] of Object.entries(stateSequences)) {
         const element = document.getElementById(elementId);
         if (sequence.index === sequence.expected.length) {
