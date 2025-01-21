@@ -3,7 +3,7 @@ version: '3.8'
 services:
   basic_robot:
     # image: natbodocker/basicrobot24:1.0 #Sostituisci con l'immagine del tuo container basic robot
-    image: cyberandrea.lol:5000/basicrobot24:1.0 #Sostituisci con l'immagine del tuo container basic robot
+    image: cyberandrea/basicrobot25:2.0 #Sostituisci con l'immagine del tuo container basic robot
     ports:
       - "8020:8020"
     depends_on:
@@ -16,14 +16,14 @@ services:
       - "8090:8090"
 
   sprint1:
-    image: sprint1:latest  # Sostituisci con l'immagine del tuo container sprint1
+    image: cyberandrea/sprint1:1.0 # Sostituisci con l'immagine del tuo container sprint1
     ports:
       - "8022:8022"
     depends_on:
       - basic_robot
 
   sprint2:
-    image: sprint2:latest # Sostituisci con l'immagine del tuo container sprint2
+    image: cyberandrea/sprint2:1.0
     ports:
       - "8021:8021"
     depends_on:
@@ -31,7 +31,7 @@ services:
       - sprint1
 
   sprintgui:
-    image: sprintgui:latest 
+    image: cyberandrea/sprintgui:2.0
     ports:
      - "8085:8085"
     depends_on:
