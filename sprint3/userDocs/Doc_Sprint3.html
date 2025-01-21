@@ -401,10 +401,14 @@ tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-
 		Nel test funzionale non abbiamo fatto riferimento alla JUnit ma si è preferito utilizzare le tecnologie Web verificando la corretta integrazione della GUI spring con il modello precedentemente sviluppo.  <br>
 		<ul>
 			<li>Verifichiamo corretta gestione dell'inserimento di un nuovo RP dalla GUI.<br>
-				&#x2705; Il test e' superato se i campi della GUI <code style="padding: 0%;">AshOut</code> e <code style="padding: 0%;">WasteIn</code> hanno registro il corretto processamento dell'RP:
+				&#x2705; Il test e' superato se i campi della GUI <code style="padding: 0%;">AshStorage</code>, <code style="padding: 0%;">WasteStorage</code>, <code style="padding: 0%;">Incinerator</code>,
+				<code style="padding: 0%;">OpRobot_Status</code>, <code style="padding: 0%;">OpRobot_Job</code> hanno registro il corretto processamento dell'RP:
 				<ul>
-					<li><code style="padding: 0%;">WasteIn</code> passa da <b>1</b> al valore <b>0</b></li>
-					<li><code style="padding: 0%;">AshOut</code> passa da <b>empty</b> a <b>half</b></li>
+					<li><code style="padding: 0%;">WasteStorage</code> passa da <b>1</b> al valore <b>0</b></li>
+					<li><code style="padding: 0%;">AshStorage</code> passa da <b>empty</b> a <b>half</b></li> 
+					<li><code style="padding: 0%;">Incinerator</code> passa da <b>on</b> a <b>off</b></li> 
+					<li><code style="padding: 0%;">OpRobot_Status</code> assume i seguenti valori: <b>burnin</b>, <b>home</b>, <b>burnout</b>, <b>ashout</b> e <b>home</b></li> 
+					<li><code style="padding: 0%;">OpRobot_Job</code> passa da <b>working</b> a <b>idle</b></li> 
 				</ul>
 			</li>
 		</ul>
