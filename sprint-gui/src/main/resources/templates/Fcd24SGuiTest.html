@@ -116,18 +116,19 @@
     </div>
     
     <div class="container">
-        <p>Current WasteStorage:   <span th:text="${wasteStorage ?: 'Unknown'}" id="WasteStorage">Unknown</span></p>
-        <p>Current AshStorage:     <span th:text="${ashStorage ?: 'Unknown'}" id="AshStorage">Unknown</span></p>
-        <p>Current Incinerator:    <span th:text="${incinerator ?: 'Unknown'}" id="Incinerator">Unknown</span></p>
-        <p>Current OpRobot status: <span th:text="${opRobot_status ?: 'Unknown'}" id="OpRobot_Status">Unknown</span></p>
-        <p>Current OpRobot job:    <span th:text="${opRobot_job ?: 'Unknown'}" id="OpRobot_Job">Unknown</span></p> 
+        <p>Current WasteStorage:   <span th:text="${wasteStorage ?: '0'}" id="WasteStorage">0</span></p>
+        <p>Current AshStorage:     <span th:text="${ashStorage ?: 'empty'}" id="AshStorage">empty</span></p>
+        <p>Current Incinerator:    <span th:text="${incinerator ?: 'off'}" id="Incinerator">off</span></p>
+        <p>Current OpRobot status: <span th:text="${opRobot_status ?: 'home'}" id="OpRobot_Status">home</span></p>
+        <p>Current OpRobot job:    <span th:text="${opRobot_job ?: 'idle'}" id="OpRobot_Job">idle</span></p> 
     </div>
     
     <div class="footer">
         <button id="pulsante">Aggiungi RP</button>
     </div>
 
-    <script src="guimainTest.js"></script>
+    <!-- <script src="guimainTest.js"></script> -->
+    <script src="guimainTestProposal.js"></script>
     <br>
     <!-- Aggiungi l'immagine in basso a destra -->
     <!-- <img src="/images/mbot.png" alt="mbot" class="bottom-right-image">  NN o cpt che immagine  -->

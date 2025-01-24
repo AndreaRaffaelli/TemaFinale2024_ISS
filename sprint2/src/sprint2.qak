@@ -149,11 +149,11 @@ QActor datacleaner context ctxashstorage {
 	      		println("$name ash full ") color yellow	
 	 			updateResource  [# "info($name,ashLevel,full)" #] 
 	     	}
-	     	if [# D > 90#] {
+	     	if [# D >= 90#] {
 	      		println("$name ash empty ") color yellow	
 	 			updateResource  [# "info($name,ashLevel,empty)" #] 
 	     	}
-	     	if [# D < 90 && D > 12 #] {
+	     	if [# D < 90 && D >= 12 #] {
 	      		println("$name ash half") color yellow	
 	 			updateResource  [# "info($name,ashLevel,half)" #] 
 	     	}
