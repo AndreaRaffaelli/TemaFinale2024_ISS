@@ -42,7 +42,7 @@ function connect() {
                 "As_status": "AshStorage",
                 "Incinerator_status": "Incinerator",           
                 "MentalState": "OpRobot_Status",
-                "RobotState": "OpRobot_Job"
+                "RobotState" : "OpRobot_Job"
             };
     
             // Aggiorna il valore dell'elemento DOM corrispondente

@@ -1,6 +1,5 @@
 # Start with a base image containing Java and Gradle
-FROM openjdk:11-jre-slim
-
+FROM openjdk:11
 # Install Python and specify the version
 RUN apt-get update && \
     apt-get install -y python3 && \

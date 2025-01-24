@@ -1,0 +1,14 @@
+#manager
+docker swarm init --advertise-addr <IP_MANAGER>
+docker swarm join-token worker
+#worker
+docker swarm join --token <TOKEN> <IP_MANAGER>:2377
+#manager
+docker network create --driver overlay my-overlay-network
+
+docker stack deploy -c docker-compose.yml my-stack
+
+docker stack rm <nome_stack>
+docker network rm <nome_rete>
+docker swarm leave
+docker swarm leave --force
