@@ -1,5 +1,4 @@
 # TODO
 - [X] variabile inceneritore
-- [ ] veficare possibilita' deploy su nodi distribuiti con docker compose
-- [ ] Userdocs
- 
+- [X] veficare possibilita' deploy su nodi distribuiti con docker compose
+- [X] Userdocs
