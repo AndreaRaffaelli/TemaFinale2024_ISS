@@ -1,5 +1,6 @@
 # Start with a base image containing Java and Gradle
-FROM openjdk:11
+FROM kyberpunk/openjdk-armv6:11-jdk
+
 # Install Python and specify the version
 RUN apt-get update && \
     apt-get install -y python3 && \
