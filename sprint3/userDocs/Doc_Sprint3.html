@@ -363,37 +363,37 @@ RobotUtils da utilizzare solo sendApplMsg(...) per inviare messaggi agli actors
 		<br>
 		<h3>Deploy</h3>		
 		Come già anticipato in Problematiche, è necessario effettuare il deploy della GUI nello stesso nodo della Service Area, a causa della natura 
-		dei metodi di comunicazione fornite dal Qak.
+		dei metodi di comunicazione fornite dal Qak.<br>
+		Per motivi di comodita' e' stato utilizzato Docker Swarm.
 
-		Per il depl
-
+		<br><br>
+		<b>Inizio la distribuzione dal MANAGER</b>
 		<pre>
 			<code>
-docker run -ti -p 8090:8090 -p 8091:8091 --rm  docker.io/natbodocker/virtualrobotdisi23:1.0
+docker swarm init --advertise-addr "IP_MANAGER"
 
-cd ./basicrobot24-1.0/bin/
-
-./basicrobot24			
+docker swarm join-token worker
 			</code>
 		</pre>	
-		<b>Per la distribuzione della Service Area:</b>
-		<pre>
-			<code>
-tar -xvf /your/path/to/TemaFinale2024_ISS/sprint1/build/distributions/sprintuno-1.0.tar											
 
-./sprintuno-1.0/bin/sprintuno.bat
-			</code>
-		</pre>		
-		<br>
-
+		Con il secondo comando verra' creato "TOKEN"<br><br>
+		
 		<b>Per la distribuzione dell'ambiente del Monitoring Device sul Raspberry:</b>
 		<pre>
 			<code>
-tar -xvf /your/path/to/TemaFinale2024_ISS/sprint2/build/distributions/sprintdue-1.0.tar											
-
-./sprintdue-1.0/bin/sprintdue.bat
+docker swarm join --token "TOKEN" "IP_MANAGER":2377
 			</code>
 		</pre>	
+
+		<b>Nuovamente sul MANAGER</b>
+		<pre>
+			<code>
+docker network create --driver overlay my-overlay-network
+
+docker stack deploy -c docker-compose-swarm.yml my-stack
+			</code>
+		</pre>	
+
 
 		<h2>Test Unit</h2>
 		<h3>Test Funzionale GUI</h3>
