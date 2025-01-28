@@ -1,19 +1,6 @@
 version: '3.8'
 
 services:
-  basic_robot:
-    image: cyberandrea/basicrobot25:2.0
-    ports:
-      - "8020:8020"
-    depends_on:
-      - wenv
-    networks:
-      - tema-finale-rete
-    deploy:
-      placement:
-        constraints:
-          - node.role == manager
-
   wenv:
     image: natbodocker/virtualrobotdisi23:1.0
     ports:
@@ -26,8 +13,21 @@ services:
         constraints:
           - node.role == manager
 
+  basic_robot:
+    image: cyberandrea/basicrobot25:2.0
+    ports:
+      - "8020:8020"
+    depends_on:
+      - wenv
+    networks:
+      - tema-finale-rete      
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+          
   sprint1:
-    image: cyberandrea/sprint1:1.0
+    image: cyberandrea/sprint1:1.3
     ports:
       - "8022:8022"
     depends_on:
@@ -54,11 +54,12 @@ services:
           - node.hostname == raspberrypi
 
   sprintgui:
-    image: cyberandrea/sprintgui:2.0
+    image: cyberandrea/sprintgui:latest
     ports:
       - "8085:8085"
     depends_on:
       - sprint1
+      - sprint2
     networks:
       - tema-finale-rete
     deploy:
